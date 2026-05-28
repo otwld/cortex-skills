@@ -107,22 +107,6 @@ Current public seed: `v0.1.0`.
 This release is practical and usable, but the public API is the repository
 structure and validation contract, not a stable package interface.
 
-## Suggested GitHub Metadata
-
-Description:
-
-```text
-Governed AI skill library for reusable TypeScript ecosystem agent workflows.
-```
-
-Topics:
-
-```text
-ai-skills, agent-skills, ai-agents, typescript, codex, openai,
-developer-tools, engineering-conventions, nx, angular, nestjs, storybook,
-vitest, playwright
-```
-
 ## License
 
 MIT. See [LICENSE](LICENSE).
