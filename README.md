@@ -1,3 +1,8 @@
+![otwld cortex skills banner](./banner.png)
+
+![GitHub License](https://img.shields.io/github/license/otwld/cortex-skills)
+[![Discord](https://img.shields.io/badge/Discord-OTWLD-blue?logo=discord&logoColor=white)](https://discord.otwld.com)
+
 # Cortex Skills
 
 Governed AI skill library for reusable TypeScript ecosystem agent workflows.
