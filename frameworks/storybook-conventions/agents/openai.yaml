@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Storybook Conventions"
+  short_description: "Apply Storybook story and docs rules"
+  default_prompt: "Use $storybook-conventions when creating or updating Storybook stories, MDX docs, preview setup, or mocks."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Vite Conventions"
+  short_description: "Apply Vite config and build rules"
+  default_prompt: "Use $vite-conventions when creating or modifying Vite config or library build settings."

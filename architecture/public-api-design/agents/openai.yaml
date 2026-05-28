@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Public API Design"
+  short_description: "Shape stable reusable APIs"
+  default_prompt: "Use $public-api-design when adding or changing exports, contracts, entry points, or reusable abstractions."

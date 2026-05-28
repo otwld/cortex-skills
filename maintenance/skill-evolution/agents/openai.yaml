@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Skill Evolution"
+  short_description: "Improve skills from repeated patterns"
+  default_prompt: "Use $skill-evolution after repeated patterns, refactors, reviews, or discussions reveal a reusable skill gap."

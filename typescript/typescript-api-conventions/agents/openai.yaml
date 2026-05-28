@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) TypeScript API Conventions"
+  short_description: "Apply TypeScript public API rules"
+  default_prompt: "Use $typescript-api-conventions when designing exported types, contracts, DTOs, generics, or public TypeScript APIs."

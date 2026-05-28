@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Angular Conventions"
+  short_description: "Apply reusable Angular rules"
+  default_prompt: "Use $angular-conventions when creating, modifying, or reviewing Angular code."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Nx Conventions"
+  short_description: "Apply reusable Nx workspace rules"
+  default_prompt: "Use $nx-conventions when creating or modifying Nx workspace configuration, targets, projects, or generators."

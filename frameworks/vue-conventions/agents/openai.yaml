@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Vue Conventions"
+  short_description: "Apply Vue 3 component rules"
+  default_prompt: "Use $vue-conventions when creating or reviewing Vue 3 Single-File Components."

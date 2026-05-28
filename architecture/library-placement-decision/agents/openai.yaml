@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Library Placement Decision"
+  short_description: "Choose where TypeScript code belongs"
+  default_prompt: "Use $library-placement-decision when placing new code, moving files, extracting logic, or designing entry points."

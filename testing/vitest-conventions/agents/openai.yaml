@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Vitest Conventions"
+  short_description: "Apply Vitest config and test rules"
+  default_prompt: "Use $vitest-conventions when creating or modifying Vitest config or tests."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Example Universe Enforcer"
+  short_description: "Use recruitment examples consistently"
+  default_prompt: "Use $example-universe-enforcer when producing examples, sample payloads, Storybook data, docs snippets, or tests."

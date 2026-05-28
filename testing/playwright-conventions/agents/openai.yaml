@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Playwright Conventions"
+  short_description: "Apply Playwright e2e test rules"
+  default_prompt: "Use $playwright-conventions when creating or modifying Playwright config or end-to-end tests."

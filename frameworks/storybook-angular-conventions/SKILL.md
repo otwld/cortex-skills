@@ -1,0 +1,41 @@
+---
+name: storybook-angular-conventions
+description: Use when creating, modifying, or reviewing Angular Storybook stories, Angular story providers, module metadata, standalone story setup, or Angular story mocks.
+---
+
+# Output Marker
+
+Display:
+using skill: storybook-angular-conventions
+
+---
+
+# Storybook Angular Conventions
+
+## Overview
+
+Apply Angular-specific Storybook rules on top of generic Storybook conventions.
+Keep this skill focused on Angular wiring, not generic story organization.
+
+## Core Rules
+
+- Use `moduleMetadata` when a story needs Angular imports or declarations.
+- Use `applicationConfig` when a standalone story needs application-wide providers.
+- Prefer colocated stories near the Angular component under test.
+- Keep story templates and args explicit enough to reveal the component state.
+- Compose mock handlers through the project's shared Storybook mock strategy.
+- Keep generated data deterministic for visual regression stories.
+
+## Usage Checklist
+
+- Generic Storybook conventions were applied first.
+- Angular dependencies are provided through `moduleMetadata` or `applicationConfig`.
+- Story args and templates are explicit.
+- Mocks are composed through project-level setup.
+- Visual data is deterministic.
+
+## Cross-References
+
+- BEFORE: storybook-conventions, angular-conventions
+- WITH: typescript-code-style
+- AFTER: skill-evolution

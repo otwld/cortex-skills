@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Angular Material Conventions"
+  short_description: "Apply Angular Material and CDK rules"
+  default_prompt: "Use $angular-material-conventions when adding or modifying Angular Material or CDK code."

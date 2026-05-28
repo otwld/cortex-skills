@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) NestJS Mongoose Conventions"
+  short_description: "Apply NestJS Mongoose data rules"
+  default_prompt: "Use $nestjs-mongoose-conventions when creating or reviewing NestJS Mongoose schemas, repositories, or aggregation helpers."

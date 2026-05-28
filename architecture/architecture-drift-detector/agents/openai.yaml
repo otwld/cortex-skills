@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Architecture Drift Detector"
+  short_description: "Spot structural drift risk"
+  default_prompt: "Use $architecture-drift-detector when starting significant work, reviewing recent changes, or planning broad refactors."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Angular TanStack Query Conventions"
+  short_description: "Apply Angular TanStack Query rules"
+  default_prompt: "Use $angular-tanstack-query-conventions when creating or modifying Angular TanStack Query integrations."

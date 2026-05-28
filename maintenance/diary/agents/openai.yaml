@@ -1,0 +1,7 @@
+interface:
+  display_name: "(otwld) Diary"
+  short_description: "Log agent work decisions and outcomes"
+  default_prompt: "Use $diary to record important agent actions, decisions, blockers, validations, and completed work."
+
+policy:
+  allow_implicit_invocation: true

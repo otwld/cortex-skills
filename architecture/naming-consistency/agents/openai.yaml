@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Naming Consistency"
+  short_description: "Keep names explicit and reusable"
+  default_prompt: "Use $naming-consistency when creating or renaming public symbols, files, contracts, or reusable abstractions."

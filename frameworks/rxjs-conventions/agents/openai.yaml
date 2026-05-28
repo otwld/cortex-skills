@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) RxJS Conventions"
+  short_description: "Apply RxJS stream rules"
+  default_prompt: "Use $rxjs-conventions when creating or modifying RxJS streams, operators, or subscriptions."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) NestJS Conventions"
+  short_description: "Apply reusable NestJS rules"
+  default_prompt: "Use $nestjs-conventions when creating or modifying NestJS modules, providers, controllers, or runtime code."
