@@ -63,7 +63,7 @@ See [SKILL_CATALOG.md](SKILL_CATALOG.md) for the full list.
 Every skill follows the structure defined in [AGENTS.md](AGENTS.md):
 
 ```text
-taxonomy/skill-name/
+taxonomy/folder-slug/
 |-- SKILL.md
 `-- agents/
     `-- openai.yaml

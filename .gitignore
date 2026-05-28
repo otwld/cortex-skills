@@ -1,6 +1,8 @@
 # Editors and local workspace state
 .idea/
 .vscode/
+.agents/
+.codex/
 *.swp
 *.swo
 *~

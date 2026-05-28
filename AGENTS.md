@@ -68,15 +68,20 @@ Skills are grouped by reusable purpose:
 
 ## Skill Directory Standard
 
-Every skill must live in its own directory under the relevant taxonomy folder
-and include:
+Every skill must live in its own short directory slug under the relevant
+taxonomy folder and include:
 
 ```text
-taxonomy/skill-name/
+taxonomy/folder-slug/
 |-- SKILL.md
 `-- agents/
     `-- openai.yaml
 ```
+
+The frontmatter `name` remains the canonical skill name. The folder slug should
+omit words already made obvious by the taxonomy, such as `frameworks/angular`
+for `angular-conventions`, `testing/jest` for `jest-conventions`, and
+`typescript/api` for `typescript-api-conventions`.
 
 Optional supporting directories:
 

@@ -17,6 +17,8 @@ SELF = Path(__file__).resolve()
 EDGE_LABELS = ("BEFORE", "WITH", "AFTER")
 SKIP_SCAN_PARTS = {
     ".git",
+    ".agents",
+    ".codex",
     ".hg",
     ".svn",
     ".idea",
@@ -190,6 +192,26 @@ def parse_frontmatter(path: Path, errors: list[str]) -> dict[str, str]:
     return values
 
 
+def expected_folder_name(category: str, skill_name: str) -> str:
+    folder_name = skill_name
+
+    if category == "architecture" and folder_name.startswith("architecture-"):
+        folder_name = folder_name.removeprefix("architecture-")
+
+    if category == "documentation" and folder_name.endswith("-documentation"):
+        folder_name = folder_name.removesuffix("-documentation")
+
+    if category in {"frameworks", "testing"} and folder_name.endswith("-conventions"):
+        folder_name = folder_name.removesuffix("-conventions")
+
+    if category == "typescript" and folder_name.startswith("typescript-"):
+        folder_name = folder_name.removeprefix("typescript-")
+        if folder_name.endswith("-conventions"):
+            folder_name = folder_name.removesuffix("-conventions")
+
+    return folder_name or skill_name
+
+
 def parse_openai_metadata(path: Path, errors: list[str]) -> dict[str, str]:
     if not path.exists():
         errors.append(f"{rel(path)}: missing agents/openai.yaml")
@@ -314,6 +336,8 @@ def check_forbidden_active_terms(errors: list[str]) -> None:
         if not path.is_file():
             continue
         if should_skip_path(path):
+            continue
+        if path.name == ".gitignore":
             continue
         if path.resolve() == SELF:
             continue
@@ -465,8 +489,11 @@ def main(argv: list[str] | None = None) -> int:
             errors.append(f"{rel(skill_path)}: missing frontmatter name")
         elif not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", name):
             errors.append(f"{rel(skill_path)}: invalid skill name {name!r}")
-        elif skill_dir.name != name:
-            errors.append(f"{rel(skill_path)}: directory name must match skill name {name!r}")
+        elif skill_dir.name != expected_folder_name(skill_dir.parent.name, name):
+            errors.append(
+                f"{rel(skill_path)}: directory name must be "
+                f"{expected_folder_name(skill_dir.parent.name, name)!r} for skill {name!r}"
+            )
         elif name in names:
             errors.append(f"{rel(skill_path)}: duplicate skill name also in {rel(names[name])}")
         else:
