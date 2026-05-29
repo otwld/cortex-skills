@@ -25,14 +25,14 @@ Cortex Skills contains 27 skills grouped by reusable purpose. Each skill has a
 
 | Skill | Use when | Path |
 | --- | --- | --- |
-| `angular-conventions` | Creating, modifying, or reviewing Angular components, directives, pipes, services, templates, styles, forms, inputs, outputs, or dependency injection. | `frameworks/angular/` |
-| `angular-material-conventions` | Adding, modifying, or reviewing Angular Material or Angular CDK components, utilities, theming, overlays, accessibility, or density settings. | `frameworks/angular-material/` |
-| `angular-tanstack-query-conventions` | Creating, modifying, or reviewing TanStack Query integration in Angular code, including query keys, query options, mutations, pagination, and skippable inputs. | `frameworks/angular-tanstack-query/` |
-| `nestjs-conventions` | Creating, modifying, or reviewing NestJS modules, providers, controllers, interceptors, guards, pipes, application bootstrap, or microservice runtimes. | `frameworks/nestjs/` |
-| `nestjs-mongoose-conventions` | Creating or reviewing NestJS Mongoose schemas, models, repositories, aggregation helpers, ObjectId handling, or persistence-facing DTO contracts. | `frameworks/nestjs-mongoose/` |
+| `angular-conventions` | Creating, modifying, or reviewing Angular components, directives, pipes, services, templates, styles, forms, inputs, outputs, or dependency injection. | `frameworks/angular/core/` |
+| `angular-material-conventions` | Adding, modifying, or reviewing Angular Material or Angular CDK components, utilities, theming, overlays, accessibility, or density settings. | `frameworks/angular/material/` |
+| `angular-tanstack-query-conventions` | Creating, modifying, or reviewing TanStack Query integration in Angular code, including query keys, query options, mutations, pagination, and skippable inputs. | `frameworks/angular/tanstack-query/` |
+| `nestjs-conventions` | Creating, modifying, or reviewing NestJS modules, providers, controllers, interceptors, guards, pipes, application bootstrap, or microservice runtimes. | `frameworks/nestjs/core/` |
+| `nestjs-mongoose-conventions` | Creating or reviewing NestJS Mongoose schemas, models, repositories, aggregation helpers, ObjectId handling, or persistence-facing DTO contracts. | `frameworks/nestjs/mongoose/` |
 | `nx-conventions` | Creating, modifying, or reviewing Nx workspace configuration, generators, targets, project metadata, inferred tasks, or project graph behavior. | `frameworks/nx/` |
 | `rxjs-conventions` | Creating, modifying, or reviewing RxJS observables, operators, subscriptions, subjects, multicasting, cleanup, or async stream composition. | `frameworks/rxjs/` |
-| `storybook-angular-conventions` | Creating, modifying, or reviewing Angular Storybook stories, Angular story providers, module metadata, standalone story setup, or Angular story mocks. | `frameworks/storybook-angular/` |
+| `storybook-angular-conventions` | Creating, modifying, or reviewing Angular Storybook stories, Angular story providers, module metadata, standalone story setup, or Angular story mocks. | `frameworks/angular/storybook/` |
 | `storybook-conventions` | Creating, modifying, or reviewing Storybook stories, MDX docs, preview setup, addons, mocks, visual regression data, or story organization. | `frameworks/storybook/` |
 | `vite-conventions` | Creating, modifying, or reviewing Vite configuration, library builds, aliases, plugins, source maps, dependency externalization, or dev-server settings. | `frameworks/vite/` |
 | `vue-conventions` | Creating, modifying, or reviewing Vue 3 Single-File Components, Composition API code, `<script setup>`, props, emits, slots, or component naming. | `frameworks/vue/` |

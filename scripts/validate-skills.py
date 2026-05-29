@@ -154,6 +154,36 @@ FORBIDDEN_EXAMPLE_IDENTIFIERS = [
     "loadUser",
 ]
 
+EXPECTED_SKILL_DIRS = {
+    "architecture-drift-detector": Path("architecture/drift-detector"),
+    "bundle-performance": Path("architecture/bundle-performance"),
+    "extraction-decision": Path("architecture/extraction-decision"),
+    "library-placement-decision": Path("architecture/library-placement-decision"),
+    "naming-consistency": Path("architecture/naming-consistency"),
+    "nx-module-boundaries": Path("architecture/nx-module-boundaries"),
+    "public-api-design": Path("architecture/public-api-design"),
+    "code-documentation": Path("documentation/code"),
+    "angular-conventions": Path("frameworks/angular/core"),
+    "angular-material-conventions": Path("frameworks/angular/material"),
+    "angular-tanstack-query-conventions": Path("frameworks/angular/tanstack-query"),
+    "nestjs-conventions": Path("frameworks/nestjs/core"),
+    "nestjs-mongoose-conventions": Path("frameworks/nestjs/mongoose"),
+    "nx-conventions": Path("frameworks/nx"),
+    "rxjs-conventions": Path("frameworks/rxjs"),
+    "storybook-angular-conventions": Path("frameworks/angular/storybook"),
+    "storybook-conventions": Path("frameworks/storybook"),
+    "vite-conventions": Path("frameworks/vite"),
+    "vue-conventions": Path("frameworks/vue"),
+    "diary": Path("maintenance/diary"),
+    "example-universe-enforcer": Path("maintenance/example-universe-enforcer"),
+    "skill-evolution": Path("maintenance/skill-evolution"),
+    "jest-conventions": Path("testing/jest"),
+    "playwright-conventions": Path("testing/playwright"),
+    "vitest-conventions": Path("testing/vitest"),
+    "typescript-api-conventions": Path("typescript/api"),
+    "typescript-code-style": Path("typescript/code-style"),
+}
+
 
 def rel(path: Path) -> str:
     return str(path.relative_to(ROOT))
@@ -190,26 +220,6 @@ def parse_frontmatter(path: Path, errors: list[str]) -> dict[str, str]:
         key, value = line.split(":", 1)
         values[key.strip()] = value.strip().strip('"').strip("'")
     return values
-
-
-def expected_folder_name(category: str, skill_name: str) -> str:
-    folder_name = skill_name
-
-    if category == "architecture" and folder_name.startswith("architecture-"):
-        folder_name = folder_name.removeprefix("architecture-")
-
-    if category == "documentation" and folder_name.endswith("-documentation"):
-        folder_name = folder_name.removesuffix("-documentation")
-
-    if category in {"frameworks", "testing"} and folder_name.endswith("-conventions"):
-        folder_name = folder_name.removesuffix("-conventions")
-
-    if category == "typescript" and folder_name.startswith("typescript-"):
-        folder_name = folder_name.removeprefix("typescript-")
-        if folder_name.endswith("-conventions"):
-            folder_name = folder_name.removesuffix("-conventions")
-
-    return folder_name or skill_name
 
 
 def parse_openai_metadata(path: Path, errors: list[str]) -> dict[str, str]:
@@ -471,7 +481,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     errors: list[str] = []
 
-    skill_paths = sorted(ROOT.glob("*/*/SKILL.md"))
+    skill_paths = sorted(path for path in ROOT.rglob("SKILL.md") if not should_skip_path(path))
     if not skill_paths:
         errors.append("no skills found")
 
@@ -489,11 +499,10 @@ def main(argv: list[str] | None = None) -> int:
             errors.append(f"{rel(skill_path)}: missing frontmatter name")
         elif not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", name):
             errors.append(f"{rel(skill_path)}: invalid skill name {name!r}")
-        elif skill_dir.name != expected_folder_name(skill_dir.parent.name, name):
-            errors.append(
-                f"{rel(skill_path)}: directory name must be "
-                f"{expected_folder_name(skill_dir.parent.name, name)!r} for skill {name!r}"
-            )
+        elif name not in EXPECTED_SKILL_DIRS:
+            errors.append(f"{rel(skill_path)}: no expected directory registered for skill {name!r}")
+        elif skill_dir.relative_to(ROOT) != EXPECTED_SKILL_DIRS[name]:
+            errors.append(f"{rel(skill_path)}: expected directory {EXPECTED_SKILL_DIRS[name]}")
         elif name in names:
             errors.append(f"{rel(skill_path)}: duplicate skill name also in {rel(names[name])}")
         else:

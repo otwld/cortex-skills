@@ -21,15 +21,16 @@ validation improvements, and documentation updates.
 Every skill must include:
 
 ```text
-taxonomy/folder-slug/
+taxonomy[/group]/folder-slug/
 |-- SKILL.md
 `-- agents/
     `-- openai.yaml
 ```
 
 Use concise folder slugs and keep the canonical skill name in `SKILL.md`
-frontmatter. For example, `frameworks/angular` can contain the
-`angular-conventions` skill.
+frontmatter. For example, `frameworks/angular/core` can contain the
+`angular-conventions` skill, while `frameworks/angular/material` can contain
+the Angular Material skill.
 
 Optional runtime support files belong in:
 
