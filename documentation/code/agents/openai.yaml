@@ -1,4 +1,4 @@
 interface:
   display_name: "(otwld) Code Documentation"
-  short_description: "Document public code changes"
-  default_prompt: "Use $code-documentation when adding or changing public, reusable, or user-facing code that needs docs."
+  short_description: "Require JSDoc/TSDoc for code edits"
+  default_prompt: "Use $code-documentation whenever code is generated, edited, moved, split, refactored, or materially reviewed."

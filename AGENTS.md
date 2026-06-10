@@ -174,6 +174,25 @@ payloads, Storybook data, docs snippets, and other examples.
 Do not introduce unrelated example domains unless the user explicitly requests
 one and the skill being edited requires that exception.
 
+## Code Documentation Policy
+
+Documentation is part of every code edit. When code is generated, edited, moved,
+split, refactored, or materially reviewed, update the relevant JSDoc/TSDoc in
+the same change. Do not treat documentation as an optional final pass.
+
+Document the touched code at the right level:
+
+- Add or update JSDoc/TSDoc for every touched exported symbol, public API,
+  reusable helper, component, service, hook, provider, command, adapter, DTO,
+  contract, or module-level behavior.
+- When private code is touched, document the nearest owning function, class,
+  module, or public surface when that code path would otherwise be undocumented.
+- When code is moved or split, move or update the associated JSDoc/TSDoc and
+  any project-native docs, such as Storybook, MDX, README, API docs, or
+  migration notes.
+- Do not add placeholder comments or comments that merely restate the code.
+  Prefer clearer names and stronger types where prose would be noise.
+
 ## Progressive Disclosure
 
 Keep `SKILL.md` focused on the essential procedure and decision rules. There is
