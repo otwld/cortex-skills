@@ -19,6 +19,7 @@ Keep this skill focused on Angular wiring, not generic story organization.
 
 ## Core Rules
 
+- Apply `storybook-conventions` for title structure, MDX identity, duplicate-title handling, source-mirror docs, and deterministic story data.
 - Use `moduleMetadata` when a story needs Angular imports or declarations.
 - Use `applicationConfig` when a standalone story needs application-wide providers.
 - Prefer colocated stories near the Angular component under test.
@@ -30,6 +31,8 @@ Keep this skill focused on Angular wiring, not generic story organization.
 
 - Generic Storybook conventions were applied first.
 - Angular dependencies are provided through `moduleMetadata` or `applicationConfig`.
+- Story titles, MDX names, and shared-title exports follow generic Storybook identity rules.
+- Source-mirror MDX is used for short Angular-facing source docs when the project has an approved source import resolver.
 - Story args and templates are explicit.
 - Mocks are composed through project-level setup.
 - Visual data is deterministic.
