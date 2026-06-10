@@ -25,7 +25,7 @@ Use only these non-transitive advisory edge labels:
 | `naming-consistency` | None | `public-api-design`, `typescript-api-conventions`, `code-documentation` | None |
 | `nx-module-boundaries` | `library-placement-decision` | `public-api-design` | None |
 | `public-api-design` | `library-placement-decision` | `naming-consistency`, `typescript-api-conventions`, `code-documentation` | None |
-| `code-documentation` | None | `example-universe-enforcer` | `skill-evolution` |
+| `code-documentation` | None | `example-universe-enforcer`, `storybook-conventions` | `skill-evolution` |
 | `angular-conventions` | None | `rxjs-conventions`, `typescript-code-style`, `code-documentation` | `skill-evolution` |
 | `angular-material-conventions` | `angular-conventions` | `bundle-performance`, `typescript-code-style`, `code-documentation` | `skill-evolution` |
 | `angular-tanstack-query-conventions` | `angular-conventions` | `rxjs-conventions`, `typescript-api-conventions`, `public-api-design`, `code-documentation` | `skill-evolution` |

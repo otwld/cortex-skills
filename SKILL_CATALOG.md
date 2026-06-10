@@ -19,7 +19,7 @@ Cortex Skills contains 39 skills grouped by reusable purpose. Each skill has a
 
 | Skill | Use when | Path |
 | --- | --- | --- |
-| `code-documentation` | Code generation, edits, moves, splits, refactors, material review, and public or reusable docs that require JSDoc/TSDoc, examples, stories, MDX docs, or API usage notes. | `documentation/code/` |
+| `code-documentation` | Code generation, edits, moves, splits, refactors, material review, and public or reusable docs that require JSDoc/TSDoc, Storybook docs, examples, stories, MDX docs, or API usage notes. | `documentation/code/` |
 
 ## Frameworks
 
