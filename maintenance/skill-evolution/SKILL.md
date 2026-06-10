@@ -1,6 +1,6 @@
 ---
 name: skill-evolution
-description: Use after repeated implementation patterns, technical discussions, refactors, reviews, or skill-library changes reveal a reusable agent workflow or doctrine gap.
+description: Use after repeated implementation patterns, technical discussions, refactors, reviews, folder or diff analysis, or skill-library changes reveal a reusable agent workflow or doctrine gap.
 ---
 
 # Output Marker
@@ -31,6 +31,24 @@ Recommend a new or updated skill when:
 Do not recommend a skill for one-off decisions, obvious language basics, or
 rules better enforced by tooling.
 
+## Convention Gap Analysis
+
+Use this workflow when the user provides a folder path, a diff, or a changed-file
+list to assess whether implementation patterns should become skill guidance.
+
+1. Summarize the area by responsibility, layer, likely consumers, and dominant
+   technologies.
+2. Identify repeated naming, layout, documentation, testing, API, or architecture
+   patterns.
+3. Compare those patterns with existing skills before proposing anything new.
+4. Flag gaps where guidance is absent, unclear, contradictory, or too broad to
+   prevent repeated mistakes.
+5. Return recommendations only unless the user explicitly asks to update skills.
+
+Prefer updating an existing skill when the pattern fits its scope. Propose a new
+skill only when the workflow is distinct, reusable, and not covered by a focused
+existing skill.
+
 ## Recommendation Format
 
 - Proposed action: update existing skill | create new skill | no action.
@@ -38,6 +56,7 @@ rules better enforced by tooling.
 - Signal: repetition, risk, or coverage gap.
 - Scope boundaries: covers and does not cover.
 - Trigger wording to add or change.
+- Documentation impact: metadata, graph, reference, or catalog updates needed.
 - Validation idea: command, scenario, or review check.
 
 ## Update Rules
@@ -52,6 +71,7 @@ rules better enforced by tooling.
 
 - The pattern is reusable beyond one task.
 - Existing skills were checked first.
+- Folder, diff, or changed-file analysis summarized responsibility and consumers when provided.
 - Scope boundaries are explicit.
 - Validation path is named.
 

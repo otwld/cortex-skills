@@ -60,7 +60,7 @@ Cortex Skills contains 39 skills grouped by reusable purpose. Each skill has a
 | --- | --- | --- |
 | `diary` | The user asks to log, journal, summarize, hand off, or preserve agent work history, decisions, blockers, validations, or completed outcomes. | `maintenance/diary/` |
 | `example-universe-enforcer` | Producing examples, sample code, DTOs, API payloads, Storybook data, docs snippets, tests, or illustrative data. | `maintenance/example-universe-enforcer/` |
-| `skill-evolution` | Repeated implementation patterns, technical discussions, refactors, reviews, or skill-library changes reveal a reusable agent workflow or doctrine gap. | `maintenance/skill-evolution/` |
+| `skill-evolution` | Repeated implementation patterns, technical discussions, refactors, reviews, folder or diff analysis, or skill-library changes reveal a reusable agent workflow or doctrine gap. | `maintenance/skill-evolution/` |
 
 ## Testing
 
