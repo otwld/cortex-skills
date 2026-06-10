@@ -37,4 +37,4 @@ free of private implementation details.
 
 ## Cross-References
 
-- WITH: public-api-design, naming-consistency, typescript-code-style
+- WITH: public-api-design, naming-consistency, typescript-code-style, code-documentation

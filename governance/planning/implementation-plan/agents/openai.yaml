@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Implementation Plan"
+  short_description: "Plan multi-step work before edits"
+  default_prompt: "Use $implementation-plan when requirements are known and implementation needs a decision-complete execution path."

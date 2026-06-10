@@ -22,9 +22,10 @@ new code readable, maintainable, and easy to refactor.
 
 1. Read the nearest project instructions, `tsconfig`, formatter, ESLint, test setup, and surrounding files.
 2. Follow project-enforced rules when they are stricter or intentionally different.
-3. Apply the core defaults to new or materially rewritten TypeScript.
-4. Load only the reference file that matches the current question or code area.
-5. Run the project's normal formatter, typecheck, and tests when feasible.
+3. Apply `code-documentation` before and during any TypeScript code edit.
+4. Apply the core defaults to new or materially rewritten TypeScript.
+5. Load only the reference file that matches the current question or code area.
+6. Run the project's normal formatter, typecheck, and tests when feasible.
 
 ## Core Defaults
 
@@ -35,7 +36,10 @@ new code readable, maintainable, and easy to refactor.
 - Prefer readable type expressions, `unknown` over `any`, and interfaces for object shapes.
 - Use function declarations for named functions and arrows for callbacks.
 - Throw and reject only `Error` instances.
-- Use JSDoc for user-facing API documentation and `//` comments for implementation notes.
+- Use JSDoc/TSDoc for every touched exported symbol, reusable API, and owning
+  surface for touched private code paths.
+- Use `//` comments only for implementation notes that JSDoc/TSDoc cannot
+  express cleanly.
 
 ## Reference Map
 
@@ -61,9 +65,9 @@ TypeScript, ESLint, Prettier, or human review.
 
 - Local project rules were checked first.
 - New TypeScript uses named exports and type-only imports where appropriate.
-- Public symbols are documented when needed.
+- Touched code has relevant JSDoc/TSDoc at the symbol or owning-surface level.
 - Mechanical preflight was run for broad TypeScript edits when feasible.
 
 ## Cross-References
 
-- None
+- WITH: code-documentation

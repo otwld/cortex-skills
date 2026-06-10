@@ -35,5 +35,5 @@ details with the AGENTS.md Context7 workflow whenever the task asks about them.
 
 ## Cross-References
 
-- WITH: vite-conventions, typescript-code-style
+- WITH: vite-conventions, typescript-code-style, code-documentation
 - AFTER: skill-evolution

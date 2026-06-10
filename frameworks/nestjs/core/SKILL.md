@@ -47,5 +47,5 @@ package naming scheme.
 
 ## Cross-References
 
-- WITH: rxjs-conventions, typescript-code-style
-- AFTER: code-documentation, skill-evolution
+- WITH: rxjs-conventions, typescript-code-style, code-documentation
+- AFTER: skill-evolution

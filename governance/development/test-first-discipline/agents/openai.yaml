@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Test First Discipline"
+  short_description: "Prove behavior before changing it"
+  default_prompt: "Use $test-first-discipline before behavior changes, bug fixes, or refactors that need test proof."

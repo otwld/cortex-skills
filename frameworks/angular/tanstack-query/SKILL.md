@@ -43,5 +43,5 @@ patterns.
 ## Cross-References
 
 - BEFORE: angular-conventions
-- WITH: rxjs-conventions, typescript-api-conventions, public-api-design
-- AFTER: code-documentation, skill-evolution
+- WITH: rxjs-conventions, typescript-api-conventions, public-api-design, code-documentation
+- AFTER: skill-evolution

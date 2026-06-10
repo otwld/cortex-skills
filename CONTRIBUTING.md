@@ -9,6 +9,7 @@ validation improvements, and documentation updates.
   ecosystem projects.
 - Preserve narrow skill scope. Prefer small focused skills over broad doctrine
   documents.
+- Put agent workflow gates and operating policy skills under `governance/`.
 - Keep the public brand separate from old extracted project assumptions.
 - Put retained historical details only in `references/legacy-*.md` files whose
   first heading includes `Legacy`.
@@ -30,7 +31,8 @@ taxonomy[/group]/folder-slug/
 Use concise folder slugs and keep the canonical skill name in `SKILL.md`
 frontmatter. For example, `frameworks/angular/core` can contain the
 `angular-conventions` skill, while `frameworks/angular/material` can contain
-the Angular Material skill.
+the Angular Material skill. Governance skills may use grouping paths such as
+`governance/core/using-cortex` and `governance/review/review-gate`.
 
 Optional runtime support files belong in:
 

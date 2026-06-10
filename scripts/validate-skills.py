@@ -12,6 +12,7 @@ from typing import Iterable
 
 ROOT = Path(__file__).resolve().parents[1]
 GRAPH_PATH = ROOT / "references" / "skill-graph.md"
+CASCADE_RULES_PATH = ROOT / "references" / "skill-cascade.md"
 SELF = Path(__file__).resolve()
 
 EDGE_LABELS = ("BEFORE", "WITH", "AFTER")
@@ -28,7 +29,6 @@ SKIP_SCAN_PARTS = {
 }
 
 FORBIDDEN_ACTIVE_TERMS = [
-    "Cortex",
     "@cortex",
     ".agents",
     "PLAN",
@@ -66,78 +66,7 @@ FORBIDDEN_ACTIVE_TERMS = [
     "source-loader:",
 ]
 
-CASCADE_SCENARIOS = [
-    (
-        "angular-material-nx-storybook",
-        [
-            "architecture-drift-detector",
-            "nx-conventions",
-            "nx-module-boundaries",
-            "library-placement-decision",
-            "angular-material-conventions",
-            "storybook-angular-conventions",
-            "public-api-design",
-            "code-documentation",
-            "example-universe-enforcer",
-        ],
-        12,
-    ),
-    (
-        "nestjs-mongoose-extraction",
-        [
-            "architecture-drift-detector",
-            "extraction-decision",
-            "nestjs-mongoose-conventions",
-            "public-api-design",
-            "code-documentation",
-            "example-universe-enforcer",
-        ],
-        10,
-    ),
-    (
-        "angular-tanstack-query-wrapper",
-        [
-            "angular-tanstack-query-conventions",
-            "typescript-api-conventions",
-            "code-documentation",
-            "example-universe-enforcer",
-        ],
-        7,
-    ),
-    (
-        "vite-bundle-review",
-        ["vite-conventions", "bundle-performance", "public-api-design"],
-        6,
-    ),
-    (
-        "playwright-e2e-test",
-        ["playwright-conventions", "typescript-code-style", "example-universe-enforcer"],
-        5,
-    ),
-    ("diary-handoff", ["diary"], 2),
-    ("skill-doctrine-gap", ["skill-evolution"], 2),
-    (
-        "vue-rxjs-public-props",
-        [
-            "vue-conventions",
-            "rxjs-conventions",
-            "typescript-api-conventions",
-            "code-documentation",
-            "example-universe-enforcer",
-        ],
-        7,
-    ),
-    (
-        "jest-public-utility",
-        [
-            "jest-conventions",
-            "typescript-code-style",
-            "typescript-api-conventions",
-            "example-universe-enforcer",
-        ],
-        6,
-    ),
-]
+MAX_BEFORE_CASCADE = 5
 
 FORBIDDEN_EXAMPLE_IDENTIFIERS = [
     "Americano",
@@ -174,6 +103,18 @@ EXPECTED_SKILL_DIRS = {
     "storybook-conventions": Path("frameworks/storybook"),
     "vite-conventions": Path("frameworks/vite"),
     "vue-conventions": Path("frameworks/vue"),
+    "using-cortex": Path("governance/core/using-cortex"),
+    "design-intake": Path("governance/intake/design-intake"),
+    "implementation-plan": Path("governance/planning/implementation-plan"),
+    "plan-execution": Path("governance/execution/plan-execution"),
+    "agent-delegation": Path("governance/delegation/agent-delegation"),
+    "workspace-state-guard": Path("governance/workspace/workspace-state-guard"),
+    "test-first-discipline": Path("governance/development/test-first-discipline"),
+    "systematic-debugging": Path("governance/debugging/systematic-debugging"),
+    "completion-verification": Path("governance/verification/completion-verification"),
+    "review-gate": Path("governance/review/review-gate"),
+    "review-feedback-triage": Path("governance/review/feedback-triage"),
+    "branch-completion": Path("governance/release/branch-completion"),
     "diary": Path("maintenance/diary"),
     "example-universe-enforcer": Path("maintenance/example-universe-enforcer"),
     "skill-evolution": Path("maintenance/skill-evolution"),
@@ -373,6 +314,37 @@ def check_empty_directories(errors: list[str]) -> None:
             errors.append(f"{rel(path)}: empty directory")
 
 
+def check_cascade_rules_reference(names: dict[str, Path], errors: list[str]) -> None:
+    if not CASCADE_RULES_PATH.exists():
+        errors.append(f"{rel(CASCADE_RULES_PATH)}: missing cascade routing reference")
+        return
+
+    text = read_text(CASCADE_RULES_PATH)
+    for heading in ("## Cascade Algorithm", "## Signal Rules", "## Guardrails"):
+        if heading not in text:
+            errors.append(f"{rel(CASCADE_RULES_PATH)}: missing {heading}")
+
+    signal_rows = [
+        line
+        for line in text.splitlines()
+        if line.startswith("| ")
+        and not line.startswith("| Signal ")
+        and not line.startswith("| ---")
+    ]
+    if len(signal_rows) < 8:
+        errors.append(f"{rel(CASCADE_RULES_PATH)}: expected at least 8 signal rule rows")
+
+    allowed_non_skills = {"BEFORE", "WITH", "AFTER"}
+    for match in re.finditer(r"`([a-zA-Z0-9_.-]+)`", text):
+        token = match.group(1)
+        if token in allowed_non_skills or "." in token:
+            continue
+        if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", token):
+            continue
+        if token not in names:
+            errors.append(f"{rel(CASCADE_RULES_PATH)}: unknown skill reference {token!r}")
+
+
 def cascade_order(
     graph: dict[str, dict[str, list[str]]],
     initial: list[str],
@@ -413,22 +385,20 @@ def check_cascade(
     if not graph:
         return
 
+    if graph.get("using-cortex", {}).get("BEFORE"):
+        errors.append(f"{rel(GRAPH_PATH)}: using-cortex must not define hard BEFORE cascades")
+
     for name in graph:
-        _, cycles = cascade_order(graph, [name])
+        order, cycles = cascade_order(graph, [name])
         for cycle in cycles:
             errors.append(f"{rel(GRAPH_PATH)}: BEFORE cycle: {cycle}")
-
-    for scenario, initial, max_loaded in CASCADE_SCENARIOS:
-        order, cycles = cascade_order(graph, initial)
-        for cycle in cycles:
-            errors.append(f"cascade {scenario}: BEFORE cycle: {cycle}")
-        if len(order) > max_loaded:
+        if len(order) > MAX_BEFORE_CASCADE:
             errors.append(
-                f"cascade {scenario}: loaded {len(order)} skills, "
-                f"expected at most {max_loaded}: {', '.join(order)}"
+                f"cascade {name}: BEFORE cascade loads {len(order)} skills, "
+                f"expected at most {MAX_BEFORE_CASCADE}: {', '.join(order)}"
             )
         if show:
-            print(f"cascade {scenario}: {len(order)} skill(s): {', '.join(order)}")
+            print(f"cascade {name}: {len(order)} skill(s): {', '.join(order)}")
 
 
 def iter_code_blocks(text: str) -> Iterable[tuple[int, str]]:
@@ -472,7 +442,7 @@ def parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument(
         "--cascade",
         action="store_true",
-        help="Print representative non-transitive cascade simulations.",
+        help="Print graph-derived BEFORE cascade closures.",
     )
     return parser.parse_args(argv)
 
@@ -550,6 +520,8 @@ def main(argv: list[str] | None = None) -> int:
             for target in targets:
                 if target not in names:
                     errors.append(f"{rel(GRAPH_PATH)}: {name} {label} references missing skill {target}")
+
+    check_cascade_rules_reference(names, errors)
 
     for path in ROOT.rglob("*.md"):
         if not should_skip_path(path):

@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Branch Completion"
+  short_description: "Finish branch work safely"
+  default_prompt: "Use $branch-completion when merging, pushing, opening a PR, publishing, discarding, cleaning up, or finishing branch work."

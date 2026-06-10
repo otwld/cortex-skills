@@ -54,5 +54,5 @@ Stop and redesign when:
 ## Cross-References
 
 - BEFORE: library-placement-decision, nx-module-boundaries
-- WITH: public-api-design, naming-consistency, bundle-performance
+- WITH: public-api-design, naming-consistency, bundle-performance, code-documentation
 - AFTER: skill-evolution

@@ -35,5 +35,5 @@ library consumers.
 
 ## Cross-References
 
-- WITH: bundle-performance, typescript-code-style
+- WITH: bundle-performance, typescript-code-style, code-documentation
 - AFTER: skill-evolution

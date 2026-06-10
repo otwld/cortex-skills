@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Plan Execution"
+  short_description: "Execute written plans with checkpoints"
+  default_prompt: "Use $plan-execution when executing a written implementation plan task-by-task."

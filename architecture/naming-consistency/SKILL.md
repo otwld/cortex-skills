@@ -51,4 +51,4 @@ Stop and rename when:
 
 ## Cross-References
 
-- WITH: public-api-design, typescript-api-conventions
+- WITH: public-api-design, typescript-api-conventions, code-documentation

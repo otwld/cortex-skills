@@ -37,5 +37,5 @@ Keep this skill focused on Angular wiring, not generic story organization.
 ## Cross-References
 
 - BEFORE: storybook-conventions, angular-conventions
-- WITH: typescript-code-style
+- WITH: typescript-code-style, code-documentation
 - AFTER: skill-evolution

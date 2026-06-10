@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Review Gate"
+  short_description: "Review major changes before publishing"
+  default_prompt: "Use $review-gate after major work or before merge, PR, push, publish, or independent quality review."

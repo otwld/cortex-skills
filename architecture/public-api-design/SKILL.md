@@ -61,4 +61,4 @@ Stop and propose a corrected surface when:
 ## Cross-References
 
 - BEFORE: library-placement-decision
-- WITH: naming-consistency, typescript-api-conventions
+- WITH: naming-consistency, typescript-api-conventions, code-documentation

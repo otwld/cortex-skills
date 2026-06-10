@@ -36,5 +36,5 @@ accessibility defaults, and avoid hiding large dependency costs in shared paths.
 ## Cross-References
 
 - BEFORE: angular-conventions
-- WITH: bundle-performance, typescript-code-style
-- AFTER: code-documentation, skill-evolution
+- WITH: bundle-performance, typescript-code-style, code-documentation
+- AFTER: skill-evolution

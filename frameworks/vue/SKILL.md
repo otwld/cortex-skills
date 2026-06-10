@@ -37,5 +37,5 @@ Composition API patterns.
 
 ## Cross-References
 
-- WITH: typescript-code-style, rxjs-conventions
-- AFTER: code-documentation, skill-evolution
+- WITH: typescript-code-style, rxjs-conventions, code-documentation
+- AFTER: skill-evolution

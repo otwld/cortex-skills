@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Design Intake"
+  short_description: "Clarify intent before implementation"
+  default_prompt: "Use $design-intake before ambiguous, user-facing, behavioral, or architecture-affecting work."

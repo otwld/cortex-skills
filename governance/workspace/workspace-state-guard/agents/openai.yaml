@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Workspace State Guard"
+  short_description: "Protect branches and user changes"
+  default_prompt: "Use $workspace-state-guard before substantial edits, plan execution, publishing, or branch cleanup."

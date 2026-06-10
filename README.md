@@ -51,6 +51,9 @@ copy the skill directories you need into your own agent skill location.
   boundaries, and bundle impact.
 - Framework skills for Angular, Angular Material, Angular TanStack Query,
   NestJS, NestJS Mongoose, Nx, RxJS, Storybook, Vite, and Vue.
+- Governance skills for Cortex routing, intake, planning, execution,
+  delegation, workspace safety, debugging, verification, review, and branch
+  completion.
 - Testing skills for Jest, Playwright, and Vitest.
 - TypeScript skills for source style and public API conventions.
 - Maintenance skills for diary entries, example consistency, and skill

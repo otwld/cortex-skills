@@ -34,5 +34,5 @@ Playwright tests.
 
 ## Cross-References
 
-- WITH: typescript-code-style
+- WITH: typescript-code-style, code-documentation
 - AFTER: skill-evolution

@@ -1,6 +1,6 @@
 # Skill Catalog
 
-Cortex Skills contains 27 skills grouped by reusable purpose. Each skill has a
+Cortex Skills contains 39 skills grouped by reusable purpose. Each skill has a
 `SKILL.md` trigger description and `agents/openai.yaml` metadata.
 
 ## Architecture
@@ -19,7 +19,7 @@ Cortex Skills contains 27 skills grouped by reusable purpose. Each skill has a
 
 | Skill | Use when | Path |
 | --- | --- | --- |
-| `code-documentation` | Adding or changing public, reusable, or user-facing code that needs documentation, examples, stories, MDX docs, or API usage notes. | `documentation/code/` |
+| `code-documentation` | Code generation, edits, moves, splits, refactors, material review, and public or reusable docs that require JSDoc/TSDoc, examples, stories, MDX docs, or API usage notes. | `documentation/code/` |
 
 ## Frameworks
 
@@ -36,6 +36,23 @@ Cortex Skills contains 27 skills grouped by reusable purpose. Each skill has a
 | `storybook-conventions` | Creating, modifying, or reviewing Storybook stories, MDX docs, preview setup, addons, mocks, visual regression data, or story organization. | `frameworks/storybook/` |
 | `vite-conventions` | Creating, modifying, or reviewing Vite configuration, library builds, aliases, plugins, source maps, dependency externalization, or dev-server settings. | `frameworks/vite/` |
 | `vue-conventions` | Creating, modifying, or reviewing Vue 3 Single-File Components, Composition API code, `<script setup>`, props, emits, slots, or component naming. | `frameworks/vue/` |
+
+## Governance
+
+| Skill | Use when | Path |
+| --- | --- | --- |
+| `using-cortex` | Starting agent work in a Cortex skill library or deciding which Cortex governance, architecture, framework, testing, or maintenance skills should apply. | `governance/core/using-cortex/` |
+| `design-intake` | Before ambiguous, creative, behavioral, user-facing, or architecture-affecting work where intent, constraints, or success criteria are not already clear. | `governance/intake/design-intake/` |
+| `implementation-plan` | Requirements are known and the work is multi-step, cross-boundary, migration-related, high-risk, or needs a written execution path before edits. | `governance/planning/implementation-plan/` |
+| `plan-execution` | Executing a written implementation plan task-by-task with validation checkpoints and no remaining design decisions. | `governance/execution/plan-execution/` |
+| `agent-delegation` | Independent tasks, investigations, or review passes can be delegated without shared state or sequential dependencies. | `governance/delegation/agent-delegation/` |
+| `workspace-state-guard` | Before substantial edits, plan execution, branch cleanup, publishing, or work that may collide with user changes or workspace isolation. | `governance/workspace/workspace-state-guard/` |
+| `test-first-discipline` | Before behavior changes, bug fixes, or refactors where tests can prove the intended behavior or regression. | `governance/development/test-first-discipline/` |
+| `systematic-debugging` | Encountering bugs, failing tests, build failures, performance problems, or unexpected behavior before proposing fixes. | `governance/debugging/systematic-debugging/` |
+| `completion-verification` | Before success claims, final responses, commits, pushes, pull requests, task completion, or publishing decisions. | `governance/verification/completion-verification/` |
+| `review-gate` | After major features or refactors, before merge, pull request, push, publish, or when a completed change needs independent quality review. | `governance/review/review-gate/` |
+| `review-feedback-triage` | Receiving code review, CI review, agent review, or external technical feedback before implementing suggested changes. | `governance/review/feedback-triage/` |
+| `branch-completion` | Implementation is complete and the user asks to merge, push, open a pull request, publish, discard, clean up, or finish branch work. | `governance/release/branch-completion/` |
 
 ## Maintenance
 

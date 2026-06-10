@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Systematic Debugging"
+  short_description: "Find root causes before fixes"
+  default_prompt: "Use $systematic-debugging when bugs, failing tests, build failures, or unexpected behavior appear."

@@ -60,6 +60,8 @@ Skills are grouped by reusable purpose:
   and performance doctrine.
 - `documentation/` for generated or maintained code documentation rules.
 - `frameworks/` for framework-specific conventions.
+- `governance/` for agent workflow gates, routing, planning, review,
+  verification, workspace safety, and release completion.
 - `maintenance/` for workspace maintenance skills and example policy.
 - `testing/` for test-runner and end-to-end testing conventions.
 - `typescript/` for TypeScript language, API, and style conventions.
@@ -83,6 +85,7 @@ The frontmatter `name` remains the canonical skill name. The folder slug should
 omit words already made obvious by the taxonomy and group path, such as
 `frameworks/angular/core` for `angular-conventions`,
 `frameworks/angular/material` for `angular-material-conventions`,
+`governance/core/using-cortex` for `using-cortex`,
 `testing/jest` for `jest-conventions`, and `typescript/api` for
 `typescript-api-conventions`.
 

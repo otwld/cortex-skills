@@ -42,5 +42,5 @@ consistent across repositories and aggregation helpers.
 ## Cross-References
 
 - BEFORE: nestjs-conventions
-- WITH: typescript-api-conventions, public-api-design
-- AFTER: code-documentation, skill-evolution
+- WITH: typescript-api-conventions, public-api-design, code-documentation
+- AFTER: skill-evolution
