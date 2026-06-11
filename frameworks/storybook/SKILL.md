@@ -22,14 +22,38 @@ structure.
 
 - Use Component Story Format with a typed default meta export and named story exports.
 - Colocate story files with the component or example they document.
-- Derive story titles from meaningful ownership and path segments; omit structural folders such as `src` and `lib`.
-- Use human taxonomy titles for package API and reference docs: collection or product area, runtime or framework, package name, content category, then documented symbol or concept.
-- Use path-style titles for package-local examples, introductions, and tooling docs.
+- Use one strict title format for stories and MDX: `<feature>/<technology>/<subject...>`.
+- Derive titles from meaningful ownership and path segments; omit structural folders such as `src` and `lib`.
 - Keep named story exports unique when several files intentionally share a title; avoid repeated generic exports such as `Primary` or `Playground` across that shared title.
 - Use MDX docs blocks for narrative docs and API examples when stories alone are not enough.
 - Centralize global preview setup and addons.
 - Keep network mocks composable and reusable when multiple stories share the same API surface.
 - Use deterministic data for visual regression stories; avoid unseeded randomness and current time.
+
+## Title Format
+
+All Storybook story and MDX titles must use:
+
+```text
+<feature>/<technology>/<subject...>
+```
+
+- `feature` is the owning package, domain, or product area without organization
+  scope or technology prefix.
+- `technology` is the short runtime or framework segment, such as `ts`, `ng`,
+  `nest`, `storybook`, `react`, or `vue`.
+- `subject` is the documented component, API, example, tool, or nested grouping.
+- Use lowercase kebab-case for every segment.
+- Do not include broad collection labels, display taxonomy labels, package scopes,
+  or structural folders such as `packages`, `src`, and `lib`.
+- Strip technology prefixes from package names before building the title.
+
+Examples:
+
+- `sdk/ts/object`
+- `ui/ng/banner`
+- `feature-flags/nest/feature-flags-service`
+- `storybook/ng/http-client-search-example`
 
 ## MDX Identity
 
@@ -63,7 +87,7 @@ MDX for short API docs, types, small utilities, tokens, and source references.
 ## Usage Checklist
 
 - Meta export and named stories are present.
-- Title identifies ownership, runtime, package, category, and subject when documenting reusable APIs.
+- Story and MDX titles follow `<feature>/<technology>/<subject...>`.
 - MDX `Meta` title and name avoid duplicate docs IDs.
 - Shared story titles have unique story export names.
 - Source-mirror MDX is used for short source docs when the project has an approved source import resolver.
