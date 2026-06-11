@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Added the `bricks` tool skill for Bricks consumer workflows and
+  worktree-based source contribution guidance.
+
 ## v0.1.0 Public Seed - 2026-05-28
 
 Initial public seed of Cortex Skills.

@@ -121,6 +121,7 @@ EXPECTED_SKILL_DIRS = {
     "jest-conventions": Path("testing/jest"),
     "playwright-conventions": Path("testing/playwright"),
     "vitest-conventions": Path("testing/vitest"),
+    "bricks": Path("tools/bricks"),
     "typescript-api-conventions": Path("typescript/api"),
     "typescript-code-style": Path("typescript/code-style"),
 }

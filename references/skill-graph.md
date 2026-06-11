@@ -37,6 +37,7 @@ Use only these non-transitive advisory edge labels:
 | `storybook-conventions` | None | `typescript-code-style`, `code-documentation` | `skill-evolution` |
 | `vite-conventions` | None | `bundle-performance`, `typescript-code-style`, `code-documentation` | `skill-evolution` |
 | `vue-conventions` | None | `typescript-code-style`, `rxjs-conventions`, `code-documentation` | `skill-evolution` |
+| `bricks` | None | `workspace-state-guard`, `nx-conventions`, `completion-verification` | None |
 | `using-cortex` | None | `design-intake`, `implementation-plan`, `plan-execution`, `agent-delegation`, `workspace-state-guard`, `test-first-discipline`, `systematic-debugging`, `completion-verification`, `review-gate`, `review-feedback-triage`, `branch-completion`, `code-documentation` | None |
 | `design-intake` | None | `architecture-drift-detector`, `library-placement-decision`, `public-api-design` | `implementation-plan` |
 | `implementation-plan` | None | `design-intake`, `workspace-state-guard`, `test-first-discipline`, `architecture-drift-detector`, `library-placement-decision`, `public-api-design`, `code-documentation` | `plan-execution` |

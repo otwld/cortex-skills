@@ -1,6 +1,6 @@
 # Skill Catalog
 
-Cortex Skills contains 39 skills grouped by reusable purpose. Each skill has a
+Cortex Skills contains 40 skills grouped by reusable purpose. Each skill has a
 `SKILL.md` trigger description and `agents/openai.yaml` metadata.
 
 ## Architecture
@@ -69,6 +69,12 @@ Cortex Skills contains 39 skills grouped by reusable purpose. Each skill has a
 | `jest-conventions` | Creating, modifying, or reviewing Jest configuration, Jest tests, setup files, custom matchers, test environments, or Jest mocks. | `testing/jest/` |
 | `playwright-conventions` | Creating, modifying, or reviewing Playwright configuration, browser projects, end-to-end tests, locators, assertions, fixtures, or setup projects. | `testing/playwright/` |
 | `vitest-conventions` | Creating, modifying, or reviewing Vitest configuration, Vitest tests, setup files, environments, mocks, or Vite-integrated test behavior. | `testing/vitest/` |
+
+## Tools
+
+| Skill | Use when | Path |
+| --- | --- | --- |
+| `bricks` | Working with Bricks in consumer Nx repos: source, install, merge, diff, status, doctor, and source contribution worktree workflows. | `tools/bricks/` |
 
 ## TypeScript
 

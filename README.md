@@ -55,6 +55,7 @@ copy the skill directories you need into your own agent skill location.
   delegation, workspace safety, debugging, verification, review, and branch
   completion.
 - Testing skills for Jest, Playwright, and Vitest.
+- Tool skills for source-management CLI workflows such as Bricks.
 - TypeScript skills for source style and public API conventions.
 - Maintenance skills for diary entries, example consistency, and skill
   evolution.

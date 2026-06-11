@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Bricks"
+  short_description: "Guide Bricks consumer source workflows"
+  default_prompt: "Use $bricks to inspect installed-brick edits in this consumer Nx repo and prepare a source contribution."

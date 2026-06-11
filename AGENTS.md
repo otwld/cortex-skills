@@ -64,6 +64,8 @@ Skills are grouped by reusable purpose:
   verification, workspace safety, and release completion.
 - `maintenance/` for workspace maintenance skills and example policy.
 - `testing/` for test-runner and end-to-end testing conventions.
+- `tools/` for source-management CLIs, developer tools, and their workflow
+  conventions.
 - `typescript/` for TypeScript language, API, and style conventions.
 - `references/` for workspace-wide references such as the skill graph.
 - `scripts/` for workspace-wide validation and maintenance scripts.
