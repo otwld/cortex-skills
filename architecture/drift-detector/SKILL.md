@@ -14,40 +14,48 @@ using skill: architecture-drift-detector
 
 ## Overview
 
-Architecture usually degrades through clusters of broad changes. Detect risk
-early and recommend focused architecture review without blocking routine work.
+Detect early structural risk from churn, repeated fixes, and ownership drift before it
+becomes a rewrite.
 
-## Trigger Signals
+## Reference Routing
 
-Inspect recent repository activity when available. Recommend review when recent
-changes include at least two of:
+- Use `../../references/architecture-deepening.md` when this task touches that concern.
 
-- Many files changed.
-- Multiple packages or applications touched.
-- Domain, data-access, runtime, or root configuration changed.
-- Large line churn.
-- Repeated fixes around the same boundary.
+## Workflow
 
-If history is unavailable, state that metadata is unknown and continue.
+1. Inspect the current repository context and existing project memory before changing behavior or guidance.
+2. State the concrete responsibility, interface, artifact, or user-visible behavior this skill governs.
+3. Apply the skill-specific rules: Use concrete signals; escalate only when risk is tied to a module, seam, package, or project area; recommend focused review instead of broad rewrites.
+4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
+5. Stop when the task needs a decision outside this skill's scope and route to the appropriate governance skill.
 
-## Output When Triggered
+## Quality Gates
 
-Briefly report:
+- Guidance is grounded in current files or explicit user intent.
+- Output uses project vocabulary and the recruitment example universe when examples are needed.
+- Decisions are recorded in the right artifact instead of hidden in transient chat.
+- Validation or acceptance criteria are named when the skill changes behavior or workflow.
 
-- What risk signal was observed.
-- Which packages or boundaries appear affected.
-- What focused review should happen before broad follow-up work.
+## Example
 
-Do not block small fixes, documentation-only work, dependency bumps, or test-only
-changes unless they reveal structural coupling.
+Three changes touch Candidate search, Application persistence, and query helpers;
+recommend reviewing the search seam before adding another filter.
+
+## Hard Stops
+
+- Do not proceed on repo facts that can be inspected but have not been checked.
+- Do not broaden scope beyond the triggering signal.
+- Do not create placeholder guidance, examples, metadata, or documentation.
+- Do not claim completion without evidence that covers this skill's checklist.
 
 ## Usage Checklist
 
-- Recent changes were inspected when possible.
-- Risk is tied to concrete files or package areas.
-- Recommendation is proportionate and actionable.
-- Routine work is not blocked by weak signals.
+- Trigger signal is explicit.
+- Relevant existing convention or memory was checked.
+- Skill-specific rules were applied.
+- Artifacts, docs, metadata, or tests affected by the work were updated together.
+- Remaining decisions, risks, or validation gaps are stated.
 
 ## Cross-References
 
-- WITH: library-placement-decision, nx-module-boundaries
+- WITH: architecture-deepening-review, library-placement-decision, nx-module-boundaries

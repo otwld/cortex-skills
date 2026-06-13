@@ -16,6 +16,8 @@ validation improvements, and documentation updates.
 - Keep all illustrative examples inside the recruitment job-board universe.
 - Update `agents/openai.yaml` whenever a skill trigger or public name changes.
 - Update `references/skill-graph.md` whenever `Cross-References` changes.
+- Update `SKILL_CATALOG.md` whenever a skill is added, removed, moved, or
+  renamed.
 
 ## Skill Structure
 
@@ -54,9 +56,17 @@ For graph changes, also inspect the cascade simulation:
 python3 scripts/validate-skills.py --cascade
 ```
 
-The validator checks structure, metadata, cross-references, referenced files,
-legacy-file headings, active source-project residue, example policy, empty
-directories, and representative cascade size.
+For validator or routing-contract changes, run the fixture regression suite:
+
+```bash
+python3 scripts/test-validate-skills.py
+```
+
+The validator checks structure, OpenAI `interface:` metadata, catalog entries
+and taxonomy headings, cross-references, referenced files, legacy-file headings,
+active source-project residue, example policy, empty directories, and
+representative cascade size.
+Ordinary skill additions should not require validator source-code changes.
 
 ## Pull Request Checklist
 
@@ -69,6 +79,8 @@ directories, and representative cascade size.
   entities.
 - Any new script is deterministic and documented from the skill that uses it.
 - `python3 scripts/validate-skills.py` passes.
+- `python3 scripts/test-validate-skills.py` passes when validator behavior
+  changes.
 
 ## Release Notes
 

@@ -14,41 +14,43 @@ using skill: branch-completion
 
 ## Overview
 
-Finish branch work by verifying state, presenting clear options, and protecting
-work from accidental loss.
+Turn local work into a durable handoff or published change without sweeping unrelated
+files into release steps.
 
 ## Workflow
 
-1. Run `completion-verification` for the relevant project checks.
-2. Inspect branch, upstream, remote, and worktree state.
-3. Summarize what is ready and what risk remains.
-4. Present the appropriate finish options: merge, push or PR, keep branch,
-   cleanup, or discard.
-5. Execute only the selected option.
-6. Confirm before destructive cleanup or discard.
+1. Inspect the current repository context and existing project memory before changing behavior or guidance.
+2. State the concrete responsibility, interface, artifact, or user-visible behavior this skill governs.
+3. Apply the skill-specific rules: Inspect status; verify; review if major; summarize scope; commit scoped changes only when requested; push or PR only with user direction.
+4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
+5. Stop when the task needs a decision outside this skill's scope and route to the appropriate governance skill.
 
-## Rules
+## Quality Gates
 
-- Do not force-push unless explicitly requested.
-- Do not delete branches or worktrees without confirmation.
-- Do not clean up a worktree owned by the harness or another tool.
-- Keep PR workspaces available for follow-up unless the user asks to remove them.
-- Use repository-specific PR tooling when available; otherwise report the Git
-  state and next command.
+- Guidance is grounded in current files or explicit user intent.
+- Output uses project vocabulary and the recruitment example universe when examples are needed.
+- Decisions are recorded in the right artifact instead of hidden in transient chat.
+- Validation or acceptance criteria are named when the skill changes behavior or workflow.
+
+## Example
+
+Commit skill bodies, references, catalog, graph, and validator tests together while
+leaving unrelated README edits uncommitted.
 
 ## Hard Stops
 
-- Verification fails before publish or merge.
-- The base branch or upstream is ambiguous.
-- Discard or cleanup would remove commits or files without explicit
-  confirmation.
+- Do not proceed on repo facts that can be inspected but have not been checked.
+- Do not broaden scope beyond the triggering signal.
+- Do not create placeholder guidance, examples, metadata, or documentation.
+- Do not claim completion without evidence that covers this skill's checklist.
 
 ## Usage Checklist
 
-- Verification result is fresh.
-- Branch and remote state are known.
-- Finish option is explicit.
-- Destructive actions were confirmed.
+- Trigger signal is explicit.
+- Relevant existing convention or memory was checked.
+- Skill-specific rules were applied.
+- Artifacts, docs, metadata, or tests affected by the work were updated together.
+- Remaining decisions, risks, or validation gaps are stated.
 
 ## Cross-References
 

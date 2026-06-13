@@ -1,4 +1,4 @@
 interface:
   display_name: "(otwld) Vite Conventions"
-  short_description: "Apply Vite config and build rules"
-  default_prompt: "Use $vite-conventions when creating or modifying Vite config or library build settings."
+  short_description: "Maintain Vite configuration, library builds, aliases, plugins, source maps, externalization, and dev-server behavior."
+  default_prompt: "Use $vite-conventions when creating, modifying, or reviewing Vite configuration, library builds, aliases, plugins, source maps, dependency externalization, or dev-server settings."

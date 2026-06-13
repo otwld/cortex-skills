@@ -14,24 +14,43 @@ using skill: angular-material-conventions
 
 ## Overview
 
-Use Angular Material and CDK deliberately. Keep imports narrow, preserve
-accessibility defaults, and avoid hiding large dependency costs in shared paths.
+Use Material and CDK narrowly while preserving accessibility, theming, and bundle
+boundaries.
 
-## Core Rules
+## Workflow
 
-- Import only the Material/CDK modules that are actually used.
-- Use CDK primitives for custom overlay, portal, a11y, drag-drop, and virtual-scroll behavior.
-- Do not disable accessibility behavior to simplify implementation.
-- Centralize theming through the project's Material theming approach.
-- Treat density reductions as user-experience decisions that need justification.
+1. Inspect the current repository context and existing project memory before changing behavior or guidance.
+2. State the concrete responsibility, interface, artifact, or user-visible behavior this skill governs.
+3. Apply the skill-specific rules: Import only used APIs; prefer CDK primitives for overlays and a11y; preserve focus and keyboard behavior; justify density changes.
+4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
+5. Stop when the task needs a decision outside this skill's scope and route to the appropriate governance skill.
+
+## Quality Gates
+
+- Guidance is grounded in current files or explicit user intent.
+- Output uses project vocabulary and the recruitment example universe when examples are needed.
+- Decisions are recorded in the right artifact instead of hidden in transient chat.
+- Validation or acceptance criteria are named when the skill changes behavior or workflow.
+
+## Example
+
+An Interview scheduling dialog uses CDK focus handling and a documented close result
+instead of custom keyboard traps.
+
+## Hard Stops
+
+- Do not proceed on repo facts that can be inspected but have not been checked.
+- Do not broaden scope beyond the triggering signal.
+- Do not create placeholder guidance, examples, metadata, or documentation.
+- Do not claim completion without evidence that covers this skill's checklist.
 
 ## Usage Checklist
 
-- Imports are scoped to used components.
-- CDK primitives are used instead of custom low-level behavior where appropriate.
-- Theming changes are centralized.
-- Accessibility remains intact.
-- Bundle impact is considered for reusable UI.
+- Trigger signal is explicit.
+- Relevant existing convention or memory was checked.
+- Skill-specific rules were applied.
+- Artifacts, docs, metadata, or tests affected by the work were updated together.
+- Remaining decisions, risks, or validation gaps are stated.
 
 ## Cross-References
 

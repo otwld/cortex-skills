@@ -1,84 +1,89 @@
 # Skill Catalog
 
-Cortex Skills contains 40 skills grouped by reusable purpose. Each skill has a
+Cortex Skills contains 45 skills grouped by reusable purpose. Each skill has a
 `SKILL.md` trigger description and `agents/openai.yaml` metadata.
 
 ## Architecture
 
 | Skill | Use when | Path |
 | --- | --- | --- |
-| `architecture-drift-detector` | Starting significant work, reviewing recent changes, planning refactors, or seeing commit bursts that may indicate structural drift. | `architecture/drift-detector/` |
-| `bundle-performance` | Changes may affect bundle size, tree-shaking, side effects, UI dependencies, entry points, or broadly consumed runtime code. | `architecture/bundle-performance/` |
-| `extraction-decision` | Repeated logic, DTOs, contracts, data-access patterns, UI composition, or orchestration suggest extracting a reusable abstraction. | `architecture/extraction-decision/` |
-| `library-placement-decision` | Deciding where new code, shared abstractions, moved files, extracted logic, or public entry points belong inside a modular TypeScript workspace. | `architecture/library-placement-decision/` |
-| `naming-consistency` | Creating or renaming files, classes, functions, exports, DTOs, contracts, events, commands, providers, factories, or reusable abstractions. | `architecture/naming-consistency/` |
-| `nx-module-boundaries` | Working in an Nx workspace and adding, moving, or reviewing projects, tags, dependencies, or module-boundary rules. | `architecture/nx-module-boundaries/` |
-| `public-api-design` | Adding or changing exports, shared contracts, DTOs, reusable abstractions, entry points, package boundaries, or import paths. | `architecture/public-api-design/` |
+| `architecture-drift-detector` | Detect structural drift signals before broad changes compound architecture risk. | `architecture/drift-detector/` |
+| `architecture-deepening-review` | Find shallow modules and propose deepening candidates using module, interface, seam, adapter, leverage, and locality language. | `architecture/deepening-review/` |
+| `bundle-performance` | Protect bundle size, tree-shaking, and side-effect boundaries in broadly consumed runtime code. | `architecture/bundle-performance/` |
+| `extraction-decision` | Decide whether repeated logic should become a reusable abstraction and where it belongs. | `architecture/extraction-decision/` |
+| `library-placement-decision` | Place new or moved code by responsibility, ownership, dependency direction, and consumer scope. | `architecture/library-placement-decision/` |
+| `naming-consistency` | Keep names aligned with domain vocabulary, ownership, and public API responsibilities. | `architecture/naming-consistency/` |
+| `nx-module-boundaries` | Use Nx project metadata and dependency rules to preserve modular workspace boundaries. | `architecture/nx-module-boundaries/` |
+| `public-api-design` | Design minimal, stable, typed, documented public surfaces for reusable packages and contracts. | `architecture/public-api-design/` |
 
 ## Documentation
 
 | Skill | Use when | Path |
 | --- | --- | --- |
-| `code-documentation` | Code generation, edits, moves, splits, refactors, material review, and public or reusable docs that require JSDoc/TSDoc, Storybook docs, examples, stories, MDX docs, or API usage notes. | `documentation/code/` |
+| `code-documentation` | Keep JSDoc, TSDoc, Storybook, MDX, and usage documentation synchronized with code changes. | `documentation/code/` |
 
 ## Frameworks
 
 | Skill | Use when | Path |
 | --- | --- | --- |
-| `angular-conventions` | Creating, modifying, or reviewing Angular components, directives, pipes, services, templates, styles, forms, inputs, outputs, or dependency injection. | `frameworks/angular/core/` |
-| `angular-material-conventions` | Adding, modifying, or reviewing Angular Material or Angular CDK components, utilities, theming, overlays, accessibility, or density settings. | `frameworks/angular/material/` |
-| `angular-tanstack-query-conventions` | Creating, modifying, or reviewing TanStack Query integration in Angular code, including query keys, query options, mutations, pagination, and skippable inputs. | `frameworks/angular/tanstack-query/` |
-| `nestjs-conventions` | Creating, modifying, or reviewing NestJS modules, providers, controllers, interceptors, guards, pipes, application bootstrap, or microservice runtimes. | `frameworks/nestjs/core/` |
-| `nestjs-mongoose-conventions` | Creating or reviewing NestJS Mongoose schemas, models, repositories, aggregation helpers, ObjectId handling, or persistence-facing DTO contracts. | `frameworks/nestjs/mongoose/` |
-| `nx-conventions` | Creating, modifying, or reviewing Nx workspace configuration, generators, targets, project metadata, inferred tasks, or project graph behavior. | `frameworks/nx/` |
-| `rxjs-conventions` | Creating, modifying, or reviewing RxJS observables, operators, subscriptions, subjects, multicasting, cleanup, or async stream composition. | `frameworks/rxjs/` |
-| `storybook-angular-conventions` | Creating, modifying, or reviewing Angular Storybook stories, Angular story providers, module metadata, standalone story setup, or Angular story mocks. | `frameworks/angular/storybook/` |
-| `storybook-conventions` | Creating, modifying, or reviewing Storybook stories, MDX docs, preview setup, addons, mocks, visual regression data, or story organization. | `frameworks/storybook/` |
-| `vite-conventions` | Creating, modifying, or reviewing Vite configuration, library builds, aliases, plugins, source maps, dependency externalization, or dev-server settings. | `frameworks/vite/` |
-| `vue-conventions` | Creating, modifying, or reviewing Vue 3 Single-File Components, Composition API code, `<script setup>`, props, emits, slots, or component naming. | `frameworks/vue/` |
+| `angular-conventions` | Apply Angular conventions for components, templates, forms, dependency injection, and public Angular APIs. | `frameworks/angular/core/` |
+| `angular-material-conventions` | Use Angular Material and CDK deliberately while preserving accessibility, theming, density, and bundle boundaries. | `frameworks/angular/material/` |
+| `storybook-angular-conventions` | Write Angular Storybook stories with realistic providers, deterministic states, and Angular-compatible setup. | `frameworks/angular/storybook/` |
+| `angular-tanstack-query-conventions` | Keep Angular TanStack Query keys, options, mutations, pagination, and skippable inputs stable and typed. | `frameworks/angular/tanstack-query/` |
+| `nestjs-conventions` | Apply NestJS conventions for modules, providers, controllers, guards, pipes, interceptors, and runtime setup. | `frameworks/nestjs/core/` |
+| `nestjs-mongoose-conventions` | Keep NestJS Mongoose schemas, ObjectId handling, repositories, aggregations, and persistence contracts explicit. | `frameworks/nestjs/mongoose/` |
+| `nx-conventions` | Maintain Nx workspace configuration, projects, targets, generators, inferred tasks, and graph behavior. | `frameworks/nx/` |
+| `rxjs-conventions` | Design RxJS streams with clear ownership, cancellation, multicasting, error handling, and cleanup. | `frameworks/rxjs/` |
+| `storybook-conventions` | Use Storybook as deterministic executable documentation for public, reusable, and user-facing UI states. | `frameworks/storybook/` |
+| `vite-conventions` | Maintain Vite configuration, library builds, aliases, plugins, source maps, externalization, and dev-server behavior. | `frameworks/vite/` |
+| `vue-conventions` | Apply Vue 3 conventions for Single-File Components, Composition API, props, emits, slots, and names. | `frameworks/vue/` |
 
 ## Governance
 
 | Skill | Use when | Path |
 | --- | --- | --- |
-| `using-cortex` | Starting agent work in a Cortex skill library or deciding which Cortex governance, architecture, framework, testing, or maintenance skills should apply. | `governance/core/using-cortex/` |
-| `design-intake` | Before ambiguous, creative, behavioral, user-facing, or architecture-affecting work where intent, constraints, or success criteria are not already clear. | `governance/intake/design-intake/` |
-| `implementation-plan` | Requirements are known and the work is multi-step, cross-boundary, migration-related, high-risk, or needs a written execution path before edits. | `governance/planning/implementation-plan/` |
-| `plan-execution` | Executing a written implementation plan task-by-task with validation checkpoints and no remaining design decisions. | `governance/execution/plan-execution/` |
-| `agent-delegation` | Independent tasks, investigations, or review passes can be delegated without shared state or sequential dependencies. | `governance/delegation/agent-delegation/` |
-| `workspace-state-guard` | Before substantial edits, plan execution, branch cleanup, publishing, or work that may collide with user changes or workspace isolation. | `governance/workspace/workspace-state-guard/` |
-| `test-first-discipline` | Before behavior changes, bug fixes, or refactors where tests can prove the intended behavior or regression. | `governance/development/test-first-discipline/` |
-| `systematic-debugging` | Encountering bugs, failing tests, build failures, performance problems, or unexpected behavior before proposing fixes. | `governance/debugging/systematic-debugging/` |
-| `completion-verification` | Before success claims, final responses, commits, pushes, pull requests, task completion, or publishing decisions. | `governance/verification/completion-verification/` |
-| `review-gate` | After major features or refactors, before merge, pull request, push, publish, or when a completed change needs independent quality review. | `governance/review/review-gate/` |
-| `review-feedback-triage` | Receiving code review, CI review, agent review, or external technical feedback before implementing suggested changes. | `governance/review/feedback-triage/` |
-| `branch-completion` | Implementation is complete and the user asks to merge, push, open a pull request, publish, discard, clean up, or finish branch work. | `governance/release/branch-completion/` |
+| `using-cortex` | Route tasks to the smallest evidence-backed set of Cortex skills using direct signals and graph edges. | `governance/core/using-cortex/` |
+| `design-intake` | Clarify goals, success criteria, constraints, and tradeoffs before implementation starts. | `governance/intake/design-intake/` |
+| `grill-with-docs` | Interview the user deeply while updating project glossary and ADR artifacts as decisions crystallize. | `governance/intake/grill-with-docs/` |
+| `implementation-plan` | Turn stable requirements into a decision-complete execution path with validations and scope boundaries. | `governance/planning/implementation-plan/` |
+| `issue-decomposition` | Break plans into vertical issue slices and durable agent briefs for configurable issue trackers. | `governance/planning/issue-decomposition/` |
+| `prototype` | Create clearly throwaway logic or UI prototypes that answer one design question quickly. | `governance/prototyping/prototype/` |
+| `project-memory-setup` | Set up or verify glossary, ADR, out-of-scope, issue tracker, and triage-label project memory artifacts. | `governance/setup/project-memory-setup/` |
+| `plan-execution` | Execute a decision-complete plan in order while preserving scope, validation, and workspace safety. | `governance/execution/plan-execution/` |
+| `agent-delegation` | Delegate independent investigation, implementation, or review work with clear prompts and verification expectations. | `governance/delegation/agent-delegation/` |
+| `workspace-state-guard` | Protect user work by inspecting branch and dirty state before substantial edits or cleanup. | `governance/workspace/workspace-state-guard/` |
+| `test-first-discipline` | Prefer a failing test or characterization before behavior changes, bug fixes, and risky refactors. | `governance/development/test-first-discipline/` |
+| `systematic-debugging` | Diagnose failures through reproduction, falsifiable hypotheses, targeted probes, fixes, and regression checks. | `governance/debugging/systematic-debugging/` |
+| `completion-verification` | Verify completion claims with current evidence before reporting success or publishing work. | `governance/verification/completion-verification/` |
+| `review-gate` | Review significant work for requirement fit, correctness, tests, APIs, boundaries, docs, and migration risk. | `governance/review/review-gate/` |
+| `review-feedback-triage` | Triage review feedback before implementing it, separating required fixes from optional or incorrect suggestions. | `governance/review/feedback-triage/` |
+| `branch-completion` | Finish branch work safely with verification, review, intentional commits, pushes, PRs, or cleanup. | `governance/release/branch-completion/` |
 
 ## Maintenance
 
 | Skill | Use when | Path |
 | --- | --- | --- |
-| `diary` | The user asks to log, journal, summarize, hand off, or preserve agent work history, decisions, blockers, validations, or completed outcomes. | `maintenance/diary/` |
-| `example-universe-enforcer` | Producing examples, sample code, DTOs, API payloads, Storybook data, docs snippets, tests, or illustrative data. | `maintenance/example-universe-enforcer/` |
-| `skill-evolution` | Repeated implementation patterns, technical discussions, refactors, reviews, folder or diff analysis, or skill-library changes reveal a reusable agent workflow or doctrine gap. | `maintenance/skill-evolution/` |
+| `diary` | Record durable work history, decisions, blockers, validations, and handoff context when requested. | `maintenance/diary/` |
+| `example-universe-enforcer` | Keep all illustrative examples in the recruitment agency job board universe. | `maintenance/example-universe-enforcer/` |
+| `skill-evolution` | Evolve skills from repeated reusable patterns, doctrine gaps, and agent failure modes. | `maintenance/skill-evolution/` |
 
 ## Testing
 
 | Skill | Use when | Path |
 | --- | --- | --- |
-| `jest-conventions` | Creating, modifying, or reviewing Jest configuration, Jest tests, setup files, custom matchers, test environments, or Jest mocks. | `testing/jest/` |
-| `playwright-conventions` | Creating, modifying, or reviewing Playwright configuration, browser projects, end-to-end tests, locators, assertions, fixtures, or setup projects. | `testing/playwright/` |
-| `vitest-conventions` | Creating, modifying, or reviewing Vitest configuration, Vitest tests, setup files, environments, mocks, or Vite-integrated test behavior. | `testing/vitest/` |
+| `jest-conventions` | Write and maintain Jest tests, setup, mocks, matchers, and environments around behavior-focused assertions. | `testing/jest/` |
+| `playwright-conventions` | Write Playwright tests with accessible locators, deterministic setup, clear fixtures, and condition-based waits. | `testing/playwright/` |
+| `vitest-conventions` | Maintain Vitest tests, environments, mocks, and Vite-integrated configuration with behavior-focused assertions. | `testing/vitest/` |
 
 ## Tools
 
 | Skill | Use when | Path |
 | --- | --- | --- |
-| `bricks` | Working with Bricks in consumer Nx repos: source, install, merge, diff, status, doctor, and source contribution worktree workflows. | `tools/bricks/` |
+| `bricks` | Operate Bricks consumer workflows for installed source copies, merges, diffs, doctor checks, and contributions. | `tools/bricks/` |
 
 ## TypeScript
 
 | Skill | Use when | Path |
 | --- | --- | --- |
-| `typescript-api-conventions` | Designing or reviewing TypeScript public APIs, exported types, DTOs, contracts, generics, strict typing, entry points, or reusable type surfaces. | `typescript/api/` |
-| `typescript-code-style` | Writing, editing, generating, refactoring, or reviewing TypeScript or TSX source files, tests, build scripts, imports, exports, classes, functions, or interfaces. | `typescript/code-style/` |
+| `typescript-api-conventions` | Design TypeScript exported types, DTOs, generics, and reusable contracts with strict public surfaces. | `typescript/api/` |
+| `typescript-code-style` | Apply TypeScript implementation style for modules, imports, comments, language features, naming, and tooling preflight. | `typescript/code-style/` |

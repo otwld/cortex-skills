@@ -14,43 +14,49 @@ using skill: agent-delegation
 
 ## Overview
 
-Delegate only when work is genuinely independent and the environment supports
-it. If subagents are unavailable, use the same scoping rules for local
-self-review or sequential investigation.
+Use subagents only for independent work with bounded inputs and verifiable output
+contracts.
 
-## Delegation Rules
+## Reference Routing
 
-- Split by independent problem domain, not by convenience.
-- Provide complete task-local context; do not rely on conversation history.
-- Give each delegate a narrow goal, constraints, expected output, and validation.
-- Keep dependent or shared-state edits sequential.
-- Review returned work before integrating or reporting it.
+- Use `references/code-reviewer-prompt.md` when this task touches that concern.
+- Use `references/implementer-prompt.md` when this task touches that concern.
+- Use `references/spec-reviewer-prompt.md` when this task touches that concern.
 
-## Reference Templates
+## Workflow
 
-Load only the template needed for the current delegation:
+1. Inspect the current repository context and existing project memory before changing behavior or guidance.
+2. State the concrete responsibility, interface, artifact, or user-visible behavior this skill governs.
+3. Apply the skill-specific rules: Separate independent tasks; choose exploration, implementation, or review; provide constraints; inspect returned evidence before integrating.
+4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
+5. Stop when the task needs a decision outside this skill's scope and route to the appropriate governance skill.
 
-- `references/implementer-prompt.md` for isolated implementation tasks.
-- `references/spec-reviewer-prompt.md` for requirement compliance review.
-- `references/code-reviewer-prompt.md` for implementation quality review.
+## Quality Gates
 
-## Fallback
+- Guidance is grounded in current files or explicit user intent.
+- Output uses project vocabulary and the recruitment example universe when examples are needed.
+- Decisions are recorded in the right artifact instead of hidden in transient chat.
+- Validation or acceptance criteria are named when the skill changes behavior or workflow.
 
-When no delegation tool exists, perform the same roles sequentially in the main
-session: implement, then inspect for requirement fit, then inspect for quality.
+## Example
+
+One agent reviews validator tests while another inspects catalog consistency, but both
+do not edit the same file.
 
 ## Hard Stops
 
-- Tasks touch the same files or mutable state without coordination.
-- The delegate would need hidden context not supplied in the prompt.
-- Returned work is accepted without reading the diff or running validation.
+- Do not proceed on repo facts that can be inspected but have not been checked.
+- Do not broaden scope beyond the triggering signal.
+- Do not create placeholder guidance, examples, metadata, or documentation.
+- Do not claim completion without evidence that covers this skill's checklist.
 
 ## Usage Checklist
 
-- Independence was established.
-- Prompt context was complete and bounded.
-- Returned work was reviewed before integration.
-- Fallback path was used if subagents were unavailable.
+- Trigger signal is explicit.
+- Relevant existing convention or memory was checked.
+- Skill-specific rules were applied.
+- Artifacts, docs, metadata, or tests affected by the work were updated together.
+- Remaining decisions, risks, or validation gaps are stated.
 
 ## Cross-References
 

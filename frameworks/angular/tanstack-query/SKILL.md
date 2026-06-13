@@ -14,31 +14,42 @@ using skill: angular-tanstack-query-conventions
 
 ## Overview
 
-Keep Angular TanStack Query usage predictable by centralizing query keys,
-options, pagination handling, and mutation metadata in reusable project
-patterns.
+Treat query integration as a cache identity and data-contract concern.
 
-## Core Rules
+## Workflow
 
-- Use TanStack Angular primitives such as `injectQuery` and `injectMutation` directly unless a shared abstraction is justified.
-- Prefer typed query option factories over repeated inline option objects.
-- Build query keys through a project-approved factory so invalidation remains consistent.
-- Represent disabled/skippable queries explicitly instead of passing partial invalid inputs.
-- Normalize paginated responses through a reusable selector when backend response shapes repeat.
-- Keep mutation metadata explicit when the project relies on it for invalidation, analytics, or notifications.
-- Avoid `any` in shared query helpers.
+1. Inspect the current repository context and existing project memory before changing behavior or guidance.
+2. State the concrete responsibility, interface, artifact, or user-visible behavior this skill governs.
+3. Apply the skill-specific rules: Keys include every variable that changes data; skippable inputs are explicit; mutations name cache impact; pagination belongs in keys.
+4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
+5. Stop when the task needs a decision outside this skill's scope and route to the appropriate governance skill.
 
-## Legacy References
+## Quality Gates
 
-- `references/legacy-extracted-patterns.md` preserves non-normative helper names from the extracted source project.
+- Guidance is grounded in current files or explicit user intent.
+- Output uses project vocabulary and the recruitment example universe when examples are needed.
+- Decisions are recorded in the right artifact instead of hidden in transient chat.
+- Validation or acceptance criteria are named when the skill changes behavior or workflow.
+
+## Example
+
+Candidate search includes companyId, jobOfferId, filters, and page in the key because
+each changes results.
+
+## Hard Stops
+
+- Do not proceed on repo facts that can be inspected but have not been checked.
+- Do not broaden scope beyond the triggering signal.
+- Do not create placeholder guidance, examples, metadata, or documentation.
+- Do not claim completion without evidence that covers this skill's checklist.
 
 ## Usage Checklist
 
-- Query keys are centralized and typed.
-- Disabled query paths are explicit.
-- Pagination logic is not duplicated across features.
-- Mutations expose the metadata the project expects.
-- Public helpers are typed without `any`.
+- Trigger signal is explicit.
+- Relevant existing convention or memory was checked.
+- Skill-specific rules were applied.
+- Artifacts, docs, metadata, or tests affected by the work were updated together.
+- Remaining decisions, risks, or validation gaps are stated.
 
 ## Cross-References
 

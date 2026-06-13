@@ -224,6 +224,7 @@ ecosystem projects.
 - Follow the existing local style unless this file defines a stricter rule.
 - Update related metadata, references, scripts, and cross-references when a
   skill changes.
+- Update `SKILL_CATALOG.md` when adding, removing, moving, or renaming a skill.
 - Avoid unrelated rewrites, formatting churn, and broad reorganization.
 - Keep examples, names, and prompts consistent across `SKILL.md` and
   `agents/openai.yaml`.
@@ -231,6 +232,9 @@ ecosystem projects.
 - If adding a script, make it deterministic and document the command or trigger
   in `SKILL.md`.
 - If adding a reference file, make it directly discoverable from `SKILL.md`.
+- Do not add per-skill registries to validation scripts. Validation should
+  derive ordinary skill discovery from taxonomy paths, frontmatter, metadata,
+  `references/skill-graph.md`, and `SKILL_CATALOG.md`.
 
 ## Validation Checklist
 
@@ -243,7 +247,10 @@ Before finishing any skill change, verify:
 - `agents/openai.yaml` exists.
 - `agents/openai.yaml` includes `interface.display_name`,
   `interface.short_description`, and `interface.default_prompt`.
+- OpenAI metadata fields live under the top-level `interface:` block.
 - `interface.display_name` contains `(otwld)`.
+- `SKILL_CATALOG.md` lists each skill once under the correct taxonomy heading
+  with the correct directory path.
 - Any referenced files, scripts, or assets actually exist.
 - Any touched scripts still run or have been validated appropriately.
 - Examples follow `example-universe-enforcer`.
@@ -253,4 +260,11 @@ Run the workspace validator before finishing:
 
 ```bash
 python3 scripts/validate-skills.py
+```
+
+When `scripts/validate-skills.py` or validation-facing routing contracts change,
+also run:
+
+```bash
+python3 scripts/test-validate-skills.py
 ```

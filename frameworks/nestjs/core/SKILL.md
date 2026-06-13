@@ -14,36 +14,43 @@ using skill: nestjs-conventions
 
 ## Overview
 
-Keep NestJS code modular, strongly typed, and framework-idiomatic. Project
-patterns can be stricter, but reusable guidance should not assume a specific
-package naming scheme.
+Keep NestJS modules explicit without letting framework structure swallow domain
+ownership.
 
-## Core Rules
+## Workflow
 
-- Providers with injectable dependencies should use `@Injectable()` and be registered through modules or project-approved provider factories.
-- Controllers should stay thin and delegate behavior to services or use-case providers.
-- Use constructor injection for providers and controllers unless the project documents another pattern.
-- Prefer composition over large inheritance hierarchies or monolithic services.
-- Search existing project packages before adding reusable helpers.
-- Use strong typing and document any unavoidable unsafe boundary.
-- Add JSDoc for public providers, guards, interceptors, pipes, and reusable runtime helpers when intent is not obvious.
+1. Inspect the current repository context and existing project memory before changing behavior or guidance.
+2. State the concrete responsibility, interface, artifact, or user-visible behavior this skill governs.
+3. Apply the skill-specific rules: Controllers handle transport; providers hold application behavior; pipes validate boundaries; tokens are explicit when adapters vary.
+4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
+5. Stop when the task needs a decision outside this skill's scope and route to the appropriate governance skill.
 
-## Microservices
+## Quality Gates
 
-- Use NestJS microservice APIs that match the runtime shape: microservice-only or hybrid HTTP plus transport.
-- For manual message acknowledgements, configure transport options explicitly and acknowledge through the context object.
-- Enable graceful shutdown hooks when the runtime owns long-lived connections.
+- Guidance is grounded in current files or explicit user intent.
+- Output uses project vocabulary and the recruitment example universe when examples are needed.
+- Decisions are recorded in the right artifact instead of hidden in transient chat.
+- Validation or acceptance criteria are named when the skill changes behavior or workflow.
 
-## Legacy References
+## Example
 
-- `references/legacy-extracted-patterns.md` preserves non-normative naming conventions from the extracted source project.
+ApplicationsController validates Candidate application requests and delegates decision
+logic to an Application intake provider.
+
+## Hard Stops
+
+- Do not proceed on repo facts that can be inspected but have not been checked.
+- Do not broaden scope beyond the triggering signal.
+- Do not create placeholder guidance, examples, metadata, or documentation.
+- Do not claim completion without evidence that covers this skill's checklist.
 
 ## Usage Checklist
 
-- Module/provider ownership is clear.
-- Controllers delegate business logic.
-- Reusable helpers were checked before adding new ones.
-- Public runtime APIs are typed and documented.
+- Trigger signal is explicit.
+- Relevant existing convention or memory was checked.
+- Skill-specific rules were applied.
+- Artifacts, docs, metadata, or tests affected by the work were updated together.
+- Remaining decisions, risks, or validation gaps are stated.
 
 ## Cross-References
 

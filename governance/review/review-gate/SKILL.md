@@ -14,42 +14,42 @@ using skill: review-gate
 
 ## Overview
 
-Review significant work before it compounds. Use subagent review when available;
-otherwise perform a local self-review against the same checklist.
+Review major work before publishing, starting with requirement fit before code quality.
 
 ## Workflow
 
-1. Identify the requirements, summary, and diff range.
-2. Choose review mode: delegated review when available, local review otherwise.
-3. Check requirement fit before code quality.
-4. Classify findings by severity.
-5. Fix critical and important issues before publishing.
-6. Run `completion-verification` after fixes.
+1. Inspect the current repository context and existing project memory before changing behavior or guidance.
+2. State the concrete responsibility, interface, artifact, or user-visible behavior this skill governs.
+3. Apply the skill-specific rules: Identify requirements and diff; review coverage; inspect correctness, tests, APIs, docs, and boundaries; classify findings; verify fixes.
+4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
+5. Stop when the task needs a decision outside this skill's scope and route to the appropriate governance skill.
 
-## Review Focus
+## Quality Gates
 
-- Requirement coverage and scope control.
-- Correctness, edge cases, and failure modes.
-- Tests verify real behavior.
-- Public API, naming, ownership, and module boundaries.
-- Documentation and migration needs when public behavior changes.
+- Guidance is grounded in current files or explicit user intent.
+- Output uses project vocabulary and the recruitment example universe when examples are needed.
+- Decisions are recorded in the right artifact instead of hidden in transient chat.
+- Validation or acceptance criteria are named when the skill changes behavior or workflow.
 
-## References
+## Example
 
-Use `agent-delegation` templates when delegating review.
+A skill catalog review checks discoverability, routing, metadata, graph, and validation,
+not just Markdown formatting.
 
 ## Hard Stops
 
-- A major change is published without review.
-- Requirement compliance is skipped because tests pass.
-- Important review findings are ignored without technical justification.
+- Do not proceed on repo facts that can be inspected but have not been checked.
+- Do not broaden scope beyond the triggering signal.
+- Do not create placeholder guidance, examples, metadata, or documentation.
+- Do not claim completion without evidence that covers this skill's checklist.
 
 ## Usage Checklist
 
-- Requirements and diff range are known.
-- Requirement fit was reviewed before quality details.
-- Findings are classified by severity.
-- Required fixes were verified.
+- Trigger signal is explicit.
+- Relevant existing convention or memory was checked.
+- Skill-specific rules were applied.
+- Artifacts, docs, metadata, or tests affected by the work were updated together.
+- Remaining decisions, risks, or validation gaps are stated.
 
 ## Cross-References
 

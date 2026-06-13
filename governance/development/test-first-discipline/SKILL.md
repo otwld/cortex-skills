@@ -14,45 +14,43 @@ using skill: test-first-discipline
 
 ## Overview
 
-Prefer a failing test before changing production behavior. The goal is not
-ceremony; it is proof that the test can catch the missing behavior or regression.
+Use tests as feedback loops that prove behavior through public seams before
+implementation.
 
 ## Workflow
 
-1. State the behavior or regression to prove.
-2. Write the smallest meaningful failing test.
-3. Run the focused test and confirm it fails for the expected reason.
-4. Implement the minimal change.
-5. Run the focused test again, then the relevant broader suite.
-6. Refactor only after tests are green.
+1. Inspect the current repository context and existing project memory before changing behavior or guidance.
+2. State the concrete responsibility, interface, artifact, or user-visible behavior this skill governs.
+3. Apply the skill-specific rules: Name behavior; choose highest meaningful seam; write one failing test; implement minimally; refactor only when green; document exceptions.
+4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
+5. Stop when the task needs a decision outside this skill's scope and route to the appropriate governance skill.
 
-## Safe Exceptions
+## Quality Gates
 
-Document the reason when test-first is impractical:
+- Guidance is grounded in current files or explicit user intent.
+- Output uses project vocabulary and the recruitment example universe when examples are needed.
+- Decisions are recorded in the right artifact instead of hidden in transient chat.
+- Validation or acceptance criteria are named when the skill changes behavior or workflow.
 
-- Configuration-only changes.
-- Generated code.
-- Throwaway prototypes.
-- Legacy seams where characterization tests must come first.
-- Behavior that can only be validated manually or externally.
+## Example
 
-For existing untested code, prefer characterization or regression tests before
-changing behavior. Do not delete user work to enforce test-first discipline.
+For Candidate saved-search creation, prove retrieval through the public query interface,
+not private storage inspection.
 
 ## Hard Stops
 
-- A bug fix has no reproduction or regression check.
-- A behavior change is claimed complete without a relevant test or documented
-  exception.
-- Tests pass immediately and do not prove missing behavior.
+- Do not proceed on repo facts that can be inspected but have not been checked.
+- Do not broaden scope beyond the triggering signal.
+- Do not create placeholder guidance, examples, metadata, or documentation.
+- Do not claim completion without evidence that covers this skill's checklist.
 
 ## Usage Checklist
 
-- Desired behavior or regression is named.
-- The test failed for the expected reason before implementation, or an exception
-  is documented.
-- The focused test passes after the change.
-- Relevant broader validation was run or deferred with reason.
+- Trigger signal is explicit.
+- Relevant existing convention or memory was checked.
+- Skill-specific rules were applied.
+- Artifacts, docs, metadata, or tests affected by the work were updated together.
+- Remaining decisions, risks, or validation gaps are stated.
 
 ## Cross-References
 

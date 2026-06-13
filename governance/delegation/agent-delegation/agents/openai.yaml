@@ -1,4 +1,4 @@
 interface:
   display_name: "(otwld) Agent Delegation"
-  short_description: "Delegate independent work safely"
-  default_prompt: "Use $agent-delegation when independent tasks, investigations, or reviews can be split without shared state."
+  short_description: "Delegate independent investigation, implementation, or review work with clear prompts and verification expectations."
+  default_prompt: "Use $agent-delegation when independent tasks, investigations, or review passes can be delegated without shared state or sequential dependencies."

@@ -14,41 +14,43 @@ using skill: completion-verification
 
 ## Overview
 
-Claims about completed, fixed, passing, or published work need fresh evidence.
-State the truth the commands prove, including failures and gaps.
+Treat completion as a current-state claim that requires authoritative evidence for every
+requirement.
 
-## Gate
+## Workflow
 
-Before claiming success:
+1. Inspect the current repository context and existing project memory before changing behavior or guidance.
+2. State the concrete responsibility, interface, artifact, or user-visible behavior this skill governs.
+3. Apply the skill-specific rules: Derive requirements; identify proof; run or inspect fresh evidence; compare evidence to claim; report gaps and risks.
+4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
+5. Stop when the task needs a decision outside this skill's scope and route to the appropriate governance skill.
 
-1. Identify the command or inspection that proves the claim.
-2. Run the full relevant verification, or explain why it cannot be run.
-3. Read the output and exit status.
-4. Compare output to the claim.
-5. Report evidence and any remaining risk.
+## Quality Gates
 
-## Evidence Rules
+- Guidance is grounded in current files or explicit user intent.
+- Output uses project vocabulary and the recruitment example universe when examples are needed.
+- Decisions are recorded in the right artifact instead of hidden in transient chat.
+- Validation or acceptance criteria are named when the skill changes behavior or workflow.
 
-- Test success requires current test output.
-- Build success requires a current build or equivalent project check.
-- Bug fixed requires reproducing the original symptom or a regression test.
-- Requirements met requires checking against the stated requirements or plan.
-- Delegated work requires inspecting returned changes and validation, not only
-  trusting the report.
+## Example
+
+After a skill migration, validation ok is necessary but also confirm new skills,
+references, catalog, graph, and tests exist.
 
 ## Hard Stops
 
-- Do not claim "passes" from stale or partial output.
-- Do not commit, push, or open a PR without fresh relevant verification or a
-  clear statement that verification could not run.
-- Do not hide failures behind optimistic wording.
+- Do not proceed on repo facts that can be inspected but have not been checked.
+- Do not broaden scope beyond the triggering signal.
+- Do not create placeholder guidance, examples, metadata, or documentation.
+- Do not claim completion without evidence that covers this skill's checklist.
 
 ## Usage Checklist
 
-- Verification target is named.
-- Command or inspection was run fresh, or limitation was stated.
-- Result and exit status are understood.
-- Final claim matches the evidence.
+- Trigger signal is explicit.
+- Relevant existing convention or memory was checked.
+- Skill-specific rules were applied.
+- Artifacts, docs, metadata, or tests affected by the work were updated together.
+- Remaining decisions, risks, or validation gaps are stated.
 
 ## Cross-References
 

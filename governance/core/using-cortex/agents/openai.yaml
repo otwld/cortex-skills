@@ -1,4 +1,4 @@
 interface:
   display_name: "(otwld) Using Cortex"
-  short_description: "Route work through Cortex skills"
-  default_prompt: "Use $using-cortex when starting agent work or deciding which Cortex skills should apply."
+  short_description: "Route tasks to the smallest evidence-backed set of Cortex skills using direct signals and graph edges."
+  default_prompt: "Use $using-cortex when starting agent work in a Cortex skill library or when deciding which Cortex governance, architecture, framework, testing, or maintenance skills should apply."

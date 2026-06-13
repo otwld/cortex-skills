@@ -14,37 +14,42 @@ using skill: workspace-state-guard
 
 ## Overview
 
-Protect user work and make workspace assumptions explicit before risky changes.
-This skill inspects state; it does not require a new worktree for every task.
+Protect user work and control generated-write scope before risky changes.
 
 ## Workflow
 
-1. Check current branch and repository status.
-2. Identify untracked or modified files before editing.
-3. Distinguish user changes from files required by the current task.
-4. Check whether work is already isolated when branch/worktree state matters.
-5. Choose the least disruptive path: work in place, ask for isolation, or stop.
+1. Inspect the current repository context and existing project memory before changing behavior or guidance.
+2. State the concrete responsibility, interface, artifact, or user-visible behavior this skill governs.
+3. Apply the skill-specific rules: Inspect status; classify dirty files; leave unrelated work alone; avoid destructive commands; report baseline failures plainly.
+4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
+5. Stop when the task needs a decision outside this skill's scope and route to the appropriate governance skill.
 
-## Rules
+## Quality Gates
 
-- Never revert or overwrite user changes unless explicitly requested.
-- Do not create a worktree when the harness already provides isolation.
-- Do not require isolation for narrow documentation or single-file edits.
-- Before destructive cleanup, use `branch-completion`.
-- If baseline tests fail before edits, report the baseline instead of hiding it.
+- Guidance is grounded in current files or explicit user intent.
+- Output uses project vocabulary and the recruitment example universe when examples are needed.
+- Decisions are recorded in the right artifact instead of hidden in transient chat.
+- Validation or acceptance criteria are named when the skill changes behavior or workflow.
+
+## Example
+
+If validation scripts are already modified and the task is validator migration, replace
+them as task-relevant and leave unrelated README edits alone.
 
 ## Hard Stops
 
-- The requested edit would overwrite unrelated user changes.
-- The branch or worktree state is ambiguous before a destructive action.
-- A generated or formatter command would rewrite files outside the task scope.
+- Do not proceed on repo facts that can be inspected but have not been checked.
+- Do not broaden scope beyond the triggering signal.
+- Do not create placeholder guidance, examples, metadata, or documentation.
+- Do not claim completion without evidence that covers this skill's checklist.
 
 ## Usage Checklist
 
-- Branch and status were inspected.
-- User changes were protected.
-- Isolation decision was proportional to the task.
-- Destructive actions were deferred to `branch-completion`.
+- Trigger signal is explicit.
+- Relevant existing convention or memory was checked.
+- Skill-specific rules were applied.
+- Artifacts, docs, metadata, or tests affected by the work were updated together.
+- Remaining decisions, risks, or validation gaps are stated.
 
 ## Cross-References
 

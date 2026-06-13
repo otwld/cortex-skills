@@ -14,40 +14,46 @@ using skill: example-universe-enforcer
 
 ## Overview
 
-All illustrative examples in this workspace use a recruitment agency job board
-domain. Normalize generic placeholders into that domain unless the user
-explicitly provides different real project data.
+Keep examples coherent by using one recruitment agency job board universe.
 
-## Core Entities
+## Reference Routing
 
-Use these names consistently:
+- Use `references/recruitment-universe.md` when this task touches that concern.
 
-- JobOffer
-- Candidate
-- Application
-- Recruiter
-- Company
-- Interview
-- Contract
-- SkillTag
+## Workflow
 
-## Rules
+1. Inspect the current repository context and existing project memory before changing behavior or guidance.
+2. State the concrete responsibility, interface, artifact, or user-visible behavior this skill governs.
+3. Apply the skill-specific rules: Replace generic placeholders; keep relationships coherent; use small realistic fixtures; preserve real user-provided project data.
+4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
+5. Stop when the task needs a decision outside this skill's scope and route to the appropriate governance skill.
 
-- Replace generic entities such as User, Foo, Bar, Product, Item, and ExampleEntity.
-- Keep relationships coherent: Candidate applies to JobOffer, Recruiter manages JobOffers, Company owns JobOffers, Interview relates to Application.
-- Keep examples small and realistic.
-- Do not let examples introduce unrelated domains.
+## Quality Gates
 
-## References
+- Guidance is grounded in current files or explicit user intent.
+- Output uses project vocabulary and the recruitment example universe when examples are needed.
+- Decisions are recorded in the right artifact instead of hidden in transient chat.
+- Validation or acceptance criteria are named when the skill changes behavior or workflow.
 
-- `references/recruitment-universe.md` defines the canonical example universe.
+## Example
+
+Use Candidate, JobOffer, Application, Recruiter, Company, Interview, Contract, and
+SkillTag consistently.
+
+## Hard Stops
+
+- Do not proceed on repo facts that can be inspected but have not been checked.
+- Do not broaden scope beyond the triggering signal.
+- Do not create placeholder guidance, examples, metadata, or documentation.
+- Do not claim completion without evidence that covers this skill's checklist.
 
 ## Usage Checklist
 
-- Generic placeholders were replaced.
-- Entity relationships are coherent.
-- Examples are minimal.
-- The same universe is used across one response or document.
+- Trigger signal is explicit.
+- Relevant existing convention or memory was checked.
+- Skill-specific rules were applied.
+- Artifacts, docs, metadata, or tests affected by the work were updated together.
+- Remaining decisions, risks, or validation gaps are stated.
 
 ## Cross-References
 

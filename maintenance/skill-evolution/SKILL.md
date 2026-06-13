@@ -14,66 +14,47 @@ using skill: skill-evolution
 
 ## Overview
 
-Skills should evolve from repeated, reusable patterns. Prefer small focused
-skills, explicit scope, progressive disclosure, and validation over broad
-doctrine documents.
+Evolve focused skills when repeated patterns or agent failure modes deserve reusable
+guidance.
 
-## When To Recommend A Skill Change
+## Reference Routing
 
-Recommend a new or updated skill when:
+- Use `../../references/skill-quality-standard.md` when this task touches that concern.
 
-- A pattern repeats across projects or packages.
-- Agents keep making the same judgment error.
-- A workflow depends on non-obvious local knowledge.
-- Existing skills overlap or contradict each other.
-- A refactor reveals a reusable convention.
+## Workflow
 
-Do not recommend a skill for one-off decisions, obvious language basics, or
-rules better enforced by tooling.
+1. Inspect the current repository context and existing project memory before changing behavior or guidance.
+2. State the concrete responsibility, interface, artifact, or user-visible behavior this skill governs.
+3. Apply the skill-specific rules: Analyze responsibility and consumers; compare existing skills; update before creating; sync metadata, graph, catalog, references, and validation.
+4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
+5. Stop when the task needs a decision outside this skill's scope and route to the appropriate governance skill.
 
-## Convention Gap Analysis
+## Quality Gates
 
-Use this workflow when the user provides a folder path, a diff, or a changed-file
-list to assess whether implementation patterns should become skill guidance.
+- Guidance is grounded in current files or explicit user intent.
+- Output uses project vocabulary and the recruitment example universe when examples are needed.
+- Decisions are recorded in the right artifact instead of hidden in transient chat.
+- Validation or acceptance criteria are named when the skill changes behavior or workflow.
 
-1. Summarize the area by responsibility, layer, likely consumers, and dominant
-   technologies.
-2. Identify repeated naming, layout, documentation, testing, API, or architecture
-   patterns.
-3. Compare those patterns with existing skills before proposing anything new.
-4. Flag gaps where guidance is absent, unclear, contradictory, or too broad to
-   prevent repeated mistakes.
-5. Return recommendations only unless the user explicitly asks to update skills.
+## Example
 
-Prefer updating an existing skill when the pattern fits its scope. Propose a new
-skill only when the workflow is distinct, reusable, and not covered by a focused
-existing skill.
+Repeated mistakes around issue briefs justify issue-decomposition plus an agent-brief
+reference, not scattered planning bullets.
 
-## Recommendation Format
+## Hard Stops
 
-- Proposed action: update existing skill | create new skill | no action.
-- Target skill or proposed skill name.
-- Signal: repetition, risk, or coverage gap.
-- Scope boundaries: covers and does not cover.
-- Trigger wording to add or change.
-- Documentation impact: metadata, graph, reference, or catalog updates needed.
-- Validation idea: command, scenario, or review check.
-
-## Update Rules
-
-- Keep changes narrow.
-- Update cross-references and `agents/openai.yaml` with the skill.
-- Move large stable details into `references/`.
-- Put deterministic mechanical checks into `scripts/`.
-- Do not preserve obsolete project-specific assumptions in active skill text.
+- Do not proceed on repo facts that can be inspected but have not been checked.
+- Do not broaden scope beyond the triggering signal.
+- Do not create placeholder guidance, examples, metadata, or documentation.
+- Do not claim completion without evidence that covers this skill's checklist.
 
 ## Usage Checklist
 
-- The pattern is reusable beyond one task.
-- Existing skills were checked first.
-- Folder, diff, or changed-file analysis summarized responsibility and consumers when provided.
-- Scope boundaries are explicit.
-- Validation path is named.
+- Trigger signal is explicit.
+- Relevant existing convention or memory was checked.
+- Skill-specific rules were applied.
+- Artifacts, docs, metadata, or tests affected by the work were updated together.
+- Remaining decisions, risks, or validation gaps are stated.
 
 ## Cross-References
 

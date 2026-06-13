@@ -14,49 +14,42 @@ using skill: public-api-design
 
 ## Overview
 
-Treat reusable package exports as contracts. Keep public surfaces explicit,
-stable, minimal, typed, and intentionally documented by names and structure.
+Keep public surfaces explicit, small, stable, typed, and documented as contracts.
 
-## Export Rules
+## Workflow
 
-Prefer:
+1. Inspect the current repository context and existing project memory before changing behavior or guidance.
+2. State the concrete responsibility, interface, artifact, or user-visible behavior this skill governs.
+3. Apply the skill-specific rules: Choose owner first; export supported symbols only; encode states with strong types; document invariants and migration impact.
+4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
+5. Stop when the task needs a decision outside this skill's scope and route to the appropriate governance skill.
 
-- Explicit exports of supported symbols.
-- Narrow entry points with clear ownership.
-- Type-only exports for type-only symbols.
-- Stable import paths that do not expose internals.
+## Quality Gates
 
-Avoid:
+- Guidance is grounded in current files or explicit user intent.
+- Output uses project vocabulary and the recruitment example universe when examples are needed.
+- Decisions are recorded in the right artifact instead of hidden in transient chat.
+- Validation or acceptance criteria are named when the skill changes behavior or workflow.
 
-- Broad barrels that accidentally export implementation details.
-- Deep imports as the primary usage path.
-- Re-exporting third-party APIs unless that is a deliberate wrapper contract.
-- Public types that expose private or framework-specific internals.
+## Example
 
-## Contract Rules
-
-- DTOs and shared contracts must have clear domain ownership.
-- Avoid optional fields that hide separate contract variants.
-- Prefer discriminated unions over ad-hoc flags when states differ.
-- Shared contracts must not depend on UI or application-only concerns.
-- Breaking changes need an explicit migration path.
+ApplicationReviewResult with accepted and rejected variants is clearer than optional
+rejectionReason on every result.
 
 ## Hard Stops
 
-Stop and propose a corrected surface when:
-
-- Internal types leak into exports.
-- Consumers need deep imports to use supported behavior.
-- A shared contract mixes application-specific fields into reusable API.
-- A public API is weakly typed to avoid fixing the model.
+- Do not proceed on repo facts that can be inspected but have not been checked.
+- Do not broaden scope beyond the triggering signal.
+- Do not create placeholder guidance, examples, metadata, or documentation.
+- Do not claim completion without evidence that covers this skill's checklist.
 
 ## Usage Checklist
 
-- Supported import paths are clear.
-- Exports are minimal and intentional.
-- Public types are stable and do not leak internals.
-- Breaking-change impact is identified.
-- Migration notes exist when compatibility changes.
+- Trigger signal is explicit.
+- Relevant existing convention or memory was checked.
+- Skill-specific rules were applied.
+- Artifacts, docs, metadata, or tests affected by the work were updated together.
+- Remaining decisions, risks, or validation gaps are stated.
 
 ## Cross-References
 

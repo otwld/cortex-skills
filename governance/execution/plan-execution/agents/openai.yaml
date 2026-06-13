@@ -1,4 +1,4 @@
 interface:
   display_name: "(otwld) Plan Execution"
-  short_description: "Execute written plans with checkpoints"
-  default_prompt: "Use $plan-execution when executing a written implementation plan task-by-task."
+  short_description: "Execute a decision-complete plan in order while preserving scope, validation, and workspace safety."
+  default_prompt: "Use $plan-execution when executing a written implementation plan task-by-task with validation checkpoints and no remaining design decisions."

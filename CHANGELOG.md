@@ -6,6 +6,19 @@
 
 - Added the `bricks` tool skill for Bricks consumer workflows and
   worktree-based source contribution guidance.
+- Added catalog synchronization and taxonomy-heading checks to the workspace
+  validator.
+- Added validator fixture regression tests for skill discovery, catalog
+  taxonomy, and support-file references.
+- Added validation that OpenAI metadata fields live under the required
+  `interface:` block.
+
+### Changed
+
+- Tightened `using-cortex` routing guidance so non-trivial skill selection
+  records direct evidence, graph expansion, deferred follow-ups, and exclusions.
+- Replaced the validator's closed per-skill directory registry with generic
+  taxonomy path validation.
 
 ## v0.1.0 Public Seed - 2026-05-28
 

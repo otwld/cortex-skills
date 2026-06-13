@@ -1,4 +1,4 @@
 interface:
   display_name: "(otwld) Workspace State Guard"
-  short_description: "Protect branches and user changes"
-  default_prompt: "Use $workspace-state-guard before substantial edits, plan execution, publishing, or branch cleanup."
+  short_description: "Protect user work by inspecting branch and dirty state before substantial edits or cleanup."
+  default_prompt: "Use $workspace-state-guard when Use before substantial edits, plan execution, branch cleanup, publishing, or work that may collide with user changes or workspace isolation."

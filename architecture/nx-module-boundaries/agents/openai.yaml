@@ -1,4 +1,4 @@
 interface:
   display_name: "(otwld) Nx Module Boundaries"
-  short_description: "Enforce Nx project dependencies"
-  default_prompt: "Use $nx-module-boundaries when adding, moving, or reviewing Nx projects, tags, dependencies, or module-boundary rules."
+  short_description: "Use Nx project metadata and dependency rules to preserve modular workspace boundaries."
+  default_prompt: "Use $nx-module-boundaries when working in an Nx workspace and adding, moving, or reviewing projects, tags, dependencies, or module-boundary rules."

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate local skill structure, metadata, graph edges, and extracted residue."""
+"""Validate skill structure, metadata, routing surfaces, and quality contracts."""
 
 from __future__ import annotations
 
@@ -9,538 +9,492 @@ import sys
 from pathlib import Path
 from typing import Iterable
 
-
 ROOT = Path(__file__).resolve().parents[1]
-GRAPH_PATH = ROOT / "references" / "skill-graph.md"
-CASCADE_RULES_PATH = ROOT / "references" / "skill-cascade.md"
+GRAPH_PATH = ROOT / 'references' / 'skill-graph.md'
+CASCADE_PATH = ROOT / 'references' / 'skill-cascade.md'
+CATALOG_PATH = ROOT / 'SKILL_CATALOG.md'
 SELF = Path(__file__).resolve()
-
-EDGE_LABELS = ("BEFORE", "WITH", "AFTER")
-SKIP_SCAN_PARTS = {
-    ".git",
-    ".agents",
-    ".codex",
-    ".hg",
-    ".svn",
-    ".idea",
-    ".vscode",
-    "__pycache__",
-    "node_modules",
+EDGE_LABELS = ('BEFORE', 'WITH', 'AFTER')
+TAXONOMY_HEADINGS = {
+    'architecture': 'Architecture',
+    'documentation': 'Documentation',
+    'frameworks': 'Frameworks',
+    'governance': 'Governance',
+    'maintenance': 'Maintenance',
+    'testing': 'Testing',
+    'tools': 'Tools',
+    'typescript': 'TypeScript',
 }
-
+REQUIRED_WORKSPACE_REFERENCES = [
+    'references/skill-quality-standard.md',
+    'references/project-memory.md',
+    'references/domain-glossary.md',
+    'references/adr-format.md',
+    'references/out-of-scope-decisions.md',
+    'references/issue-tracker-setup.md',
+    'references/vertical-slices.md',
+    'references/agent-briefs.md',
+    'references/architecture-deepening.md',
+    'references/prototype-guidance.md',
+]
+REQUIRED_SKILL_SECTIONS = [
+    '# Output Marker',
+    '## Overview',
+    '## Workflow',
+    '## Quality Gates',
+    '## Example',
+    '## Hard Stops',
+    '## Usage Checklist',
+    '## Cross-References',
+]
+SKIP_PARTS = {'.git', '.agents', '.codex', '.hg', '.svn', '.idea', '.vscode', '__pycache__', 'node_modules'}
 FORBIDDEN_ACTIVE_TERMS = [
-    "@cortex",
-    ".agents",
-    "PLAN",
-    "GOVERNANCE",
-    "codebase-vacuum",
-    "nx_workspace",
-    "nx_project_details",
-    "nx-generate",
-    "/home/ntrehout",
-    "\ue200cite",
-    "Deep Architecture",
-    "apps/documentation",
-    "createStorybookNodeSourceLoaderPlugin",
-    "createFakerGenetics",
-    "createMswSearchGetHandler",
-    "AbstractRepository",
-    "MatchRule",
-    "buildMatchStage",
-    "buildPipeline",
-    "buildFacet",
-    "buildPaginatedFacet",
-    "buildRelationLookup",
-    "buildRelationsLookup",
-    "toObjectId",
-    "toObjectIds",
-    "Skippable",
-    "runSkippableQuery",
-    "createQueryKey",
-    "strictMutationOptions",
-    "coerceQueryOptions",
-    "coerceQueryInfiniteOptions",
-    "selectPaginatedResponse",
-    "PaginationInfo",
-    "formServiceProvide",
-    "source-loader:",
+    '@cortex', '.agents', 'GOVERNANCE', 'codebase-vacuum', 'nx_workspace', 'nx_project_details',
+    'nx-generate', '/home/ntrehout', '\ue200cite', 'Deep Architecture', 'apps/documentation',
+    'createStorybookNodeSourceLoaderPlugin', 'createFakerGenetics', 'createMswSearchGetHandler',
+    'AbstractRepository', 'MatchRule', 'buildMatchStage', 'buildPipeline', 'buildFacet',
+    'buildPaginatedFacet', 'buildRelationLookup', 'buildRelationsLookup', 'toObjectId',
+    'toObjectIds', 'Skippable', 'runSkippableQuery', 'createQueryKey', 'strictMutationOptions',
+    'coerceQueryOptions', 'coerceQueryInfiniteOptions', 'selectPaginatedResponse', 'PaginationInfo',
+    'formServiceProvide', 'source-loader:',
 ]
-
-MAX_BEFORE_CASCADE = 5
-
 FORBIDDEN_EXAMPLE_IDENTIFIERS = [
-    "Americano",
-    "Coffee",
-    "CoffeeMaker",
-    "Grinder",
-    "Latte",
-    "ReportRow",
-    "RequestContext",
-    "Scheduler",
-    "Widget",
-    "currentUser",
-    "getCurrentUser",
-    "loadUser",
+    'Americano', 'Coffee', 'CoffeeMaker', 'Grinder', 'Latte', 'ReportRow', 'RequestContext',
+    'Scheduler', 'Widget', 'currentUser', 'getCurrentUser', 'loadUser', 'Product', 'Item',
 ]
-
-EXPECTED_SKILL_DIRS = {
-    "architecture-drift-detector": Path("architecture/drift-detector"),
-    "bundle-performance": Path("architecture/bundle-performance"),
-    "extraction-decision": Path("architecture/extraction-decision"),
-    "library-placement-decision": Path("architecture/library-placement-decision"),
-    "naming-consistency": Path("architecture/naming-consistency"),
-    "nx-module-boundaries": Path("architecture/nx-module-boundaries"),
-    "public-api-design": Path("architecture/public-api-design"),
-    "code-documentation": Path("documentation/code"),
-    "angular-conventions": Path("frameworks/angular/core"),
-    "angular-material-conventions": Path("frameworks/angular/material"),
-    "angular-tanstack-query-conventions": Path("frameworks/angular/tanstack-query"),
-    "nestjs-conventions": Path("frameworks/nestjs/core"),
-    "nestjs-mongoose-conventions": Path("frameworks/nestjs/mongoose"),
-    "nx-conventions": Path("frameworks/nx"),
-    "rxjs-conventions": Path("frameworks/rxjs"),
-    "storybook-angular-conventions": Path("frameworks/angular/storybook"),
-    "storybook-conventions": Path("frameworks/storybook"),
-    "vite-conventions": Path("frameworks/vite"),
-    "vue-conventions": Path("frameworks/vue"),
-    "using-cortex": Path("governance/core/using-cortex"),
-    "design-intake": Path("governance/intake/design-intake"),
-    "implementation-plan": Path("governance/planning/implementation-plan"),
-    "plan-execution": Path("governance/execution/plan-execution"),
-    "agent-delegation": Path("governance/delegation/agent-delegation"),
-    "workspace-state-guard": Path("governance/workspace/workspace-state-guard"),
-    "test-first-discipline": Path("governance/development/test-first-discipline"),
-    "systematic-debugging": Path("governance/debugging/systematic-debugging"),
-    "completion-verification": Path("governance/verification/completion-verification"),
-    "review-gate": Path("governance/review/review-gate"),
-    "review-feedback-triage": Path("governance/review/feedback-triage"),
-    "branch-completion": Path("governance/release/branch-completion"),
-    "diary": Path("maintenance/diary"),
-    "example-universe-enforcer": Path("maintenance/example-universe-enforcer"),
-    "skill-evolution": Path("maintenance/skill-evolution"),
-    "jest-conventions": Path("testing/jest"),
-    "playwright-conventions": Path("testing/playwright"),
-    "vitest-conventions": Path("testing/vitest"),
-    "bricks": Path("tools/bricks"),
-    "typescript-api-conventions": Path("typescript/api"),
-    "typescript-code-style": Path("typescript/code-style"),
-}
+MAX_BEFORE_CASCADE = 5
 
 
 def rel(path: Path) -> str:
+    """Return a repository-relative path."""
     return str(path.relative_to(ROOT))
 
 
 def read_text(path: Path) -> str:
-    return path.read_text(encoding="utf-8")
+    """Read a UTF-8 file."""
+    return path.read_text(encoding='utf-8')
 
 
-def should_skip_path(path: Path) -> bool:
+def skip(path: Path) -> bool:
+    """Return whether path should be ignored by recursive scans."""
     try:
-        relative = path.relative_to(ROOT)
+        parts = path.relative_to(ROOT).parts
     except ValueError:
         return False
-    return any(part in SKIP_SCAN_PARTS for part in relative.parts)
+    return any(part in SKIP_PARTS for part in parts)
+
+
+def valid_slug(value: str) -> bool:
+    """Return whether a value is a lowercase kebab-case slug."""
+    return re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', value) is not None
 
 
 def parse_frontmatter(path: Path, errors: list[str]) -> dict[str, str]:
+    """Parse the minimal YAML frontmatter used by skills."""
     text = read_text(path)
-    if not text.startswith("---\n"):
-        errors.append(f"{rel(path)}: missing YAML frontmatter")
+    if not text.startswith('---\n'):
+        errors.append(f'{rel(path)}: missing YAML frontmatter')
         return {}
-
-    end = text.find("\n---", 4)
+    end = text.find('\n---', 4)
     if end == -1:
-        errors.append(f"{rel(path)}: unterminated YAML frontmatter")
+        errors.append(f'{rel(path)}: unterminated YAML frontmatter')
         return {}
-
-    frontmatter = text[4:end].strip().splitlines()
     values: dict[str, str] = {}
-    for line in frontmatter:
-        if ":" not in line:
-            continue
-        key, value = line.split(":", 1)
-        values[key.strip()] = value.strip().strip('"').strip("'")
+    for line in text[4:end].strip().splitlines():
+        if ':' in line:
+            key, value = line.split(':', 1)
+            values[key.strip()] = value.strip().strip('"').strip("'")
     return values
 
 
 def parse_openai_metadata(path: Path, errors: list[str]) -> dict[str, str]:
+    """Parse required metadata fields from agents/openai.yaml."""
     if not path.exists():
-        errors.append(f"{rel(path)}: missing agents/openai.yaml")
+        errors.append(f'{rel(path)}: missing agents/openai.yaml')
         return {}
-
     values: dict[str, str] = {}
+    in_interface = False
+    saw_interface = False
     for line in read_text(path).splitlines():
-        match = re.match(r"\s+(display_name|short_description|default_prompt):\s*(.+?)\s*$", line)
+        if line == 'interface:':
+            in_interface = True
+            saw_interface = True
+            continue
+        if line and not line.startswith((' ', '\t')):
+            in_interface = False
+        if not in_interface:
+            continue
+        match = re.match(r'\s+(display_name|short_description|default_prompt):\s*(.+?)\s*$', line)
         if match:
             values[match.group(1)] = match.group(2).strip().strip('"').strip("'")
+    if not saw_interface:
+        errors.append(f'{rel(path)}: missing interface block')
     return values
 
 
 def parse_list(value: str) -> list[str]:
+    """Parse a graph or cross-reference list cell."""
     value = value.strip()
-    if not value or value == "None":
+    if not value or value == 'None':
         return []
-    return [part.strip().strip("`") for part in value.split(",") if part.strip()]
+    return [part.strip().strip('`') for part in value.split(',') if part.strip()]
+
+
+def parse_graph(errors: list[str]) -> dict[str, dict[str, list[str]]]:
+    """Parse references/skill-graph.md."""
+    if not GRAPH_PATH.exists():
+        errors.append(f'{rel(GRAPH_PATH)}: missing central skill graph')
+        return {}
+    graph: dict[str, dict[str, list[str]]] = {}
+    for line_number, line in enumerate(read_text(GRAPH_PATH).splitlines(), start=1):
+        if not line.startswith('| `'):
+            continue
+        cells = [cell.strip() for cell in line.strip().strip('|').split('|')]
+        if len(cells) != 4:
+            errors.append(f'{rel(GRAPH_PATH)}:{line_number}: expected 4 table columns')
+            continue
+        graph[cells[0].strip('`')] = {
+            'BEFORE': parse_list(cells[1]),
+            'WITH': parse_list(cells[2]),
+            'AFTER': parse_list(cells[3]),
+        }
+    if not graph:
+        errors.append(f'{rel(GRAPH_PATH)}: graph table is empty')
+    return graph
 
 
 def parse_cross_references(path: Path, errors: list[str]) -> dict[str, list[str]]:
-    text = read_text(path)
-    lines = text.splitlines()
-    section_start = None
-    for index, line in enumerate(lines):
-        if line.strip() == "## Cross-References":
-            section_start = index + 1
-            break
-
-    if section_start is None:
-        errors.append(f"{rel(path)}: missing Cross-References section")
+    """Parse a SKILL.md Cross-References section."""
+    lines = read_text(path).splitlines()
+    try:
+        start = lines.index('## Cross-References') + 1
+    except ValueError:
+        errors.append(f'{rel(path)}: missing Cross-References section')
         return {label: [] for label in EDGE_LABELS}
-
     section: list[str] = []
-    for line in lines[section_start:]:
-        if line.startswith("## "):
+    for line in lines[start:]:
+        if line.startswith('## '):
             break
         section.append(line)
-
-    bullets = [line.strip() for line in section if line.strip().startswith("- ")]
+    bullets = [line.strip() for line in section if line.strip().startswith('- ')]
     if not bullets:
-        errors.append(f"{rel(path)}: Cross-References must include - None or labeled edges")
+        errors.append(f'{rel(path)}: Cross-References must include - None or labeled edges')
         return {label: [] for label in EDGE_LABELS}
-
     edges = {label: [] for label in EDGE_LABELS}
     saw_none = False
     for bullet in bullets:
         value = bullet[2:].strip()
-        if value == "None":
+        if value == 'None':
             saw_none = True
             continue
-
-        match = re.match(r"^(BEFORE|WITH|AFTER):\s*(.+)$", value)
+        match = re.match(r'^(BEFORE|WITH|AFTER):\s*(.+)$', value)
         if not match:
-            errors.append(
-                f"{rel(path)}: invalid Cross-References bullet {bullet!r}; "
-                "use BEFORE, WITH, AFTER, or None"
-            )
+            errors.append(f'{rel(path)}: invalid Cross-References bullet {bullet!r}')
             continue
         label, targets = match.groups()
         edges[label].extend(parse_list(targets))
-
     if saw_none and any(edges[label] for label in EDGE_LABELS):
-        errors.append(f"{rel(path)}: Cross-References cannot mix None with edges")
-
+        errors.append(f'{rel(path)}: Cross-References cannot mix None with edges')
     return edges
 
 
-def parse_graph(errors: list[str]) -> dict[str, dict[str, list[str]]]:
-    if not GRAPH_PATH.exists():
-        errors.append(f"{rel(GRAPH_PATH)}: missing central skill graph")
-        return {}
+def check_skill_location(skill_path: Path, errors: list[str]) -> bool:
+    """Validate taxonomy/group/slug directory shape."""
+    parts = skill_path.parent.relative_to(ROOT).parts
+    if len(parts) not in (2, 3):
+        errors.append(f'{rel(skill_path)}: skill directory must match taxonomy/folder-slug or taxonomy/group/folder-slug')
+        return False
+    taxonomy = parts[0]
+    if taxonomy not in TAXONOMY_HEADINGS:
+        errors.append(f'{rel(skill_path)}: unknown skill taxonomy {taxonomy!r}')
+        return False
+    bad = [part for part in parts if not valid_slug(part)]
+    if bad:
+        errors.append(f'{rel(skill_path)}: directory parts must be lowercase slugs: {", ".join(bad)}')
+        return False
+    return True
 
-    graph: dict[str, dict[str, list[str]]] = {}
-    for line_number, line in enumerate(read_text(GRAPH_PATH).splitlines(), start=1):
-        if not line.startswith("| `"):
-            continue
-        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
-        if len(cells) != 4:
-            errors.append(f"{rel(GRAPH_PATH)}:{line_number}: expected 4 table columns")
-            continue
-        skill = cells[0].strip("`")
-        graph[skill] = {
-            "BEFORE": parse_list(cells[1]),
-            "WITH": parse_list(cells[2]),
-            "AFTER": parse_list(cells[3]),
-        }
 
-    if not graph:
-        errors.append(f"{rel(GRAPH_PATH)}: graph table is empty")
-    return graph
+def check_skill_quality(path: Path, errors: list[str]) -> None:
+    """Validate required active skill quality sections."""
+    text = read_text(path)
+    for section in REQUIRED_SKILL_SECTIONS:
+        if section not in text:
+            errors.append(f'{rel(path)}: missing required quality section {section}')
+    if re.search(r'\b(TBD|TODO)\b', text):
+        errors.append(f'{rel(path)}: contains placeholder TODO/TBD text')
 
 
 def check_resource_references(path: Path, errors: list[str]) -> None:
+    """Validate referenced local and workspace support files exist."""
     text = read_text(path)
-    for match in re.finditer(r"`((?:references|scripts|assets)/[^`]+)`", text):
-        raw = match.group(1)
-        target = raw.split()[0]
-        if not (path.parent / target).exists():
-            errors.append(f"{rel(path)}: referenced resource does not exist: {target}")
-
-    for match in re.finditer(r"\]\(((?:references|scripts|assets)/[^)]+)\)", text):
+    pattern = r'(?:\.\./)*(?:references|scripts)/[^`)]+\.\w+'
+    for match in re.finditer(rf'`({pattern})`', text):
         target = match.group(1).split()[0]
         if not (path.parent / target).exists():
-            errors.append(f"{rel(path)}: linked resource does not exist: {target}")
+            errors.append(f'{rel(path)}: referenced resource does not exist: {target}')
+    for match in re.finditer(rf'\]\(({pattern})\)', text):
+        target = match.group(1).split()[0]
+        if not (path.parent / target).exists():
+            errors.append(f'{rel(path)}: linked resource does not exist: {target}')
+
+
+def check_required_workspace_references(errors: list[str]) -> None:
+    """Ensure the workspace-level reference layer exists."""
+    for reference in REQUIRED_WORKSPACE_REFERENCES:
+        path = ROOT / reference
+        if not path.exists():
+            errors.append(f'{reference}: missing required workspace reference')
+        elif len(read_text(path).strip().splitlines()) < 3:
+            errors.append(f'{reference}: reference is too thin to be useful')
 
 
 def check_legacy_heading(path: Path, errors: list[str]) -> None:
-    if "legacy" not in rel(path).lower():
+    """Ensure legacy reference files identify themselves as legacy."""
+    if 'legacy' not in rel(path).lower():
         return
-
     for line in read_text(path).splitlines():
-        if line.startswith("#"):
-            if "Legacy" not in line:
-                errors.append(f"{rel(path)}: first markdown heading must include Legacy")
+        if line.startswith('#'):
+            if 'Legacy' not in line:
+                errors.append(f'{rel(path)}: first markdown heading must include Legacy')
             return
-    errors.append(f"{rel(path)}: legacy file must include a markdown heading")
+    errors.append(f'{rel(path)}: legacy file must include a markdown heading')
 
 
 def check_forbidden_active_terms(errors: list[str]) -> None:
-    for path in ROOT.rglob("*"):
-        if not path.is_file():
+    """Reject source-project residue in active instruction files."""
+    for path in ROOT.rglob('*'):
+        if not path.is_file() or skip(path) or path.name == '.gitignore' or path.resolve() == SELF:
             continue
-        if should_skip_path(path):
+        if 'legacy' in rel(path).lower():
             continue
-        if path.name == ".gitignore":
-            continue
-        if path.resolve() == SELF:
-            continue
-        if "legacy" in rel(path).lower():
-            continue
-
         try:
-            text = read_text(path)
+            text = read_text(path).replace('Cortex Skills', '')
         except UnicodeDecodeError:
             continue
-
-        text = text.replace("Cortex Skills", "")
         for term in FORBIDDEN_ACTIVE_TERMS:
             if term in text:
-                errors.append(f"{rel(path)}: forbidden active source-project residue: {term}")
+                errors.append(f'{rel(path)}: forbidden active source-project residue: {term}')
 
 
 def check_empty_directories(errors: list[str]) -> None:
-    for path in ROOT.rglob("*"):
-        if should_skip_path(path):
-            continue
-        if path.is_dir() and not any(path.iterdir()):
-            errors.append(f"{rel(path)}: empty directory")
+    """Reject empty directories in the workspace."""
+    for path in ROOT.rglob('*'):
+        if not skip(path) and path.is_dir() and not any(path.iterdir()):
+            errors.append(f'{rel(path)}: empty directory')
 
 
-def check_cascade_rules_reference(names: dict[str, Path], errors: list[str]) -> None:
-    if not CASCADE_RULES_PATH.exists():
-        errors.append(f"{rel(CASCADE_RULES_PATH)}: missing cascade routing reference")
+def check_cascade_reference(names: dict[str, Path], errors: list[str]) -> None:
+    """Validate the signal-routing reference."""
+    if not CASCADE_PATH.exists():
+        errors.append(f'{rel(CASCADE_PATH)}: missing cascade routing reference')
         return
-
-    text = read_text(CASCADE_RULES_PATH)
-    for heading in ("## Cascade Algorithm", "## Signal Rules", "## Guardrails"):
+    text = read_text(CASCADE_PATH)
+    for heading in ('## Cascade Algorithm', '## Signal Rules', '## Guardrails'):
         if heading not in text:
-            errors.append(f"{rel(CASCADE_RULES_PATH)}: missing {heading}")
-
-    signal_rows = [
-        line
-        for line in text.splitlines()
-        if line.startswith("| ")
-        and not line.startswith("| Signal ")
-        and not line.startswith("| ---")
-    ]
-    if len(signal_rows) < 8:
-        errors.append(f"{rel(CASCADE_RULES_PATH)}: expected at least 8 signal rule rows")
-
-    allowed_non_skills = {"BEFORE", "WITH", "AFTER"}
-    for match in re.finditer(r"`([a-zA-Z0-9_.-]+)`", text):
+            errors.append(f'{rel(CASCADE_PATH)}: missing {heading}')
+    rows = [line for line in text.splitlines() if line.startswith('| ') and not line.startswith('| Signal ') and not line.startswith('| ---')]
+    if len(rows) < 12:
+        errors.append(f'{rel(CASCADE_PATH)}: expected at least 12 signal rule rows')
+    allowed = {'BEFORE', 'WITH', 'AFTER'}
+    for match in re.finditer(r'`([a-zA-Z0-9_.-]+)`', text):
         token = match.group(1)
-        if token in allowed_non_skills or "." in token:
+        if token in allowed or '.' in token:
             continue
-        if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", token):
-            continue
-        if token not in names:
-            errors.append(f"{rel(CASCADE_RULES_PATH)}: unknown skill reference {token!r}")
+        if re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', token) and token not in names:
+            errors.append(f'{rel(CASCADE_PATH)}: unknown skill reference {token!r}')
 
 
-def cascade_order(
-    graph: dict[str, dict[str, list[str]]],
-    initial: list[str],
-) -> tuple[list[str], list[str]]:
+def check_catalog(names: dict[str, Path], errors: list[str]) -> None:
+    """Validate SKILL_CATALOG.md count, paths, and taxonomy sections."""
+    if not CATALOG_PATH.exists():
+        errors.append(f'{rel(CATALOG_PATH)}: missing skill catalog')
+        return
+    text = read_text(CATALOG_PATH)
+    count_match = re.search(r'Cortex Skills contains (\d+) skills', text)
+    if not count_match:
+        errors.append(f'{rel(CATALOG_PATH)}: missing skill count summary')
+    elif int(count_match.group(1)) != len(names):
+        errors.append(f'{rel(CATALOG_PATH)}: skill count says {count_match.group(1)}, expected {len(names)}')
+    rows: dict[str, tuple[int, str, str]] = {}
+    heading = ''
+    for line_number, line in enumerate(text.splitlines(), start=1):
+        heading_match = re.match(r'^## (.+)$', line)
+        if heading_match:
+            heading = heading_match.group(1)
+            continue
+        match = re.match(r'\| `([^`]+)` \| .* \| `([^`]+)` \|$', line)
+        if not match:
+            continue
+        skill, catalog_path = match.groups()
+        if skill in rows:
+            errors.append(f'{rel(CATALOG_PATH)}:{line_number}: duplicate catalog row for {skill!r}')
+        rows[skill] = (line_number, catalog_path, heading)
+    for skill, (line_number, _, _) in rows.items():
+        if skill not in names:
+            errors.append(f'{rel(CATALOG_PATH)}:{line_number}: unknown catalog skill {skill!r}')
+    for skill, skill_path in names.items():
+        expected_path = f'{rel(skill_path.parent)}/'
+        if skill not in rows:
+            errors.append(f'{rel(CATALOG_PATH)}: missing catalog row for {skill!r}')
+            continue
+        line_number, catalog_path, row_heading = rows[skill]
+        if catalog_path != expected_path:
+            errors.append(f'{rel(CATALOG_PATH)}:{line_number}: catalog path for {skill!r} is {catalog_path!r}, expected {expected_path!r}')
+        expected_heading = TAXONOMY_HEADINGS[skill_path.parent.relative_to(ROOT).parts[0]]
+        if row_heading != expected_heading:
+            errors.append(f'{rel(CATALOG_PATH)}:{line_number}: catalog section for {skill!r} is {row_heading!r}, expected {expected_heading!r}')
+
+
+def cascade_order(graph: dict[str, dict[str, list[str]]], initial: list[str]) -> tuple[list[str], list[str]]:
+    """Return recursive BEFORE order and cycle diagnostics."""
     order: list[str] = []
     seen: set[str] = set()
     visiting: list[str] = []
     cycles: list[str] = []
-
     def add(name: str) -> None:
         if name not in graph:
             return
         if name in visiting:
-            cycles.append(" -> ".join(visiting[visiting.index(name):] + [name]))
+            cycles.append(' -> '.join(visiting[visiting.index(name):] + [name]))
             return
         if name in seen:
             return
-
         visiting.append(name)
-        for target in graph[name]["BEFORE"]:
+        for target in graph[name]['BEFORE']:
             add(target)
         visiting.pop()
-
         seen.add(name)
         order.append(name)
-
     for name in initial:
         add(name)
-
     return order, cycles
 
 
-def check_cascade(
-    graph: dict[str, dict[str, list[str]]],
-    errors: list[str],
-    show: bool,
-) -> None:
-    if not graph:
-        return
-
-    if graph.get("using-cortex", {}).get("BEFORE"):
-        errors.append(f"{rel(GRAPH_PATH)}: using-cortex must not define hard BEFORE cascades")
-
+def check_cascade(graph: dict[str, dict[str, list[str]]], errors: list[str], show: bool) -> None:
+    """Validate graph expansion is bounded and acyclic."""
+    if graph.get('using-cortex', {}).get('BEFORE'):
+        errors.append(f'{rel(GRAPH_PATH)}: using-cortex must not define hard BEFORE cascades')
     for name in graph:
         order, cycles = cascade_order(graph, [name])
         for cycle in cycles:
-            errors.append(f"{rel(GRAPH_PATH)}: BEFORE cycle: {cycle}")
+            errors.append(f'{rel(GRAPH_PATH)}: BEFORE cycle: {cycle}')
         if len(order) > MAX_BEFORE_CASCADE:
-            errors.append(
-                f"cascade {name}: BEFORE cascade loads {len(order)} skills, "
-                f"expected at most {MAX_BEFORE_CASCADE}: {', '.join(order)}"
-            )
+            errors.append(f'cascade {name}: BEFORE cascade loads {len(order)} skills, expected at most {MAX_BEFORE_CASCADE}: {", ".join(order)}')
         if show:
-            print(f"cascade {name}: {len(order)} skill(s): {', '.join(order)}")
+            print(f'cascade {name}: {len(order)} skill(s): {", ".join(order)}')
 
 
 def iter_code_blocks(text: str) -> Iterable[tuple[int, str]]:
+    """Yield fenced code blocks with starting line numbers."""
     in_block = False
     start_line = 0
     block: list[str] = []
-
     for line_number, line in enumerate(text.splitlines(), start=1):
-        if line.startswith("```"):
+        if line.startswith('```'):
             if in_block:
-                yield start_line, "\n".join(block)
+                yield start_line, '\n'.join(block)
                 block = []
                 in_block = False
             else:
                 in_block = True
                 start_line = line_number
             continue
-
         if in_block:
             block.append(line)
 
 
 def check_example_universe(errors: list[str]) -> None:
-    for path in ROOT.rglob("*.md"):
-        if should_skip_path(path):
+    """Reject known non-recruitment examples in code blocks."""
+    for path in ROOT.rglob('*.md'):
+        if skip(path) or 'legacy' in rel(path).lower():
             continue
-        if "legacy" in rel(path).lower():
-            continue
-
-        text = read_text(path)
-        for start_line, block in iter_code_blocks(text):
+        for start_line, block in iter_code_blocks(read_text(path)):
             for identifier in FORBIDDEN_EXAMPLE_IDENTIFIERS:
-                if re.search(rf"\b{re.escape(identifier)}\b", block):
-                    errors.append(
-                        f"{rel(path)}:{start_line}: example code uses non-recruitment identifier {identifier}"
-                    )
+                if re.search(rf'\b{re.escape(identifier)}\b', block):
+                    errors.append(f'{rel(path)}:{start_line}: example code uses non-recruitment identifier {identifier}')
 
 
 def parse_args(argv: list[str] | None) -> argparse.Namespace:
+    """Parse command-line arguments."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--cascade",
-        action="store_true",
-        help="Print graph-derived BEFORE cascade closures.",
-    )
+    parser.add_argument('--cascade', action='store_true', help='Print graph-derived BEFORE cascade closures.')
     return parser.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> int:
+    """Run all workspace validations."""
     args = parse_args(argv)
     errors: list[str] = []
-
-    skill_paths = sorted(path for path in ROOT.rglob("SKILL.md") if not should_skip_path(path))
-    if not skill_paths:
-        errors.append("no skills found")
-
     graph = parse_graph(errors)
     names: dict[str, Path] = {}
     metadata_count = 0
-
+    skill_paths = sorted(path for path in ROOT.rglob('SKILL.md') if not skip(path))
+    if not skill_paths:
+        errors.append('no skills found')
     for skill_path in skill_paths:
-        skill_dir = skill_path.parent
         values = parse_frontmatter(skill_path, errors)
-        name = values.get("name", "")
-        description = values.get("description", "")
-
+        name = values.get('name', '')
+        description = values.get('description', '')
         if not name:
-            errors.append(f"{rel(skill_path)}: missing frontmatter name")
-        elif not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", name):
-            errors.append(f"{rel(skill_path)}: invalid skill name {name!r}")
-        elif name not in EXPECTED_SKILL_DIRS:
-            errors.append(f"{rel(skill_path)}: no expected directory registered for skill {name!r}")
-        elif skill_dir.relative_to(ROOT) != EXPECTED_SKILL_DIRS[name]:
-            errors.append(f"{rel(skill_path)}: expected directory {EXPECTED_SKILL_DIRS[name]}")
+            errors.append(f'{rel(skill_path)}: missing frontmatter name')
+        elif not valid_slug(name):
+            errors.append(f'{rel(skill_path)}: invalid skill name {name!r}')
         elif name in names:
-            errors.append(f"{rel(skill_path)}: duplicate skill name also in {rel(names[name])}")
-        else:
+            errors.append(f'{rel(skill_path)}: duplicate skill name also in {rel(names[name])}')
+        elif check_skill_location(skill_path, errors):
             names[name] = skill_path
-
         if not description:
-            errors.append(f"{rel(skill_path)}: missing frontmatter description")
-
-        text = read_text(skill_path)
-        if "# Output Marker" not in text:
-            errors.append(f"{rel(skill_path)}: missing Output Marker")
-        if name and f"using skill: {name}" not in text:
-            errors.append(f"{rel(skill_path)}: Output Marker must use frontmatter name")
-
-        metadata_path = skill_dir / "agents" / "openai.yaml"
+            errors.append(f'{rel(skill_path)}: missing frontmatter description')
+        if name and f'using skill: {name}' not in read_text(skill_path):
+            errors.append(f'{rel(skill_path)}: Output Marker must use frontmatter name')
+        check_skill_quality(skill_path, errors)
+        metadata_path = skill_path.parent / 'agents' / 'openai.yaml'
         metadata = parse_openai_metadata(metadata_path, errors)
         if metadata:
             metadata_count += 1
-        display_name = metadata.get("display_name", "")
-        short_description = metadata.get("short_description", "")
-        default_prompt = metadata.get("default_prompt", "")
+        display_name = metadata.get('display_name', '')
+        short_description = metadata.get('short_description', '')
+        default_prompt = metadata.get('default_prompt', '')
         if metadata_path.exists():
-            if "(otwld)" not in display_name:
-                errors.append(f"{rel(metadata_path)}: display_name must include (otwld)")
+            if '(otwld)' not in display_name:
+                errors.append(f'{rel(metadata_path)}: display_name must include (otwld)')
             if not short_description:
-                errors.append(f"{rel(metadata_path)}: missing short_description")
+                errors.append(f'{rel(metadata_path)}: missing short_description')
             if not default_prompt:
-                errors.append(f"{rel(metadata_path)}: missing default_prompt")
-            elif name and not default_prompt.startswith(f"Use ${name} "):
-                errors.append(f"{rel(metadata_path)}: default_prompt must start with Use ${name} ")
-
+                errors.append(f'{rel(metadata_path)}: missing default_prompt')
+            elif name and not default_prompt.startswith(f'Use ${name} '):
+                errors.append(f'{rel(metadata_path)}: default_prompt must start with Use ${name} ')
         edges = parse_cross_references(skill_path, errors)
         if name and graph:
             if name not in graph:
-                errors.append(f"{rel(GRAPH_PATH)}: missing graph row for {name}")
+                errors.append(f'{rel(GRAPH_PATH)}: missing graph row for {name}')
             elif edges != graph[name]:
-                errors.append(f"{rel(skill_path)}: Cross-References do not match {rel(GRAPH_PATH)}")
-
+                errors.append(f'{rel(skill_path)}: Cross-References do not match {rel(GRAPH_PATH)}')
         check_resource_references(skill_path, errors)
-
     for name, edges in graph.items():
         if name not in names:
-            errors.append(f"{rel(GRAPH_PATH)}: graph row references missing skill {name}")
+            errors.append(f'{rel(GRAPH_PATH)}: graph row references missing skill {name}')
         for label, targets in edges.items():
             for target in targets:
                 if target not in names:
-                    errors.append(f"{rel(GRAPH_PATH)}: {name} {label} references missing skill {target}")
-
-    check_cascade_rules_reference(names, errors)
-
-    for path in ROOT.rglob("*.md"):
-        if not should_skip_path(path):
+                    errors.append(f'{rel(GRAPH_PATH)}: {name} {label} references missing skill {target}')
+    check_required_workspace_references(errors)
+    check_cascade_reference(names, errors)
+    check_catalog(names, errors)
+    for path in ROOT.rglob('*.md'):
+        if not skip(path):
             check_legacy_heading(path, errors)
-
     check_cascade(graph, errors, args.cascade)
     check_example_universe(errors)
     check_forbidden_active_terms(errors)
     check_empty_directories(errors)
-
     if errors:
         for error in sorted(set(errors)):
-            print(f"error: {error}", file=sys.stderr)
+            print(f'error: {error}', file=sys.stderr)
         return 1
-
-    print(f"validation ok: skills={len(skill_paths)} metadata={metadata_count}")
+    print(f'validation ok: skills={len(skill_paths)} metadata={metadata_count}')
     return 0
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     raise SystemExit(main(sys.argv[1:]))

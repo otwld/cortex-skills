@@ -14,59 +14,51 @@ using skill: typescript-code-style
 
 ## Overview
 
-Apply a Google TypeScript Style Guide based workflow for TypeScript source.
-Preserve local tooling and surrounding style first, then use this skill to keep
-new code readable, maintainable, and easy to refactor.
+Keep TypeScript implementation predictable through explicit modules, clear names, narrow
+types, and useful comments.
 
-## Operating Order
+## Reference Routing
 
-1. Read the nearest project instructions, `tsconfig`, formatter, ESLint, test setup, and surrounding files.
-2. Follow project-enforced rules when they are stricter or intentionally different.
-3. Apply `code-documentation` before and during any TypeScript code edit.
-4. Apply the core defaults to new or materially rewritten TypeScript.
-5. Load only the reference file that matches the current question or code area.
-6. Run the project's normal formatter, typecheck, and tests when feasible.
+- Use `references/source-modules.md` when this task touches that concern.
+- Use `references/types-naming.md` when this task touches that concern.
+- Use `references/language-features.md` when this task touches that concern.
+- Use `references/comments-tooling-policy.md` when this task touches that concern.
+- Use `scripts/ts_style_preflight.py` when this task touches that concern.
 
-## Core Defaults
+## Workflow
 
-- Use UTF-8, ordinary spaces, semicolons, `const` by default, `let` only for reassignment, and never `var`.
-- Use ES module syntax with named exports in owned code.
-- Use `import type` and `export type` for type-only symbols.
-- Keep exported APIs small and stable.
-- Prefer readable type expressions, `unknown` over `any`, and interfaces for object shapes.
-- Use function declarations for named functions and arrows for callbacks.
-- Throw and reject only `Error` instances.
-- Use JSDoc/TSDoc for every touched exported symbol, reusable API, and owning
-  surface for touched private code paths.
-- Use `//` comments only for implementation notes that JSDoc/TSDoc cannot
-  express cleanly.
+1. Inspect the current repository context and existing project memory before changing behavior or guidance.
+2. State the concrete responsibility, interface, artifact, or user-visible behavior this skill governs.
+3. Apply the skill-specific rules: Follow project tooling; prefer explicit imports; use strict narrowing; avoid casts; respect public entry points; comment intent, not syntax.
+4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
+5. Stop when the task needs a decision outside this skill's scope and route to the appropriate governance skill.
 
-## Reference Map
+## Quality Gates
 
-| Need | Read |
-| --- | --- |
-| Source files, imports, exports, modules | [references/source-modules.md](references/source-modules.md) |
-| Variables, objects, classes, functions, control flow, errors | [references/language-features.md](references/language-features.md) |
-| Naming, inference, nullability, interfaces, arrays, generics | [references/types-naming.md](references/types-naming.md) |
-| Compiler expectations, JSDoc, comments, generated code | [references/comments-tooling-policy.md](references/comments-tooling-policy.md) |
+- Guidance is grounded in current files or explicit user intent.
+- Output uses project vocabulary and the recruitment example universe when examples are needed.
+- Decisions are recorded in the right artifact instead of hidden in transient chat.
+- Validation or acceptance criteria are named when the skill changes behavior or workflow.
 
-## Mechanical Preflight
+## Example
 
-Run the optional preflight from this skill directory:
+parseCandidateStage returns a typed CandidateStage or validation error instead of
+casting form data.
 
-```bash
-python3 scripts/ts_style_preflight.py path/to/file.ts path/to/dir
-```
+## Hard Stops
 
-The script catches high-signal mechanical issues. It does not replace
-TypeScript, ESLint, Prettier, or human review.
+- Do not proceed on repo facts that can be inspected but have not been checked.
+- Do not broaden scope beyond the triggering signal.
+- Do not create placeholder guidance, examples, metadata, or documentation.
+- Do not claim completion without evidence that covers this skill's checklist.
 
 ## Usage Checklist
 
-- Local project rules were checked first.
-- New TypeScript uses named exports and type-only imports where appropriate.
-- Touched code has relevant JSDoc/TSDoc at the symbol or owning-surface level.
-- Mechanical preflight was run for broad TypeScript edits when feasible.
+- Trigger signal is explicit.
+- Relevant existing convention or memory was checked.
+- Skill-specific rules were applied.
+- Artifacts, docs, metadata, or tests affected by the work were updated together.
+- Remaining decisions, risks, or validation gaps are stated.
 
 ## Cross-References
 

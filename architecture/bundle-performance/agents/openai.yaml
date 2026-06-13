@@ -1,4 +1,4 @@
 interface:
   display_name: "(otwld) Bundle Performance"
-  short_description: "Protect tree-shaking and bundle size"
-  default_prompt: "Use $bundle-performance when exports, entry points, UI dependencies, or shared runtime code may affect bundle size."
+  short_description: "Protect bundle size, tree-shaking, and side-effect boundaries in broadly consumed runtime code."
+  default_prompt: "Use $bundle-performance when changes may affect bundle size, tree-shaking, side effects, UI dependencies, entry points, or broadly consumed runtime code."

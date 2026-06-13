@@ -14,39 +14,42 @@ using skill: review-feedback-triage
 
 ## Overview
 
-Review feedback is input to evaluate, not an order to apply blindly. Verify the
-claim, understand the intent, and implement one coherent fix at a time.
+Classify feedback before applying it so correct principles do not become bad patches.
 
 ## Workflow
 
-1. Read all feedback before changing files.
-2. Group related findings.
-3. Clarify anything that affects scope or correctness.
-4. Verify each claim against current code and requirements.
-5. Decide: fix, defer, reject with technical reason, or ask the user.
-6. Implement accepted fixes in risk order.
-7. Test each meaningful fix and re-run relevant verification.
+1. Inspect the current repository context and existing project memory before changing behavior or guidance.
+2. State the concrete responsibility, interface, artifact, or user-visible behavior this skill governs.
+3. Apply the skill-specific rules: Read context; classify each item; verify the claim; apply, adapt, defer, or reject; respond with evidence.
+4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
+5. Stop when the task needs a decision outside this skill's scope and route to the appropriate governance skill.
 
-## Rules
+## Quality Gates
 
-- Treat user feedback as authoritative on intent, but still clarify scope.
-- Treat external or agent feedback as a hypothesis to verify.
-- Push back when feedback breaks requirements, violates architecture, or adds
-  unused scope.
-- Do not batch unrelated fixes if that hides which change resolved the issue.
+- Guidance is grounded in current files or explicit user intent.
+- Output uses project vocabulary and the recruitment example universe when examples are needed.
+- Decisions are recorded in the right artifact instead of hidden in transient chat.
+- Validation or acceptance criteria are named when the skill changes behavior or workflow.
+
+## Example
+
+A suggestion to add a generic Candidate filter helper is checked for stable duplication
+before extraction.
 
 ## Hard Stops
 
-- Feedback is unclear and implementation would guess intent.
-- A suggestion conflicts with prior user or architecture decisions.
-- A reviewer requests broad "proper" implementation for unused behavior.
+- Do not proceed on repo facts that can be inspected but have not been checked.
+- Do not broaden scope beyond the triggering signal.
+- Do not create placeholder guidance, examples, metadata, or documentation.
+- Do not claim completion without evidence that covers this skill's checklist.
 
 ## Usage Checklist
 
-- Feedback was read and grouped.
-- Unclear items were clarified before implementation.
-- Accepted and rejected findings have technical reasons.
-- Fixes were validated individually or by coherent batch.
+- Trigger signal is explicit.
+- Relevant existing convention or memory was checked.
+- Skill-specific rules were applied.
+- Artifacts, docs, metadata, or tests affected by the work were updated together.
+- Remaining decisions, risks, or validation gaps are stated.
 
 ## Cross-References
 

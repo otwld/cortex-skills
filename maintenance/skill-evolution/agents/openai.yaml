@@ -1,4 +1,4 @@
 interface:
   display_name: "(otwld) Skill Evolution"
-  short_description: "Improve skills from repeated patterns or diffs"
-  default_prompt: "Use $skill-evolution after repeated patterns, folder or diff analysis, refactors, reviews, or discussions reveal a reusable skill gap."
+  short_description: "Evolve skills from repeated reusable patterns, doctrine gaps, and agent failure modes."
+  default_prompt: "Use $skill-evolution when Use after repeated implementation patterns, technical discussions, refactors, reviews, folder or diff analysis, or skill-library changes reveal a reusable agent workflow or doctrine gap."

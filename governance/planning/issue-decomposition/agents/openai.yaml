@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Issue Decomposition"
+  short_description: "Break plans into vertical issue slices and durable agent briefs for configurable issue trackers."
+  default_prompt: "Use $issue-decomposition when turning a PRD, plan, design, or large request into vertical slices, durable agent briefs, issue tracker work, or ready-for-agent implementation units."

@@ -14,51 +14,43 @@ using skill: angular-conventions
 
 ## Overview
 
-Apply Angular rules only when the target project uses Angular. Follow project
-tooling first, then prefer current Angular patterns for new or materially
-changed code.
+Apply Angular guidance only when the project uses Angular and local version support is
+known.
 
-## Core Rules
+## Workflow
 
-- Prefer standalone APIs when the project already uses them.
-- Prefer `inject()` for new Angular dependency injection unless the file uses constructor injection consistently.
-- Use modern control flow (`@if`, `@for`, `@switch`, `@let`) in projects that support it.
-- Keep templates and styles external for non-trivial components.
-- Use reactive forms for complex or reusable form UI.
-- Use project-approved form provider helpers instead of hand-rolled provider aliases.
-- Add JSDoc for exported Angular classes, non-obvious inputs/outputs, and public reusable APIs.
+1. Inspect the current repository context and existing project memory before changing behavior or guidance.
+2. State the concrete responsibility, interface, artifact, or user-visible behavior this skill governs.
+3. Apply the skill-specific rules: Prefer supported standalone APIs; use local DI style; keep complex templates/styles external; type forms; document public inputs and outputs.
+4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
+5. Stop when the task needs a decision outside this skill's scope and route to the appropriate governance skill.
+
+## Quality Gates
+
+- Guidance is grounded in current files or explicit user intent.
+- Output uses project vocabulary and the recruitment example universe when examples are needed.
+- Decisions are recorded in the right artifact instead of hidden in transient chat.
+- Validation or acceptance criteria are named when the skill changes behavior or workflow.
 
 ## Example
 
-```ts
-/**
- * Pipeline board for tracking candidate stages on a job offer.
- */
-@Component({
-  selector: 'recruiting-pipeline-board',
-  standalone: true,
-  templateUrl: './pipeline-board.component.html',
-  styleUrl: './pipeline-board.component.css',
-})
-export class PipelineBoardComponent {
-  /** Active job offer shown on the board. */
-  readonly jobOffer = input<JobOfferSummary | null>(null);
+CandidatePipelineComponent exposes a documented jobOffer input and stageChange output
+instead of reaching into route state directly.
 
-  /** Emitted when a candidate moves between stages. */
-  readonly stageChange = output<CandidateStageChange>();
-}
-```
+## Hard Stops
 
-## Legacy References
-
-- `references/legacy-extracted-patterns.md` preserves non-normative helper names from the extracted source project.
+- Do not proceed on repo facts that can be inspected but have not been checked.
+- Do not broaden scope beyond the triggering signal.
+- Do not create placeholder guidance, examples, metadata, or documentation.
+- Do not claim completion without evidence that covers this skill's checklist.
 
 ## Usage Checklist
 
-- Angular version and local style were checked.
-- New code follows supported Angular syntax.
-- Forms use the project's reusable form pattern.
-- Public Angular APIs have useful documentation.
+- Trigger signal is explicit.
+- Relevant existing convention or memory was checked.
+- Skill-specific rules were applied.
+- Artifacts, docs, metadata, or tests affected by the work were updated together.
+- Remaining decisions, risks, or validation gaps are stated.
 
 ## Cross-References
 

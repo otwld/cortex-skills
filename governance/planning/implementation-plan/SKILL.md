@@ -14,46 +14,50 @@ using skill: implementation-plan
 
 ## Overview
 
-Turn stable requirements into an execution plan that another engineer or agent
-can follow without making design decisions. Plans should be specific enough to
-prevent drift and compact enough to stay useful.
+Turn stable requirements into a plan another engineer can execute without design
+decisions.
+
+## Reference Routing
+
+- Use `../../../references/skill-quality-standard.md` when this task touches that concern.
+- Use `../../../references/vertical-slices.md` when this task touches that concern.
 
 ## Workflow
 
-1. Confirm requirements, non-goals, and success criteria.
-2. Map the main files or modules and each responsibility.
-3. Break the work into independently verifiable tasks.
-4. Include JSDoc/TSDoc updates for any planned code generation, edit, move,
-   split, or refactor.
-5. Name expected validation commands and acceptance checks.
-6. Identify needed governance and domain skills for execution.
-7. Save a plan only when useful or requested.
+1. Inspect the current repository context and existing project memory before changing behavior or guidance.
+2. State the concrete responsibility, interface, artifact, or user-visible behavior this skill governs.
+3. Apply the skill-specific rules: Confirm non-goals; map modules and interfaces; order tasks; name validation; include docs, API, migration, and compatibility impact.
+4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
+5. Stop when the task needs a decision outside this skill's scope and route to the appropriate governance skill.
 
-Default artifact path is `docs/cortex/plans/` when the target repository has no
-existing plan convention.
+## Quality Gates
 
-## Plan Rules
+- Guidance is grounded in current files or explicit user intent.
+- Output uses project vocabulary and the recruitment example universe when examples are needed.
+- Decisions are recorded in the right artifact instead of hidden in transient chat.
+- Validation or acceptance criteria are named when the skill changes behavior or workflow.
 
-- No placeholders such as `TBD`, `TODO`, or vague "handle edge cases" steps.
-- Include exact commands when validation is known.
-- Include code snippets only where they remove ambiguity.
-- Prefer behavior-level task descriptions over file-by-file churn.
-- Do not require intermediate commits unless the user workflow does.
+## Example
+
+A Candidate saved-search plan names query contract, UI behavior, persistence, story
+coverage, and focused tests before edits.
 
 ## Hard Stops
 
-- A requirement cannot be mapped to a task.
-- A task requires a decision not captured in the plan.
-- Validation is unspecified for a risky behavior change.
+- Do not proceed on repo facts that can be inspected but have not been checked.
+- Do not broaden scope beyond the triggering signal.
+- Do not create placeholder guidance, examples, metadata, or documentation.
+- Do not claim completion without evidence that covers this skill's checklist.
 
 ## Usage Checklist
 
-- Requirements and non-goals are stable.
-- Tasks are ordered and independently checkable.
-- Validation commands or acceptance checks are named.
-- Execution can start without new design decisions.
+- Trigger signal is explicit.
+- Relevant existing convention or memory was checked.
+- Skill-specific rules were applied.
+- Artifacts, docs, metadata, or tests affected by the work were updated together.
+- Remaining decisions, risks, or validation gaps are stated.
 
 ## Cross-References
 
-- WITH: design-intake, workspace-state-guard, test-first-discipline, architecture-drift-detector, library-placement-decision, public-api-design, code-documentation
+- WITH: design-intake, grill-with-docs, issue-decomposition, workspace-state-guard, test-first-discipline, architecture-drift-detector, library-placement-decision, public-api-design, code-documentation
 - AFTER: plan-execution

@@ -1,4 +1,4 @@
 interface:
   display_name: "(otwld) Angular Conventions"
-  short_description: "Apply reusable Angular rules"
-  default_prompt: "Use $angular-conventions when creating, modifying, or reviewing Angular code."
+  short_description: "Apply Angular conventions for components, templates, forms, dependency injection, and public Angular APIs."
+  default_prompt: "Use $angular-conventions when creating, modifying, or reviewing Angular components, directives, pipes, services, templates, styles, forms, inputs, outputs, or dependency injection."

@@ -42,6 +42,12 @@ Preview the skill cascade simulations:
 python3 scripts/validate-skills.py --cascade
 ```
 
+Run validator fixture tests after changing validator behavior:
+
+```bash
+python3 scripts/test-validate-skills.py
+```
+
 Use the repository as a complete skill library with compatible agent tooling, or
 copy the skill directories you need into your own agent skill location.
 
@@ -78,7 +84,9 @@ The repository also includes:
 - [references/skill-graph.md](references/skill-graph.md), the canonical
   non-transitive cross-skill graph.
 - [scripts/validate-skills.py](scripts/validate-skills.py), the structural,
-  metadata, residue, example, and cascade validator.
+  OpenAI metadata, catalog taxonomy, residue, example, and cascade validator.
+- [scripts/test-validate-skills.py](scripts/test-validate-skills.py), fixture
+  regression tests for validator behavior.
 - A shared recruitment job-board example universe for all illustrative examples.
 - Required `(otwld)` display names in `agents/openai.yaml` for easy discovery in
   agent UIs and CLIs.

@@ -14,25 +14,42 @@ using skill: jest-conventions
 
 ## Overview
 
-Keep Jest configuration explicit and tests focused on observable behavior.
-When a task asks about Jest APIs, configuration options, CLI behavior, setup, or
-migration details, follow the AGENTS.md Context7 workflow before relying on
-memory.
+Use Jest to prove behavior through stable seams with minimal boundary mocks.
 
-## Core Rules
+## Workflow
 
-- Keep Jest configuration in the project's established config location.
-- Use setup files only for shared test environment behavior.
-- Prefer `setupFilesAfterEnv` for custom matchers and environment extensions.
-- Keep mocks local unless a reusable mock factory removes real duplication.
-- Avoid tests that assert implementation details instead of behavior.
+1. Inspect the current repository context and existing project memory before changing behavior or guidance.
+2. State the concrete responsibility, interface, artifact, or user-visible behavior this skill governs.
+3. Apply the skill-specific rules: Inspect config; choose public seam; use deterministic fixtures; mock true boundaries; keep setup small; add matchers only for clarity.
+4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
+5. Stop when the task needs a decision outside this skill's scope and route to the appropriate governance skill.
+
+## Quality Gates
+
+- Guidance is grounded in current files or explicit user intent.
+- Output uses project vocabulary and the recruitment example universe when examples are needed.
+- Decisions are recorded in the right artifact instead of hidden in transient chat.
+- Validation or acceptance criteria are named when the skill changes behavior or workflow.
+
+## Example
+
+Test that a Candidate retrieves submitted Applications through a public service instead
+of asserting a repository call.
+
+## Hard Stops
+
+- Do not proceed on repo facts that can be inspected but have not been checked.
+- Do not broaden scope beyond the triggering signal.
+- Do not create placeholder guidance, examples, metadata, or documentation.
+- Do not claim completion without evidence that covers this skill's checklist.
 
 ## Usage Checklist
 
-- Config is discoverable by the test command.
-- Setup files are scoped to real shared behavior.
-- Tests are behavior-focused.
-- Reusable mocks are typed and intentional.
+- Trigger signal is explicit.
+- Relevant existing convention or memory was checked.
+- Skill-specific rules were applied.
+- Artifacts, docs, metadata, or tests affected by the work were updated together.
+- Remaining decisions, risks, or validation gaps are stated.
 
 ## Cross-References
 

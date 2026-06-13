@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Project Memory Setup"
+  short_description: "Set up or verify glossary, ADR, out-of-scope, issue tracker, and triage-label project memory artifacts."
+  default_prompt: "Use $project-memory-setup when setting up or verifying project-memory artifacts such as domain glossary, ADR location, out-of-scope decisions, issue tracker config, or triage label mapping."

@@ -1,4 +1,4 @@
 interface:
   display_name: "(otwld) Storybook Angular Conventions"
-  short_description: "Apply Angular Storybook wiring rules"
-  default_prompt: "Use $storybook-angular-conventions when creating or modifying Angular Storybook stories."
+  short_description: "Write Angular Storybook stories with realistic providers, deterministic states, and Angular-compatible setup."
+  default_prompt: "Use $storybook-angular-conventions when creating, modifying, or reviewing Angular Storybook stories, Angular story providers, module metadata, standalone story setup, or Angular story mocks."

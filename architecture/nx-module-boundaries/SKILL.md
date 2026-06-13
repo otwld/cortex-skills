@@ -14,42 +14,42 @@ using skill: nx-module-boundaries
 
 ## Overview
 
-Use the project graph and configured tags to keep Nx workspaces modular. Never
-guess dependency direction or tags when the workspace can be inspected.
+Use Nx graph metadata and tags as executable architecture, not paperwork to bypass.
 
 ## Workflow
 
-1. Inspect available Nx configuration, project metadata, and dependency graph.
-2. Identify project role, scope tags, and intended consumers.
-3. Check the dependency direction before adding imports or package references.
-4. Prefer fixing ownership or extraction problems over weakening boundary rules.
+1. Inspect the current repository context and existing project memory before changing behavior or guidance.
+2. State the concrete responsibility, interface, artifact, or user-visible behavior this skill governs.
+3. Apply the skill-specific rules: Inspect tags and graph; keep dependency direction valid; fix ownership instead of weakening rules; update tags only when responsibility changes.
+4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
+5. Stop when the task needs a decision outside this skill's scope and route to the appropriate governance skill.
 
-Use the repository's available Nx tools or CLI commands. If an Nx graph is not
-available, fall back to project files and existing import patterns.
+## Quality Gates
 
-## Boundary Rules
+- Guidance is grounded in current files or explicit user intent.
+- Output uses project vocabulary and the recruitment example universe when examples are needed.
+- Decisions are recorded in the right artifact instead of hidden in transient chat.
+- Validation or acceptance criteria are named when the skill changes behavior or workflow.
 
-- Each project should have one primary responsibility.
-- Tags should express scope and project type clearly enough to enforce imports.
-- Feature-level code must not create horizontal coupling across unrelated features.
-- Shared logic belongs in a correctly owned domain, utility, UI, or integration package.
-- Circular dependencies must be resolved by changing ownership or dependency flow.
+## Example
+
+Interview scheduling consumes Candidate domain contracts through an approved entry
+point, not another feature project internals.
 
 ## Hard Stops
 
-Stop and propose a migration path when:
-
-- A circular dependency is introduced.
-- Dependency direction is reversed.
-- Tags are removed or bypassed to make an import compile.
-- A reusable package starts depending on application-only code.
+- Do not proceed on repo facts that can be inspected but have not been checked.
+- Do not broaden scope beyond the triggering signal.
+- Do not create placeholder guidance, examples, metadata, or documentation.
+- Do not claim completion without evidence that covers this skill's checklist.
 
 ## Usage Checklist
 
-- Project role and owner are known.
-- Tags and constraints were inspected.
-- New dependencies obey configured direction.
-- Shared code is extracted to the correct reusable layer.
+- Trigger signal is explicit.
+- Relevant existing convention or memory was checked.
+- Skill-specific rules were applied.
+- Artifacts, docs, metadata, or tests affected by the work were updated together.
+- Remaining decisions, risks, or validation gaps are stated.
 
 ## Cross-References
 

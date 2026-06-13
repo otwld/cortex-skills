@@ -14,78 +14,43 @@ using skill: diary
 
 ## Overview
 
-Use diary entries to preserve durable project history for AI-assisted work. Keep
-entries concise, summary-first, append-only, and safe to commit.
+Preserve useful work history without replacing authoritative plans, issues, ADRs, or
+commits.
 
-## Operating Policy
+## Workflow
 
-- Write entries for important actions, decisions, blockers, validations, handoffs, and user preference changes.
-- Do not log every turn, transient thought, raw transcript, or long command output.
-- Redact credentials, tokens, private keys, auth headers, passwords, and other sensitive values.
-- Prefer summaries over raw code or private conversation text.
-- If writing fails, report the failure and include the would-be summary in the response.
+1. Inspect the current repository context and existing project memory before changing behavior or guidance.
+2. State the concrete responsibility, interface, artifact, or user-visible behavior this skill governs.
+3. Apply the skill-specific rules: Determine log type; reference existing artifacts; redact sensitive data; record scope, decisions, validation, blockers, and next steps.
+4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
+5. Stop when the task needs a decision outside this skill's scope and route to the appropriate governance skill.
 
-## Readback
+## Quality Gates
 
-Read recent diary entries when they materially improve continuity:
+- Guidance is grounded in current files or explicit user intent.
+- Output uses project vocabulary and the recruitment example universe when examples are needed.
+- Decisions are recorded in the right artifact instead of hidden in transient chat.
+- Validation or acceptance criteria are named when the skill changes behavior or workflow.
 
-- The user asks to resume, continue, reconstruct, or explain previous work.
-- Current work depends on prior agent decisions.
-- Context appears missing or contradictory and diary files exist.
+## Example
 
-Use:
+Log that Candidate search refactor passed validation and link the ADR rather than
+copying it.
 
-```bash
-python3 scripts/diary.py recent --repo path/to/target-project --limit 3
-```
+## Hard Stops
 
-from this skill directory. Always pass `--repo` when the diary should belong to
-a project other than the current working directory.
-
-## Writing Entries
-
-Preview without writing:
-
-```bash
-python3 scripts/diary.py append --dry-run \
-  --repo path/to/target-project \
-  --title "Preview entry" \
-  --summary "Show the diary format before writing."
-```
-
-Append an entry:
-
-```bash
-python3 scripts/diary.py append \
-  --repo path/to/target-project \
-  --title "Updated skill library" \
-  --summary "Reworked reusable skills and validated the structure." \
-  --action "Updated skill metadata." \
-  --validation "scripts/validate-skills.py passed"
-```
-
-## Entry Shape
-
-The script writes `.diary/YYYY-MM-DD.md` and appends stable Markdown sections:
-
-- Summary
-- Actions
-- Decisions
-- Done
-- Validation
-- Blockers
-- Changed Files
-- Next
-
-`Summary`, `Blockers`, and `Next` are always present. Other sections appear
-only when supplied.
+- Do not proceed on repo facts that can be inspected but have not been checked.
+- Do not broaden scope beyond the triggering signal.
+- Do not create placeholder guidance, examples, metadata, or documentation.
+- Do not claim completion without evidence that covers this skill's checklist.
 
 ## Usage Checklist
 
-- Entry captures durable context, not routine chatter.
-- Sensitive values are redacted.
-- Validation commands and outcomes are included when relevant.
-- Old entries are not rewritten unless the user asks.
+- Trigger signal is explicit.
+- Relevant existing convention or memory was checked.
+- Skill-specific rules were applied.
+- Artifacts, docs, metadata, or tests affected by the work were updated together.
+- Remaining decisions, risks, or validation gaps are stated.
 
 ## Cross-References
 

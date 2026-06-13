@@ -14,44 +14,43 @@ using skill: bundle-performance
 
 ## Overview
 
-Bundle impact is an architectural concern for reusable TypeScript packages.
-Small export and dependency mistakes compound across applications.
+Prevent shared imports from accumulating global bundle cost through side effects, broad
+barrels, or heavy optional dependencies.
 
-## Core Rules
+## Workflow
 
-- Keep modules side-effect-free unless initialization is the explicit purpose.
-- Prefer narrow entry points and explicit exports.
-- Avoid broad re-exports that pull heavy dependencies into common paths.
-- Keep optional or heavy integrations behind separate entry points.
-- Treat UI kit and charting dependencies as bundle-sensitive.
-- Prefer pure functions and standalone modules for reusable helpers.
+1. Inspect the current repository context and existing project memory before changing behavior or guidance.
+2. State the concrete responsibility, interface, artifact, or user-visible behavior this skill governs.
+3. Apply the skill-specific rules: Keep root entry points narrow; isolate optional integrations; preserve tree-shaking; document intentional bundle tradeoffs.
+4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
+5. Stop when the task needs a decision outside this skill's scope and route to the appropriate governance skill.
 
-## Secondary Entry Points
+## Quality Gates
 
-Use separate entry points when a subset:
+- Guidance is grounded in current files or explicit user intent.
+- Output uses project vocabulary and the recruitment example universe when examples are needed.
+- Decisions are recorded in the right artifact instead of hidden in transient chat.
+- Validation or acceptance criteria are named when the skill changes behavior or workflow.
 
-- Has heavier dependencies.
-- Is consumed independently.
-- Represents a stable optional integration.
-- Would make the root API too broad.
+## Example
 
-Do not use entry points to hide mixed ownership.
+JobOffer charting helpers live behind a charts entry point so Candidate list pages avoid
+charting dependencies.
 
 ## Hard Stops
 
-Stop and propose an alternative when:
-
-- Shared entry points gain side effects.
-- A root export pulls a large optional dependency.
-- A bundle increase is introduced without justification.
-- Tree-shaking is weakened by convenience barrels.
+- Do not proceed on repo facts that can be inspected but have not been checked.
+- Do not broaden scope beyond the triggering signal.
+- Do not create placeholder guidance, examples, metadata, or documentation.
+- Do not claim completion without evidence that covers this skill's checklist.
 
 ## Usage Checklist
 
-- Side effects are intentional and isolated.
-- Heavy dependencies are not pulled into common imports.
-- Export strategy is narrow.
-- Optional integrations have separate entry points when useful.
+- Trigger signal is explicit.
+- Relevant existing convention or memory was checked.
+- Skill-specific rules were applied.
+- Artifacts, docs, metadata, or tests affected by the work were updated together.
+- Remaining decisions, risks, or validation gaps are stated.
 
 ## Cross-References
 

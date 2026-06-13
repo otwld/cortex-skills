@@ -14,48 +14,49 @@ using skill: systematic-debugging
 
 ## Overview
 
-Find the root cause before fixing symptoms. Guessing may look fast, but it
-usually creates extra changes and weaker evidence.
+Build a reliable feedback loop before fixing, then test falsifiable hypotheses instead
+of guessing.
+
+## Reference Routing
+
+- Use `references/root-cause-tracing.md` when this task touches that concern.
+- Use `references/defense-in-depth.md` when this task touches that concern.
+- Use `references/condition-based-waiting.md` when this task touches that concern.
 
 ## Workflow
 
-1. Read the complete error, log, stack trace, or failing assertion.
-2. Reproduce the failure or gather enough evidence to explain why it is not
-   reproducible.
-3. Check recent changes and environment differences.
-4. Trace the failing data or control flow to the source.
-5. Compare with nearby working examples or documented patterns.
-6. Form one hypothesis and test it with the smallest possible change or probe.
-7. Add a regression test or documented reproduction before the final fix when
-   feasible.
+1. Inspect the current repository context and existing project memory before changing behavior or guidance.
+2. State the concrete responsibility, interface, artifact, or user-visible behavior this skill governs.
+3. Apply the skill-specific rules: Read complete evidence; reproduce; rank hypotheses; probe one variable; fix root cause; add regression; remove instrumentation.
+4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
+5. Stop when the task needs a decision outside this skill's scope and route to the appropriate governance skill.
 
-## References
+## Quality Gates
 
-Load only when needed:
+- Guidance is grounded in current files or explicit user intent.
+- Output uses project vocabulary and the recruitment example universe when examples are needed.
+- Decisions are recorded in the right artifact instead of hidden in transient chat.
+- Validation or acceptance criteria are named when the skill changes behavior or workflow.
 
-- `references/root-cause-tracing.md` for failures deep in a call stack.
-- `references/defense-in-depth.md` after invalid data reaches dangerous code.
-- `references/condition-based-waiting.md` for flaky async or timing tests.
+## Example
 
-## Escalation
-
-If three reasonable fix attempts fail, stop and question the architecture,
-assumptions, or test model before trying another patch.
+If Candidate search drops results intermittently, replay one filter fixture until the
+failure rate is debuggable before changing query code.
 
 ## Hard Stops
 
-- A fix is proposed before the failure is understood.
-- Multiple fixes are bundled into one untestable change.
-- A test failure is handled by relaxing expectations without proving behavior
-  changed intentionally.
+- Do not proceed on repo facts that can be inspected but have not been checked.
+- Do not broaden scope beyond the triggering signal.
+- Do not create placeholder guidance, examples, metadata, or documentation.
+- Do not claim completion without evidence that covers this skill's checklist.
 
 ## Usage Checklist
 
-- Failure evidence was read and summarized.
-- Reproduction or evidence gap is known.
-- Root cause hypothesis is explicit.
-- Fix addresses the source, not only the symptom.
-- Regression or verification path is named.
+- Trigger signal is explicit.
+- Relevant existing convention or memory was checked.
+- Skill-specific rules were applied.
+- Artifacts, docs, metadata, or tests affected by the work were updated together.
+- Remaining decisions, risks, or validation gaps are stated.
 
 ## Cross-References
 

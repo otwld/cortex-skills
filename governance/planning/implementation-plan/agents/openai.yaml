@@ -1,4 +1,4 @@
 interface:
   display_name: "(otwld) Implementation Plan"
-  short_description: "Plan multi-step work before edits"
-  default_prompt: "Use $implementation-plan when requirements are known and implementation needs a decision-complete execution path."
+  short_description: "Turn stable requirements into a decision-complete execution path with validations and scope boundaries."
+  default_prompt: "Use $implementation-plan when requirements are known and the work is multi-step, cross-boundary, migration-related, high-risk, or needs a written execution path before edits."

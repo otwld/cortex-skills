@@ -1,4 +1,4 @@
 interface:
   display_name: "(otwld) TypeScript Code Style"
-  short_description: "Apply TypeScript source style"
-  default_prompt: "Use $typescript-code-style when writing, editing, or reviewing TypeScript source files."
+  short_description: "Apply TypeScript implementation style for modules, imports, comments, language features, naming, and tooling preflight."
+  default_prompt: "Use $typescript-code-style when writing, editing, generating, refactoring, or reviewing TypeScript or TSX source files, tests, build scripts, imports, exports, classes, functions, or interfaces."

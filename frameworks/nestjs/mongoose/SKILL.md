@@ -14,30 +14,42 @@ using skill: nestjs-mongoose-conventions
 
 ## Overview
 
-Keep Mongoose data-access code typed, isolated from transport concerns, and
-consistent across repositories and aggregation helpers.
+Keep persistence shape behind a seam so Mongoose details do not leak upward.
 
-## Core Rules
+## Workflow
 
-- Register connections and feature models through NestJS Mongoose module APIs.
-- Define schemas with class decorators or the project's chosen schema style consistently.
-- Inject models through `@InjectModel()` or a project-approved provider token.
-- Keep repository query composition reusable when match logic repeats.
-- Validate and convert ObjectId inputs at the boundary before querying.
-- Keep persistence schemas separate from transport DTOs unless the project intentionally shares them.
-- Avoid `any` in repository and aggregation helpers.
+1. Inspect the current repository context and existing project memory before changing behavior or guidance.
+2. State the concrete responsibility, interface, artifact, or user-visible behavior this skill governs.
+3. Apply the skill-specific rules: Separate schema, domain, and transport shapes; centralize ObjectId conversion; type aggregations; return plain contracts when callers need them.
+4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
+5. Stop when the task needs a decision outside this skill's scope and route to the appropriate governance skill.
 
-## Legacy References
+## Quality Gates
 
-- `references/legacy-extracted-patterns.md` preserves non-normative helper names from the extracted source project.
+- Guidance is grounded in current files or explicit user intent.
+- Output uses project vocabulary and the recruitment example universe when examples are needed.
+- Decisions are recorded in the right artifact instead of hidden in transient chat.
+- Validation or acceptance criteria are named when the skill changes behavior or workflow.
+
+## Example
+
+ApplicationRepository.findActiveForJobOffer returns ApplicationSummary records, not raw
+hydrated documents.
+
+## Hard Stops
+
+- Do not proceed on repo facts that can be inspected but have not been checked.
+- Do not broaden scope beyond the triggering signal.
+- Do not create placeholder guidance, examples, metadata, or documentation.
+- Do not claim completion without evidence that covers this skill's checklist.
 
 ## Usage Checklist
 
-- Schema and model ownership is clear.
-- Query helpers are typed.
-- ObjectId conversion is centralized.
-- DTOs and persistence schemas do not drift accidentally.
-- Public data-access exports use stable entry points.
+- Trigger signal is explicit.
+- Relevant existing convention or memory was checked.
+- Skill-specific rules were applied.
+- Artifacts, docs, metadata, or tests affected by the work were updated together.
+- Remaining decisions, risks, or validation gaps are stated.
 
 ## Cross-References
 
