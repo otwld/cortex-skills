@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate Cortex public skill, internal modules, routing, and quality contracts."""
+"""Validate Cortex public skills, internal modules, routing, and quality contracts."""
 
 from __future__ import annotations
 
@@ -14,9 +14,9 @@ GRAPH_PATH = ROOT / 'references' / 'module-graph.md'
 CASCADE_PATH = ROOT / 'references' / 'module-cascade.md'
 CATALOG_PATH = ROOT / 'SKILL_CATALOG.md'
 SELF = Path(__file__).resolve()
-PUBLIC_SKILL_NAME = 'cortex'
-PUBLIC_SKILL_PATH = ROOT / 'governance' / 'core' / 'cortex' / 'SKILL.md'
-PUBLIC_METADATA_PATH = PUBLIC_SKILL_PATH.parent / 'agents' / 'openai.yaml'
+ROUTER_SKILL_NAME = 'cortex'
+ROUTER_SKILL_PATH = ROOT / 'governance' / 'core' / 'cortex' / 'SKILL.md'
+COMMAND_SKILL_ROOT = ROOT / 'governance' / 'setup'
 EDGE_LABELS = ('BEFORE', 'WITH', 'AFTER')
 TAXONOMY_HEADINGS = {
     'architecture': 'Architecture',
@@ -297,7 +297,7 @@ def check_empty_directories(errors: list[str]) -> None:
             errors.append(f'{rel(path)}: empty directory')
 
 
-def check_cascade_reference(names: dict[str, Path], errors: list[str]) -> None:
+def check_cascade_reference(route_names: dict[str, Path], command_names: dict[str, Path], errors: list[str]) -> None:
     """Validate the signal-routing reference."""
     if not CASCADE_PATH.exists():
         errors.append(f'{rel(CASCADE_PATH)}: missing cascade routing reference')
@@ -314,7 +314,9 @@ def check_cascade_reference(names: dict[str, Path], errors: list[str]) -> None:
         token = match.group(1)
         if token in allowed or '.' in token:
             continue
-        if re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', token) and token not in names:
+        if token in command_names:
+            errors.append(f'{rel(CASCADE_PATH)}: command skill {token!r} must not appear in module cascade')
+        elif re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', token) and token not in route_names:
             errors.append(f'{rel(CASCADE_PATH)}: unknown module reference {token!r}')
 
 
@@ -324,7 +326,7 @@ def check_catalog(names: dict[str, Path], public_count: int, module_count: int, 
         errors.append(f'{rel(CATALOG_PATH)}: missing skill catalog')
         return
     text = read_text(CATALOG_PATH)
-    count_match = re.search(r'Cortex Skills contains (\d+) public skill and (\d+) internal modules', text)
+    count_match = re.search(r'Cortex Skills contains (\d+) public skills? and (\d+) internal modules', text)
     if not count_match:
         errors.append(f'{rel(CATALOG_PATH)}: missing skill/module count summary')
     else:
@@ -391,8 +393,8 @@ def cascade_order(graph: dict[str, dict[str, list[str]]], initial: list[str]) ->
 
 def check_cascade(graph: dict[str, dict[str, list[str]]], errors: list[str], show: bool) -> None:
     """Validate graph expansion is bounded and acyclic."""
-    if graph.get(PUBLIC_SKILL_NAME, {}).get('BEFORE'):
-        errors.append(f'{rel(GRAPH_PATH)}: {PUBLIC_SKILL_NAME} must not define hard BEFORE cascades')
+    if graph.get(ROUTER_SKILL_NAME, {}).get('BEFORE'):
+        errors.append(f'{rel(GRAPH_PATH)}: {ROUTER_SKILL_NAME} must not define hard BEFORE cascades')
     for name in graph:
         order, cycles = cascade_order(graph, [name])
         for cycle in cycles:
@@ -433,25 +435,61 @@ def check_example_universe(errors: list[str]) -> None:
                     errors.append(f'{rel(path)}:{start_line}: example code uses non-recruitment identifier {identifier}')
 
 
+def is_command_skill_path(path: Path) -> bool:
+    """Return whether a public skill path is an explicit setup command skill."""
+    try:
+        parts = path.relative_to(COMMAND_SKILL_ROOT).parts
+    except ValueError:
+        return False
+    return len(parts) == 2 and parts[1] == 'SKILL.md' and valid_slug(parts[0])
+
+
+def is_supported_public_skill_path(path: Path) -> bool:
+    """Return whether a SKILL.md path is supported by this workspace contract."""
+    return path == ROUTER_SKILL_PATH or is_command_skill_path(path)
+
+
 def check_public_skill_paths(public_skill_paths: list[Path], errors: list[str]) -> None:
-    """Validate that Cortex exposes exactly one public SKILL.md surface."""
-    if PUBLIC_SKILL_PATH not in public_skill_paths:
-        errors.append(f'{rel(PUBLIC_SKILL_PATH)}: missing public Cortex SKILL.md')
+    """Validate supported public SKILL.md surfaces."""
+    if ROUTER_SKILL_PATH not in public_skill_paths:
+        errors.append(f'{rel(ROUTER_SKILL_PATH)}: missing public Cortex SKILL.md')
     for path in public_skill_paths:
-        if path != PUBLIC_SKILL_PATH:
-            errors.append(f'{rel(path)}: only {rel(PUBLIC_SKILL_PATH)} may be a public SKILL.md')
+        if not is_supported_public_skill_path(path):
+            errors.append(f'{rel(path)}: unsupported public skill path')
 
 
-def check_metadata_paths(module_paths: list[Path], errors: list[str]) -> None:
-    """Ensure OpenAI metadata exists only for the public Cortex skill."""
+def check_metadata_paths(public_skill_paths: list[Path], module_paths: list[Path], errors: list[str]) -> None:
+    """Ensure OpenAI metadata exists only for supported public skills."""
+    public_parents = {path.parent for path in public_skill_paths if is_supported_public_skill_path(path)}
     module_parents = {path.parent for path in module_paths}
     for metadata_path in sorted(path for path in ROOT.rglob('agents/openai.yaml') if not skip(path)):
-        if metadata_path == PUBLIC_METADATA_PATH:
+        artifact_dir = metadata_path.parent.parent
+        if artifact_dir in public_parents:
             continue
-        if metadata_path.parent.parent in module_parents:
-            errors.append(f'{rel(metadata_path.parent.parent / "MODULE.md")}: internal module must not define agents/openai.yaml')
+        if artifact_dir in module_parents:
+            errors.append(f'{rel(artifact_dir / "MODULE.md")}: internal module must not define agents/openai.yaml')
         else:
-            errors.append(f'{rel(metadata_path)}: only {rel(PUBLIC_METADATA_PATH)} may define OpenAI skill metadata')
+            errors.append(f'{rel(metadata_path)}: OpenAI metadata must belong to a supported public skill')
+
+
+def check_openai_metadata(metadata_path: Path, skill_name: str, errors: list[str]) -> None:
+    """Validate OpenAI metadata for one public skill."""
+    metadata = parse_openai_metadata(metadata_path, errors)
+    display_name = metadata.get('display_name', '')
+    short_description = metadata.get('short_description', '')
+    default_prompt = metadata.get('default_prompt', '')
+    if not metadata_path.exists():
+        return
+    if '(otwld)' not in display_name:
+        errors.append(f'{rel(metadata_path)}: display_name must include (otwld)')
+    if not short_description:
+        errors.append(f'{rel(metadata_path)}: missing short_description')
+    if not default_prompt:
+        errors.append(f'{rel(metadata_path)}: missing default_prompt')
+    elif skill_name and not default_prompt.startswith(f'Use ${skill_name} '):
+        errors.append(f'{rel(metadata_path)}: default_prompt must start with Use ${skill_name} ')
+    if metadata.get('allow_implicit_invocation') != 'false':
+        errors.append(f'{rel(metadata_path)}: policy.allow_implicit_invocation must be false')
 
 
 def validate_artifact(path: Path, errors: list[str], names: dict[str, Path], label: str, marker_kind: str) -> str:
@@ -489,53 +527,57 @@ def main(argv: list[str] | None = None) -> int:
     errors: list[str] = []
     graph = parse_graph(errors)
     names: dict[str, Path] = {}
+    route_names: dict[str, Path] = {}
+    command_names: dict[str, Path] = {}
     public_skill_paths = sorted(path for path in ROOT.rglob('SKILL.md') if not skip(path))
     module_paths = sorted(path for path in ROOT.rglob('MODULE.md') if not skip(path))
     check_public_skill_paths(public_skill_paths, errors)
-    check_metadata_paths(module_paths, errors)
+    check_metadata_paths(public_skill_paths, module_paths, errors)
 
-    if PUBLIC_SKILL_PATH.exists():
-        name = validate_artifact(PUBLIC_SKILL_PATH, errors, names, 'public skill', 'skill')
-        if name and name != PUBLIC_SKILL_NAME:
-            errors.append(f'{rel(PUBLIC_SKILL_PATH)}: public skill name must be {PUBLIC_SKILL_NAME!r}')
-        metadata = parse_openai_metadata(PUBLIC_METADATA_PATH, errors)
-        display_name = metadata.get('display_name', '')
-        short_description = metadata.get('short_description', '')
-        default_prompt = metadata.get('default_prompt', '')
-        if PUBLIC_METADATA_PATH.exists():
-            if '(otwld)' not in display_name:
-                errors.append(f'{rel(PUBLIC_METADATA_PATH)}: display_name must include (otwld)')
-            if not short_description:
-                errors.append(f'{rel(PUBLIC_METADATA_PATH)}: missing short_description')
-            if not default_prompt:
-                errors.append(f'{rel(PUBLIC_METADATA_PATH)}: missing default_prompt')
-            elif not default_prompt.startswith(f'Use ${PUBLIC_SKILL_NAME} '):
-                errors.append(f'{rel(PUBLIC_METADATA_PATH)}: default_prompt must start with Use ${PUBLIC_SKILL_NAME} ')
-            if metadata.get('allow_implicit_invocation') != 'false':
-                errors.append(f'{rel(PUBLIC_METADATA_PATH)}: policy.allow_implicit_invocation must be false')
+    for public_skill_path in public_skill_paths:
+        name = validate_artifact(public_skill_path, errors, names, 'public skill', 'skill')
+        if public_skill_path == ROUTER_SKILL_PATH:
+            if name and name != ROUTER_SKILL_NAME:
+                errors.append(f'{rel(ROUTER_SKILL_PATH)}: public skill name must be {ROUTER_SKILL_NAME!r}')
+            if name:
+                route_names[name] = public_skill_path
+        elif is_command_skill_path(public_skill_path):
+            if name:
+                command_names[name] = public_skill_path
+        if is_supported_public_skill_path(public_skill_path):
+            check_openai_metadata(public_skill_path.parent / 'agents' / 'openai.yaml', name, errors)
 
     if not module_paths:
         errors.append('no modules found')
     for module_path in module_paths:
-        validate_artifact(module_path, errors, names, 'module', 'module')
+        name = validate_artifact(module_path, errors, names, 'module', 'module')
+        if name:
+            route_names[name] = module_path
 
     for artifact_name, artifact_path in names.items():
         edges = parse_cross_references(artifact_path, errors)
-        if graph:
+        if artifact_name in command_names:
+            if any(edges[label] for label in EDGE_LABELS):
+                errors.append(f'{rel(artifact_path)}: command skill must not define module Cross-References')
+        elif graph:
             if artifact_name not in graph:
                 errors.append(f'{rel(GRAPH_PATH)}: missing graph row for {artifact_name}')
             elif edges != graph[artifact_name]:
                 errors.append(f'{rel(artifact_path)}: Cross-References do not match {rel(GRAPH_PATH)}')
     for name, edges in graph.items():
-        if name not in names:
+        if name in command_names:
+            errors.append(f'{rel(GRAPH_PATH)}: command skill {name!r} must not appear in module graph')
+        elif name not in route_names:
             errors.append(f'{rel(GRAPH_PATH)}: graph row references missing module {name}')
         for label, targets in edges.items():
             for target in targets:
-                if target not in names:
+                if target in command_names:
+                    errors.append(f'{rel(GRAPH_PATH)}: command skill {target!r} must not appear in module graph')
+                elif target not in route_names:
                     errors.append(f'{rel(GRAPH_PATH)}: {name} {label} references missing module {target}')
 
     check_required_workspace_references(errors)
-    check_cascade_reference(names, errors)
+    check_cascade_reference(route_names, command_names, errors)
     check_catalog(names, len(public_skill_paths), len(module_paths), errors)
     for path in ROOT.rglob('*.md'):
         if not skip(path):
@@ -548,7 +590,8 @@ def main(argv: list[str] | None = None) -> int:
         for error in sorted(set(errors)):
             print(f'error: {error}', file=sys.stderr)
         return 1
-    print(f'validation ok: skills={len(public_skill_paths)} modules={len(module_paths)} metadata=1')
+    metadata_count = sum(1 for path in public_skill_paths if (path.parent / 'agents' / 'openai.yaml').exists())
+    print(f'validation ok: skills={len(public_skill_paths)} modules={len(module_paths)} metadata={metadata_count}')
     return 0
 
 
