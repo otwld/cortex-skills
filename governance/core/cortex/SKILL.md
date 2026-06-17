@@ -60,4 +60,4 @@ code docs, and verification modules, not to Angular.
 
 ## Cross-References
 
-- WITH: design-intake, grill-with-docs, implementation-plan, issue-decomposition, prototype, agent-instructions-bootstrap, project-memory-setup, plan-execution, agent-delegation, workspace-state-guard, test-first-discipline, systematic-debugging, completion-verification, review-gate, review-feedback-triage, branch-completion, code-documentation
+- WITH: design-intake, grill-with-docs, implementation-plan, issue-decomposition, prototype, plan-execution, agent-delegation, workspace-state-guard, test-first-discipline, systematic-debugging, completion-verification, review-gate, review-feedback-triage, branch-completion, code-documentation

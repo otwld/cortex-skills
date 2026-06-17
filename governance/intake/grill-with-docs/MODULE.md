@@ -60,5 +60,5 @@ rejected, then record the chosen term.
 
 ## Cross-References
 
-- WITH: design-intake, project-memory-setup, implementation-plan
+- WITH: design-intake, implementation-plan
 - AFTER: issue-decomposition

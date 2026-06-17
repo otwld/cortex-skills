@@ -1,12 +1,12 @@
 ---
 name: agent-instructions-bootstrap
-description: Internal Cortex module applied when creating, updating, auditing, or planning workspace AI-agent instruction files such as AGENTS.md, nested AGENTS.md, CLAUDE.md, .github/copilot-instructions.md, .cursorrules, .cursor/rules, .windsurf, or .clinerules. Prefer this for bootstrapping repo operating guides, reconciling competing agent instructions, or deciding which AI instruction files should exist.
+description: Use only when the user explicitly includes $agent-instructions-bootstrap; bootstraps or audits workspace AI-agent instruction files such as AGENTS.md, nested AGENTS.md, CLAUDE.md, .github/copilot-instructions.md, .cursorrules, .cursor/rules, .windsurf, or .clinerules.
 ---
 
 # Output Marker
 
 Display:
-using module: agent-instructions-bootstrap
+using skill: agent-instructions-bootstrap
 
 ---
 
@@ -85,5 +85,4 @@ root `AGENTS.md` plus a nested app guide only if the app has distinct rules.
 
 ## Cross-References
 
-- WITH: grill-with-docs, project-memory-setup, workspace-state-guard, completion-verification
-- AFTER: implementation-plan
+- None

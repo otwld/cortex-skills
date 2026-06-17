@@ -60,5 +60,5 @@ delete behavior slices.
 
 ## Cross-References
 
-- WITH: implementation-plan, project-memory-setup, grill-with-docs
+- WITH: implementation-plan, grill-with-docs
 - AFTER: plan-execution

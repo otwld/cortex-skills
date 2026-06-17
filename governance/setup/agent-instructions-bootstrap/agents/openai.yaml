@@ -1,0 +1,6 @@
+interface:
+  display_name: "(otwld) Agent Instructions Bootstrap"
+  short_description: "Bootstrap or audit workspace AI-agent instruction files."
+  default_prompt: "Use $agent-instructions-bootstrap when creating, updating, auditing, or planning workspace AI-agent instruction files."
+policy:
+  allow_implicit_invocation: false

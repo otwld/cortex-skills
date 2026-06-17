@@ -1,12 +1,12 @@
 ---
 name: project-memory-setup
-description: Internal Cortex module applied when setting up or verifying project-memory artifacts such as domain glossary, ADR location, out-of-scope decisions, issue tracker config, or triage label mapping.
+description: Use only when the user explicitly includes $project-memory-setup; sets up or verifies project-memory artifacts such as domain glossary, ADR location, out-of-scope decisions, issue tracker config, or triage label mapping.
 ---
 
 # Output Marker
 
 Display:
-using module: project-memory-setup
+using skill: project-memory-setup
 
 ---
 
@@ -26,17 +26,17 @@ tracker rules.
 ## Workflow
 
 1. Inspect the current repository context and existing project memory before changing behavior or guidance.
-2. State the concrete responsibility, interface, artifact, or user-visible behavior this module governs.
-3. Apply the module-specific rules: Inspect existing files; choose single or multi-context shape; create files lazily; support GitHub, GitLab, or local markdown; map labels.
+2. State the concrete responsibility, interface, artifact, or user-visible behavior this command skill governs.
+3. Apply the command-specific rules: Inspect existing files; choose single or multi-context shape; create files lazily; support GitHub, GitLab, or local markdown; map labels.
 4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
-5. Stop when the task needs a decision outside this module's scope and route to the appropriate governance module.
+5. Stop when the task needs a decision outside this command skill's scope and ask for the missing decision.
 
 ## Quality Gates
 
 - Guidance is grounded in current files or explicit user intent.
 - Output uses project vocabulary and the recruitment example universe when examples are needed.
 - Decisions are recorded in the right artifact instead of hidden in transient chat.
-- Validation or acceptance criteria are named when the module changes behavior or workflow.
+- Validation or acceptance criteria are named when the command skill changes behavior or workflow.
 
 ## Example
 
@@ -48,16 +48,16 @@ strings project-specific.
 - Do not proceed on repo facts that can be inspected but have not been checked.
 - Do not broaden scope beyond the triggering signal.
 - Do not create placeholder guidance, examples, metadata, or documentation.
-- Do not claim completion without evidence that covers this module's checklist.
+- Do not claim completion without evidence that covers this command skill's checklist.
 
 ## Usage Checklist
 
 - Trigger signal is explicit.
 - Relevant existing convention or memory was checked.
-- Module-specific rules were applied.
+- Command-specific rules were applied.
 - Artifacts, docs, metadata, or tests affected by the work were updated together.
 - Remaining decisions, risks, or validation gaps are stated.
 
 ## Cross-References
 
-- WITH: grill-with-docs, issue-decomposition
+- None
