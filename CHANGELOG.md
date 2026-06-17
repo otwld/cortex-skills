@@ -15,9 +15,12 @@
 
 ### Changed
 
-- Converted Cortex to a single public `$cortex` skill backed by internal
+- Converted Cortex routing to an explicit public `$cortex` skill backed by internal
   `MODULE.md` files, hiding non-public guidance from direct Codex skill
   invocation.
+- Converted setup workflows into explicit-only command skills under
+  `governance/setup/`, with OpenAI metadata that disables implicit invocation
+  and excludes them from `$cortex` module routing.
 - Replaced the skill graph and cascade references with module routing references.
 - Replaced the validator's closed per-skill directory registry with generic
   taxonomy path validation.

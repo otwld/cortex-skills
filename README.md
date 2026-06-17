@@ -7,12 +7,13 @@
 
 Governed AI skill library for reusable TypeScript ecosystem agent workflows.
 
-Cortex Skills is a public `$cortex` skill backed by agent-readable internal
-modules. It is for AI builders and engineering teams who want reusable guidance
-with explicit invocation, validation, and cross-module coordination.
+Cortex Skills is a public `$cortex` router, explicit setup command skills, and
+agent-readable internal modules. It is for AI builders and engineering teams
+who want reusable guidance with explicit invocation, validation, and
+cross-module coordination.
 
 This is not a package manager, framework, or prompt dump. The public Codex
-surface is one `SKILL.md` with OpenAI-facing metadata; each internal module is a
+surface uses `SKILL.md` with OpenAI-facing metadata; each internal module is a
 small directory with `MODULE.md` plus optional references or scripts for
 deterministic checks.
 
@@ -50,7 +51,9 @@ python3 scripts/test-validate-skills.py
 ```
 
 Use the repository as a complete Cortex library with compatible agent tooling.
-Invoke `$cortex` explicitly to route a task through the internal modules.
+Invoke `$cortex` explicitly to route a task through the internal modules, or
+invoke setup command skills such as `$agent-instructions-bootstrap` and
+`$project-memory-setup` directly when you want those workflows.
 
 ## What Is Included
 
@@ -61,6 +64,7 @@ Invoke `$cortex` explicitly to route a task through the internal modules.
 - Governance modules for Cortex routing, intake, planning, execution,
   delegation, workspace safety, debugging, verification, review, and branch
   completion.
+- Explicit setup command skills for agent instructions and project memory.
 - Testing modules for Jest, Playwright, and Vitest.
 - Tool modules for source-management CLI workflows such as Bricks.
 - TypeScript modules for source style and public API conventions.
@@ -71,7 +75,7 @@ See [SKILL_CATALOG.md](SKILL_CATALOG.md) for the full list.
 
 ## Governance Model
 
-The public skill follows the structure defined in [AGENTS.md](AGENTS.md):
+The public router follows the structure defined in [AGENTS.md](AGENTS.md):
 
 ```text
 governance/core/cortex/
@@ -79,6 +83,9 @@ governance/core/cortex/
 `-- agents/
     `-- openai.yaml
 ```
+
+Explicit setup command skills use the same public-skill shape under
+`governance/setup/<command-slug>/` and are excluded from module routing.
 
 Internal modules use:
 
@@ -96,22 +103,24 @@ The repository also includes:
 - [scripts/test-validate-skills.py](scripts/test-validate-skills.py), fixture
   regression tests for validator behavior.
 - A shared recruitment job-board example universe for all illustrative examples.
-- Required `(otwld)` display name in the public `agents/openai.yaml` for easy
+- Required `(otwld)` display name in public `agents/openai.yaml` files for easy
   discovery in agent UIs and CLIs.
 
 ## Optional Codex Usage
 
-The module instructions are intentionally agent-neutral, but only the public
-`cortex` skill includes `agents/openai.yaml` metadata for OpenAI/Codex-style
-discovery.
+The module instructions are intentionally agent-neutral. Public skills include
+`agents/openai.yaml` metadata for OpenAI/Codex-style discovery; internal modules
+do not.
 
 Common usage patterns:
 
-- Clone this repository and point compatible tooling at the public `cortex`
-  skill directory.
+- Clone this repository and point compatible tooling at the public skill
+  directories.
 - Keep internal modules with the public skill so `$cortex` can route work
   through `references/module-cascade.md`.
-- Use `SKILL_CATALOG.md` to inspect the module names selected by `$cortex`.
+- Use `$agent-instructions-bootstrap` or `$project-memory-setup` directly for
+  user-invoked setup workflows.
+- Use `SKILL_CATALOG.md` to inspect the public commands and module names.
 
 Always run the validator after copying, editing, or contributing Cortex
 artifacts.
