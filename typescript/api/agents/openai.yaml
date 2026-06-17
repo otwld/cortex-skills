@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) TypeScript API Conventions"
-  short_description: "Design TypeScript exported types, DTOs, generics, and reusable contracts with strict public surfaces."
-  default_prompt: "Use $typescript-api-conventions when designing or reviewing TypeScript public APIs, exported types, DTOs, contracts, generics, strict typing, entry points, or reusable type surfaces."

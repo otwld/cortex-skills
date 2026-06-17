@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) Angular Material And CDK Conventions"
-  short_description: "Use Angular Material and CDK deliberately while preserving accessibility, theming, density, and bundle boundaries."
-  default_prompt: "Use $angular-material-conventions when adding, modifying, or reviewing Angular Material or Angular CDK components, utilities, theming, overlays, accessibility, or density settings."

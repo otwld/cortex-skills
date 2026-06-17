@@ -1,11 +1,13 @@
 # Skill Catalog
 
-Cortex Skills contains 46 skills grouped by reusable purpose. Each skill has a
-`SKILL.md` trigger description and `agents/openai.yaml` metadata.
+Cortex Skills contains 1 public skill and 45 internal modules grouped by
+reusable purpose. The public `cortex` skill has `SKILL.md` and
+`agents/openai.yaml`; internal modules use `MODULE.md` and are routed only after
+`$cortex` is invoked.
 
 ## Architecture
 
-| Skill | Use when | Path |
+| Module | Purpose | Path |
 | --- | --- | --- |
 | `architecture-drift-detector` | Detect structural drift signals before broad changes compound architecture risk. | `architecture/drift-detector/` |
 | `architecture-deepening-review` | Find shallow modules and propose deepening candidates using module, interface, seam, adapter, leverage, and locality language. | `architecture/deepening-review/` |
@@ -18,13 +20,13 @@ Cortex Skills contains 46 skills grouped by reusable purpose. Each skill has a
 
 ## Documentation
 
-| Skill | Use when | Path |
+| Module | Purpose | Path |
 | --- | --- | --- |
 | `code-documentation` | Keep JSDoc, TSDoc, Storybook, MDX, and usage documentation synchronized with code changes. | `documentation/code/` |
 
 ## Frameworks
 
-| Skill | Use when | Path |
+| Module | Purpose | Path |
 | --- | --- | --- |
 | `angular-conventions` | Apply Angular conventions for components, templates, forms, dependency injection, and public Angular APIs. | `frameworks/angular/core/` |
 | `angular-material-conventions` | Use Angular Material and CDK deliberately while preserving accessibility, theming, density, and bundle boundaries. | `frameworks/angular/material/` |
@@ -40,9 +42,9 @@ Cortex Skills contains 46 skills grouped by reusable purpose. Each skill has a
 
 ## Governance
 
-| Skill | Use when | Path |
+| Entry | Purpose | Path |
 | --- | --- | --- |
-| `using-cortex` | Route tasks to the smallest evidence-backed set of Cortex skills using direct signals and graph edges. | `governance/core/using-cortex/` |
+| `cortex` | Public `$cortex` skill that routes explicit requests to the smallest evidence-backed set of internal modules. | `governance/core/cortex/` |
 | `design-intake` | Clarify goals, success criteria, constraints, and tradeoffs before implementation starts. | `governance/intake/design-intake/` |
 | `grill-with-docs` | Interview the user deeply while updating project glossary and ADR artifacts as decisions crystallize. | `governance/intake/grill-with-docs/` |
 | `implementation-plan` | Turn stable requirements into a decision-complete execution path with validations and scope boundaries. | `governance/planning/implementation-plan/` |
@@ -62,15 +64,15 @@ Cortex Skills contains 46 skills grouped by reusable purpose. Each skill has a
 
 ## Maintenance
 
-| Skill | Use when | Path |
+| Module | Purpose | Path |
 | --- | --- | --- |
 | `diary` | Record durable work history, decisions, blockers, validations, and handoff context when requested. | `maintenance/diary/` |
 | `example-universe-enforcer` | Keep all illustrative examples in the recruitment agency job board universe. | `maintenance/example-universe-enforcer/` |
-| `skill-evolution` | Evolve skills from repeated reusable patterns, doctrine gaps, and agent failure modes. | `maintenance/skill-evolution/` |
+| `skill-evolution` | Evolve modules from repeated reusable patterns, doctrine gaps, and agent failure modes. | `maintenance/skill-evolution/` |
 
 ## Testing
 
-| Skill | Use when | Path |
+| Module | Purpose | Path |
 | --- | --- | --- |
 | `jest-conventions` | Write and maintain Jest tests, setup, mocks, matchers, and environments around behavior-focused assertions. | `testing/jest/` |
 | `playwright-conventions` | Write Playwright tests with accessible locators, deterministic setup, clear fixtures, and condition-based waits. | `testing/playwright/` |
@@ -78,13 +80,13 @@ Cortex Skills contains 46 skills grouped by reusable purpose. Each skill has a
 
 ## Tools
 
-| Skill | Use when | Path |
+| Module | Purpose | Path |
 | --- | --- | --- |
 | `bricks` | Operate Bricks consumer workflows for installed source copies, merges, diffs, doctor checks, and contributions. | `tools/bricks/` |
 
 ## TypeScript
 
-| Skill | Use when | Path |
+| Module | Purpose | Path |
 | --- | --- | --- |
 | `typescript-api-conventions` | Design TypeScript exported types, DTOs, generics, and reusable contracts with strict public surfaces. | `typescript/api/` |
 | `typescript-code-style` | Apply TypeScript implementation style for modules, imports, comments, language features, naming, and tooling preflight. | `typescript/code-style/` |

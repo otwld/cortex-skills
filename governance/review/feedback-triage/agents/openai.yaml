@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) Review Feedback Triage"
-  short_description: "Triage review feedback before implementing it, separating required fixes from optional or incorrect suggestions."
-  default_prompt: "Use $review-feedback-triage when receiving code review, CI review, agent review, or external technical feedback before implementing suggested changes."

@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) Completion Verification"
-  short_description: "Verify completion claims with current evidence before reporting success or publishing work."
-  default_prompt: "Use $completion-verification when Use before success claims, final responses, commits, pushes, pull requests, task completion, or publishing decisions."

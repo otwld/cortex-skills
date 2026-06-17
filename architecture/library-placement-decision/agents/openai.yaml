@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) Library Placement Decision"
-  short_description: "Place new or moved code by responsibility, ownership, dependency direction, and consumer scope."
-  default_prompt: "Use $library-placement-decision when deciding where new code, shared abstractions, moved files, extracted logic, or public entry points belong inside a modular TypeScript workspace."

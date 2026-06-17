@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) Public API Design"
-  short_description: "Design minimal, stable, typed, documented public surfaces for reusable packages and contracts."
-  default_prompt: "Use $public-api-design when adding or changing exports, shared contracts, DTOs, reusable abstractions, entry points, package boundaries, or import paths."

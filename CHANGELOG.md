@@ -15,8 +15,10 @@
 
 ### Changed
 
-- Tightened `using-cortex` routing guidance so non-trivial skill selection
-  records direct evidence, graph expansion, deferred follow-ups, and exclusions.
+- Converted Cortex to a single public `$cortex` skill backed by internal
+  `MODULE.md` files, hiding non-public guidance from direct Codex skill
+  invocation.
+- Replaced the skill graph and cascade references with module routing references.
 - Replaced the validator's closed per-skill directory registry with generic
   taxonomy path validation.
 

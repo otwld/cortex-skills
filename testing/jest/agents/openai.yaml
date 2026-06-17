@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) Jest Conventions"
-  short_description: "Write and maintain Jest tests, setup, mocks, matchers, and environments around behavior-focused assertions."
-  default_prompt: "Use $jest-conventions when creating, modifying, or reviewing Jest configuration, Jest tests, setup files, custom matchers, test environments, or Jest mocks."

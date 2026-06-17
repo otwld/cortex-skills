@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) Naming Consistency"
-  short_description: "Keep names aligned with domain vocabulary, ownership, and public API responsibilities."
-  default_prompt: "Use $naming-consistency when creating or renaming files, classes, functions, exports, DTOs, contracts, events, commands, providers, factories, or reusable abstractions."

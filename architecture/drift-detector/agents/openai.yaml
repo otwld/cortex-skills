@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) Architecture Drift Detector"
-  short_description: "Detect structural drift signals before broad changes compound architecture risk."
-  default_prompt: "Use $architecture-drift-detector when starting significant work, reviewing recent changes, planning refactors, or seeing commit bursts that may indicate structural drift."

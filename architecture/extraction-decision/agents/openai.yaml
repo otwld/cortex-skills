@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) Extraction Decision"
-  short_description: "Decide whether repeated logic should become a reusable abstraction and where it belongs."
-  default_prompt: "Use $extraction-decision when repeated logic, DTOs, contracts, data-access patterns, UI composition, or orchestration suggest extracting a reusable abstraction."

@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) Nx Conventions"
-  short_description: "Maintain Nx workspace configuration, projects, targets, generators, inferred tasks, and graph behavior."
-  default_prompt: "Use $nx-conventions when creating, modifying, or reviewing Nx workspace configuration, generators, targets, project metadata, inferred tasks, or project graph behavior."

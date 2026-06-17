@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) Vue Conventions"
-  short_description: "Apply Vue 3 conventions for Single-File Components, Composition API, props, emits, slots, and names."
-  default_prompt: "Use $vue-conventions when creating, modifying, or reviewing Vue 3 Single-File Components, Composition API code, `<script setup>`, props, emits, slots, or component naming."

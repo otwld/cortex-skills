@@ -2,12 +2,13 @@
 
 ## Purpose
 
-This workspace contains homemade AI skills. Treat each skill as a small,
-self-contained operating guide for agents. Keep instructions precise,
-maintainable, and easy to discover.
+This workspace contains the public `$cortex` AI skill and internal Cortex
+modules. Treat each artifact as a small, self-contained operating guide for
+agents. Keep instructions precise, maintainable, and easy to discover.
 
-These rules primarily govern writing and maintaining skills in this workspace.
-They are intentionally agent-neutral.
+These rules primarily govern writing and maintaining Cortex skill and module
+artifacts in this workspace. They are intentionally agent-neutral except where
+the public Codex skill surface is described.
 
 ## Documentation Lookup
 
@@ -67,27 +68,38 @@ Skills are grouped by reusable purpose:
 - `tools/` for source-management CLIs, developer tools, and their workflow
   conventions.
 - `typescript/` for TypeScript language, API, and style conventions.
-- `references/` for workspace-wide references such as the skill graph.
+- `references/` for workspace-wide references such as the module graph.
 - `scripts/` for workspace-wide validation and maintenance scripts.
 
-## Skill Directory Standard
+## Artifact Directory Standard
 
-Every skill must live in its own short directory slug under the relevant
+The public `cortex` skill is the only direct Codex skill surface. Every other
+operating guide is an internal Cortex module selected by `$cortex`, not a
+directly invocable Codex skill.
+
+Every artifact must live in its own short directory slug under the relevant
 taxonomy folder. Related ecosystems may introduce one grouping level before the
-skill slug:
+artifact slug:
 
 ```text
 taxonomy[/group]/folder-slug/
+`-- MODULE.md
+```
+
+The public skill uses this shape:
+
+```text
+governance/core/cortex/
 |-- SKILL.md
 `-- agents/
     `-- openai.yaml
 ```
 
-The frontmatter `name` remains the canonical skill name. The folder slug should
-omit words already made obvious by the taxonomy and group path, such as
+The frontmatter `name` remains the canonical artifact name. The folder slug
+should omit words already made obvious by the taxonomy and group path, such as
 `frameworks/angular/core` for `angular-conventions`,
 `frameworks/angular/material` for `angular-material-conventions`,
-`governance/core/using-cortex` for `using-cortex`,
+`governance/core/cortex` for `cortex`,
 `testing/jest` for `jest-conventions`, and `typescript/api` for
 `typescript-api-conventions`.
 
@@ -99,66 +111,83 @@ Optional supporting directories:
 - `assets/` for templates, images, fixtures, or other output resources.
 
 Do not add extra README, changelog, quick-reference, or installation files
-unless the skill genuinely needs them at runtime.
+unless the artifact genuinely needs them at runtime.
 
-## SKILL.md Standard
+## SKILL.md and MODULE.md Standard
 
-Every `SKILL.md` must start with YAML frontmatter:
+The only `SKILL.md` is `governance/core/cortex/SKILL.md`. All internal modules
+must use `MODULE.md`, which is a Cortex workspace convention rather than an
+official Codex skill format.
+
+Every `SKILL.md` and `MODULE.md` must start with YAML frontmatter:
 
 ```markdown
 ---
-name: skill-name
-description: Clear trigger guidance explaining when this skill should be used.
+name: artifact-name
+description: Clear routing guidance explaining when this artifact should apply.
 ---
 ```
 
-The `description` is the main discovery surface. It must explain the task,
-domain, trigger conditions, and important exclusions clearly enough that an
-agent can decide whether to load the skill.
+For the public skill, `description` is the Codex discovery surface and must
+state that it applies only when the user explicitly includes `$cortex`. For
+modules, `description` is internal routing guidance used after `$cortex` is
+already selected.
 
-After the frontmatter, every skill must include this standardized output marker:
+After the frontmatter, every public skill must include this standardized output
+marker:
 
 ```markdown
 # Output Marker
 
 Display:
-using skill: <skill-name>
+using skill: cortex
+```
+
+Every module must use:
+
+```markdown
+# Output Marker
+
+Display:
+using module: <module-name>
 ```
 
 Use the actual frontmatter `name` value in the marker.
 
-Every `SKILL.md` must also include:
+Every `SKILL.md` and `MODULE.md` must also include:
 
 - A purpose, overview, or operating policy section.
-- The core workflow, rules, or decision process the skill teaches.
+- The core workflow, rules, or decision process the artifact teaches.
 - Any hard-stop conditions or precedence rules that affect behavior.
-- A usage checklist when the skill has validation or completion criteria.
+- A usage checklist when the artifact has validation or completion criteria.
 - A `Cross-References` section, even if it is empty.
 
-The `Cross-References` section should identify related skills, reference files,
-or follow-on skills. If none apply, write `None`.
+The `Cross-References` section should identify related modules, reference files,
+or follow-on modules. If none apply, write `None`.
 
 Use only these labels in `Cross-References`:
 
-- `BEFORE` for skills that should be loaded or applied first. `BEFORE` edges
+- `BEFORE` for modules that should be loaded or applied first. `BEFORE` edges
   may be followed recursively.
-- `WITH` for skills that should be applied alongside this one only when the task
+- `WITH` for modules that should be applied alongside this one only when the task
   or changed files already touch that area. Do not expand `WITH` transitively.
-- `AFTER` for follow-on skills to consider once the task is complete. Do not
+- `AFTER` for follow-on modules to consider once the task is complete. Do not
   expand `AFTER` transitively.
 
-Inline cross-references must match `references/skill-graph.md`. Keep the graph
-and the skill body synchronized in the same change.
+Inline cross-references must match `references/module-graph.md`. Keep the graph
+and artifact body synchronized in the same change.
 
 ## OpenAI Metadata Standard
 
-Every skill must include `agents/openai.yaml` with at least:
+Only the public `cortex` skill may include `agents/openai.yaml`, with at least:
 
 ```yaml
 interface:
   display_name: "(otwld) Human Readable Name"
   short_description: "Short description for skill lists"
-  default_prompt: "Use $skill-name when ..."
+  default_prompt: "Use $cortex when ..."
+policy:
+  allow_implicit_invocation: false
 ```
 
 Rules:
@@ -166,9 +195,11 @@ Rules:
 - `interface.display_name` must include `(otwld)` for easy discovery in agent
   UIs and CLIs.
 - `interface.short_description` must be brief and user-facing.
-- `interface.default_prompt` must name the skill and describe a realistic
+- `interface.default_prompt` must name `$cortex` and describe a realistic
   invocation.
-- Keep metadata synchronized with `SKILL.md` whenever a skill changes.
+- `policy.allow_implicit_invocation` must be `false` so `$cortex` is explicit.
+- Internal modules must not include `agents/openai.yaml`.
+- Keep metadata synchronized with `SKILL.md` whenever the public skill changes.
 
 ## Examples Policy
 
@@ -200,15 +231,17 @@ Document the touched code at the right level:
 
 ## Progressive Disclosure
 
-Keep `SKILL.md` focused on the essential procedure and decision rules. There is
-no hard size limit, but large stable details should move into supporting files:
+Keep `SKILL.md` and `MODULE.md` focused on the essential procedure and decision
+rules. There is no hard size limit, but large stable details should move into
+supporting files:
 
 - Put detailed documentation, schemas, policies, and examples in `references/`.
 - Put fragile or repeated mechanical work in `scripts/`.
 - Put reusable output resources in `assets/`.
 
-When a supporting file exists, `SKILL.md` must say when to read or use it. Avoid
-duplicating the same guidance in both `SKILL.md` and a reference file.
+When a supporting file exists, the owning `SKILL.md` or `MODULE.md` must say
+when to read or use it. Avoid duplicating the same guidance in both the owning
+artifact and a reference file.
 
 Extracted project-specific APIs, package names, application names, helper names,
 and workflow names are not active rules. Move retained historical details into a
@@ -219,42 +252,46 @@ ecosystem projects.
 
 ## Maintenance Rules
 
-- Preserve narrow skill scope. Prefer small focused skills over broad doctrine
+- Preserve narrow artifact scope. Prefer small focused modules over broad doctrine
   documents.
 - Follow the existing local style unless this file defines a stricter rule.
 - Update related metadata, references, scripts, and cross-references when a
-  skill changes.
-- Update `SKILL_CATALOG.md` when adding, removing, moving, or renaming a skill.
+  skill or module changes.
+- Update `SKILL_CATALOG.md` when adding, removing, moving, or renaming a skill
+  or module.
 - Avoid unrelated rewrites, formatting churn, and broad reorganization.
-- Keep examples, names, and prompts consistent across `SKILL.md` and
-  `agents/openai.yaml`.
+- Keep examples, names, and prompts consistent across the public `SKILL.md` and
+  `agents/openai.yaml`; keep module names synchronized with `MODULE.md`.
 - Keep source-project residue out of active skill instructions.
 - If adding a script, make it deterministic and document the command or trigger
-  in `SKILL.md`.
-- If adding a reference file, make it directly discoverable from `SKILL.md`.
-- Do not add per-skill registries to validation scripts. Validation should
-  derive ordinary skill discovery from taxonomy paths, frontmatter, metadata,
-  `references/skill-graph.md`, and `SKILL_CATALOG.md`.
+  in the owning `SKILL.md` or `MODULE.md`.
+- If adding a reference file, make it directly discoverable from the owning
+  `SKILL.md` or `MODULE.md`.
+- Do not add per-module registries to validation scripts. Validation should
+  derive discovery from taxonomy paths, frontmatter, metadata,
+  `references/module-graph.md`, and `SKILL_CATALOG.md`.
 
 ## Validation Checklist
 
-Before finishing any skill change, verify:
+Before finishing any Cortex artifact change, verify:
 
-- `SKILL.md` exists and has valid YAML frontmatter with `name` and
-  `description`.
-- `SKILL.md` includes the standardized `Output Marker`.
-- `SKILL.md` includes `Cross-References`, with `None` if empty.
-- `agents/openai.yaml` exists.
-- `agents/openai.yaml` includes `interface.display_name`,
+- The public `governance/core/cortex/SKILL.md` exists and has valid YAML
+  frontmatter with `name` and `description`.
+- Every internal module uses `MODULE.md`, not `SKILL.md`.
+- Each artifact includes the standardized `Output Marker`.
+- Each artifact includes `Cross-References`, with `None` if empty.
+- Only `governance/core/cortex/agents/openai.yaml` exists.
+- Public metadata includes `interface.display_name`,
   `interface.short_description`, and `interface.default_prompt`.
 - OpenAI metadata fields live under the top-level `interface:` block.
 - `interface.display_name` contains `(otwld)`.
-- `SKILL_CATALOG.md` lists each skill once under the correct taxonomy heading
+- `policy.allow_implicit_invocation` is `false`.
+- `SKILL_CATALOG.md` lists each skill and module once under the correct taxonomy heading
   with the correct directory path.
 - Any referenced files, scripts, or assets actually exist.
 - Any touched scripts still run or have been validated appropriately.
 - Examples follow `example-universe-enforcer`.
-- The skill remains focused on a clear task, domain, or workflow.
+- The artifact remains focused on a clear task, domain, or workflow.
 
 Run the workspace validator before finishing:
 

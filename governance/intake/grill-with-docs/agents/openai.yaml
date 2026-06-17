@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) Grill With Docs"
-  short_description: "Interview the user deeply while updating project glossary and ADR artifacts as decisions crystallize."
-  default_prompt: "Use $grill-with-docs when stress-testing a plan against project vocabulary, documented decisions, domain rules, or when a deep questioning session should update glossary and ADR artifacts."

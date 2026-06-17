@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) Branch Completion"
-  short_description: "Finish branch work safely with verification, review, intentional commits, pushes, PRs, or cleanup."
-  default_prompt: "Use $branch-completion when implementation is complete and the user asks to merge, push, open a pull request, publish, discard, clean up, or finish branch work."

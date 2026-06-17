@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) Review Gate"
-  short_description: "Review significant work for requirement fit, correctness, tests, APIs, boundaries, docs, and migration risk."
-  default_prompt: "Use $review-gate when Use after major features or refactors, before merge, pull request, push, publish, or when a completed change needs independent quality review."

@@ -1,0 +1,6 @@
+interface:
+  display_name: "(otwld) Cortex"
+  short_description: "Route explicit Cortex requests through internal governance, architecture, framework, testing, and maintenance modules."
+  default_prompt: "Use $cortex when you want Cortex to route the task through its internal module cascade."
+policy:
+  allow_implicit_invocation: false

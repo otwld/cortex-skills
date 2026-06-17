@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) Design Intake"
-  short_description: "Clarify goals, success criteria, constraints, and tradeoffs before implementation starts."
-  default_prompt: "Use $design-intake when Use before ambiguous, creative, behavioral, user-facing, or architecture-affecting work where intent, constraints, or success criteria are not already clear."

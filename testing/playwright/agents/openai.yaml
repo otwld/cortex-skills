@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) Playwright Conventions"
-  short_description: "Write Playwright tests with accessible locators, deterministic setup, clear fixtures, and condition-based waits."
-  default_prompt: "Use $playwright-conventions when creating, modifying, or reviewing Playwright configuration, browser projects, end-to-end tests, locators, assertions, fixtures, or setup projects."

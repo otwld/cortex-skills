@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) Angular TanStack Query Conventions"
-  short_description: "Keep Angular TanStack Query keys, options, mutations, pagination, and skippable inputs stable and typed."
-  default_prompt: "Use $angular-tanstack-query-conventions when creating, modifying, or reviewing TanStack Query integration in Angular code, including query keys, query options, mutations, pagination, and skippable inputs."

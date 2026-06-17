@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) Bricks"
-  short_description: "Operate Bricks consumer workflows for installed source copies, merges, diffs, doctor checks, and contributions."
-  default_prompt: "Use $bricks when working with Bricks in consumer Nx repositories: inspecting or running Bricks init, source, install, merge, diff, status, doctor, or contribute commands; reviewing installed-brick edits; updating installed copies; or helping contribute consumer edits back to source repos through Bricks worktree workflows. Do not use for Nx release, npm publishing, or source-repo maintainer release workflows unless Bricks consumer state is directly involved."

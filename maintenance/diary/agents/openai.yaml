@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) Diary"
-  short_description: "Record durable work history, decisions, blockers, validations, and handoff context when requested."
-  default_prompt: "Use $diary when the user asks to log, journal, summarize, hand off, or preserve agent work history, decisions, blockers, validations, or completed outcomes."

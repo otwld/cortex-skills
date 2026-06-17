@@ -14,15 +14,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 VALIDATOR = Path('scripts/validate-skills.py')
 
-TAXONOMY_PROBER_SKILL = '''---
+TAXONOMY_PROBER_MODULE = '''---
 name: taxonomy-prober
-description: Use when checking that skill discovery validates skills through generic taxonomy rules.
+description: Internal Cortex module applied when checking that module discovery validates through generic taxonomy rules.
 ---
 
 # Output Marker
 
 Display:
-using skill: taxonomy-prober
+using module: taxonomy-prober
 
 ---
 
@@ -30,13 +30,13 @@ using skill: taxonomy-prober
 
 ## Overview
 
-Validate that skills can be discovered from filesystem state, graph, catalog,
-and metadata instead of a validator source-code registry.
+Validate that modules can be discovered from filesystem state, graph, and catalog
+instead of a validator source-code registry.
 
 ## Workflow
 
-1. Add a skill directory under a valid taxonomy.
-2. Add graph, catalog, and metadata entries.
+1. Add a module directory under a valid taxonomy.
+2. Add graph and catalog entries.
 3. Run the validator.
 
 ## Quality Gates
@@ -49,20 +49,26 @@ Example: A maintenance taxonomy fixture proves discovery without editing the val
 
 ## Hard Stops
 
-- The validator requires a source-code registry edit for an otherwise valid skill.
+- The validator requires a source-code registry edit for an otherwise valid module.
 
 ## Usage Checklist
 
-- The skill has frontmatter, metadata, graph, and catalog entries.
+- The module has frontmatter, graph, and catalog entries.
 
 ## Cross-References
 
 - None
 '''
+
+TAXONOMY_PROBER_SKILL = TAXONOMY_PROBER_MODULE.replace(
+    'using module: taxonomy-prober',
+    'using skill: taxonomy-prober',
+)
+
 TAXONOMY_PROBER_METADATA = '''interface:
   display_name: "(otwld) Taxonomy Prober"
-  short_description: "Check generic skill discovery"
-  default_prompt: "Use $taxonomy-prober when checking generic skill discovery."
+  short_description: "Check generic module discovery"
+  default_prompt: "Use $taxonomy-prober when checking generic module discovery."
 '''
 
 
@@ -79,39 +85,51 @@ def replace_required(path: Path, old: str, new: str) -> None:
     path.write_text(text.replace(old, new), encoding='utf-8')
 
 
-def find_catalog_row(catalog_path: Path, skill_name: str) -> str:
-    """Return a catalog row by skill name."""
-    prefix = f'| `{skill_name}` | '
+def find_catalog_row(catalog_path: Path, name: str) -> str:
+    """Return a catalog row by public skill or module name."""
+    prefix = f'| `{name}` | '
     for line in catalog_path.read_text(encoding='utf-8').splitlines():
         if line.startswith(prefix):
             return f'{line}\n'
-    raise AssertionError(f'{catalog_path}: missing catalog row for {skill_name!r}')
+    raise AssertionError(f'{catalog_path}: missing catalog row for {name!r}')
 
 
-def increment_catalog_skill_count(catalog_path: Path) -> None:
-    """Increment the catalog summary count for one fixture skill."""
+def increment_catalog_module_count(catalog_path: Path) -> None:
+    """Increment the catalog summary count for one fixture module."""
     text = catalog_path.read_text(encoding='utf-8')
-    match = re.search(r'Cortex Skills contains (\d+) skills', text)
+    match = re.search(r'Cortex Skills contains (\d+) public skill and (\d+) internal modules', text)
     if match is None:
-        raise AssertionError(f'{catalog_path}: missing skill count summary')
-    updated = text[:match.start(1)] + str(int(match.group(1)) + 1) + text[match.end(1):]
+        raise AssertionError(f'{catalog_path}: missing skill/module count summary')
+    updated = text[:match.start(2)] + str(int(match.group(2)) + 1) + text[match.end(2):]
     catalog_path.write_text(updated, encoding='utf-8')
 
 
 def add_taxonomy_prober(workspace: Path, taxonomy: str = 'maintenance') -> None:
-    """Add a fully wired fixture skill under the selected taxonomy."""
-    skill_dir = workspace / taxonomy / 'taxonomy-prober'
-    agents_dir = skill_dir / 'agents'
-    agents_dir.mkdir(parents=True)
-    (skill_dir / 'SKILL.md').write_text(TAXONOMY_PROBER_SKILL, encoding='utf-8')
-    (agents_dir / 'openai.yaml').write_text(TAXONOMY_PROBER_METADATA, encoding='utf-8')
-    graph_path = workspace / 'references' / 'skill-graph.md'
+    """Add a fully wired fixture module under the selected taxonomy."""
+    module_dir = workspace / taxonomy / 'taxonomy-prober'
+    module_dir.mkdir(parents=True)
+    (module_dir / 'MODULE.md').write_text(TAXONOMY_PROBER_MODULE, encoding='utf-8')
+    graph_path = workspace / 'references' / 'module-graph.md'
     skill_evolution_row = '| `skill-evolution` | None | None | None |\n'
     replace_required(graph_path, skill_evolution_row, skill_evolution_row + '| `taxonomy-prober` | None | None | None |\n')
     catalog_path = workspace / 'SKILL_CATALOG.md'
-    increment_catalog_skill_count(catalog_path)
+    increment_catalog_module_count(catalog_path)
     row = find_catalog_row(catalog_path, 'skill-evolution')
-    replace_required(catalog_path, row, row + '| `taxonomy-prober` | Checking generic skill discovery through taxonomy, graph, catalog, and metadata rules. | `maintenance/taxonomy-prober/` |\n')
+    replace_required(catalog_path, row, row + '| `taxonomy-prober` | Checking generic module discovery through taxonomy, graph, and catalog rules. | `maintenance/taxonomy-prober/` |\n')
+
+
+def add_direct_skill(workspace: Path) -> None:
+    """Add a second public skill where only internal modules are allowed."""
+    skill_dir = workspace / 'maintenance' / 'taxonomy-prober'
+    skill_dir.mkdir(parents=True)
+    (skill_dir / 'SKILL.md').write_text(TAXONOMY_PROBER_SKILL, encoding='utf-8')
+
+
+def add_module_metadata(workspace: Path) -> None:
+    """Add OpenAI metadata to an internal module."""
+    agents_dir = workspace / 'maintenance' / 'skill-evolution' / 'agents'
+    agents_dir.mkdir()
+    (agents_dir / 'openai.yaml').write_text(TAXONOMY_PROBER_METADATA, encoding='utf-8')
 
 
 def move_catalog_row_to_wrong_section(workspace: Path) -> None:
@@ -124,20 +142,20 @@ def move_catalog_row_to_wrong_section(workspace: Path) -> None:
 
 
 def break_workspace_relative_reference(workspace: Path) -> None:
-    """Point a skill reference at a missing file."""
-    path = workspace / 'governance' / 'core' / 'using-cortex' / 'SKILL.md'
-    replace_required(path, '`../../../references/skill-graph.md`', '`../../../references/missing-skill-graph.md`')
+    """Point the public Cortex skill at a missing workspace reference."""
+    path = workspace / 'governance' / 'core' / 'cortex' / 'SKILL.md'
+    replace_required(path, '`../../../references/module-graph.md`', '`../../../references/missing-module-graph.md`')
 
 
 def rename_openai_interface_block(workspace: Path) -> None:
-    """Move metadata fields out of the interface block."""
-    path = workspace / 'governance' / 'core' / 'using-cortex' / 'agents' / 'openai.yaml'
+    """Move public skill metadata fields out of the interface block."""
+    path = workspace / 'governance' / 'core' / 'cortex' / 'agents' / 'openai.yaml'
     replace_required(path, 'interface:\n', 'metadata:\n')
 
 
 def remove_quality_section(workspace: Path) -> None:
-    """Remove a required quality section from one skill."""
-    path = workspace / 'maintenance' / 'skill-evolution' / 'SKILL.md'
+    """Remove a required quality section from one module."""
+    path = workspace / 'maintenance' / 'skill-evolution' / 'MODULE.md'
     replace_required(path, '## Hard Stops\n\n', '')
 
 
@@ -181,14 +199,17 @@ def expect_failure(name: str, mutate: Callable[[Path], None], expected_error: st
 def main() -> int:
     """Run validator regression fixtures."""
     expect_success('current repository validates', lambda _workspace: None)
-    expect_success('fully wired new skill needs no validator registry', add_taxonomy_prober)
-    expect_failure('unknown taxonomy is rejected', lambda workspace: add_taxonomy_prober(workspace, taxonomy='misc'), "unknown skill taxonomy 'misc'")
+    expect_success('fully wired new module needs no validator registry', add_taxonomy_prober)
+    expect_failure('unknown taxonomy is rejected', lambda workspace: add_taxonomy_prober(workspace, taxonomy='misc'), "unknown module taxonomy 'misc'")
+    expect_failure('non-cortex public skill is rejected', add_direct_skill, 'only governance/core/cortex/SKILL.md may be a public SKILL.md')
+    expect_failure('internal module metadata is rejected', add_module_metadata, 'internal module must not define agents/openai.yaml')
     expect_failure('catalog section must match taxonomy', move_catalog_row_to_wrong_section, "catalog section for 'code-documentation' is 'Architecture', expected 'Documentation'")
-    expect_failure('workspace-relative support references must exist', break_workspace_relative_reference, 'referenced resource does not exist: ../../../references/missing-skill-graph.md')
+    expect_failure('workspace-relative support references must exist', break_workspace_relative_reference, 'referenced resource does not exist: ../../../references/missing-module-graph.md')
     expect_failure('OpenAI metadata must use interface block', rename_openai_interface_block, 'missing interface block')
-    expect_failure('skill quality sections are required', remove_quality_section, 'missing required quality section ## Hard Stops')
+    expect_failure('module quality sections are required', remove_quality_section, 'missing required quality section ## Hard Stops')
     expect_failure('workspace references are required', remove_workspace_reference, 'references/agent-briefs.md: missing required workspace reference')
     return 0
+
 
 if __name__ == '__main__':
     raise SystemExit(main())

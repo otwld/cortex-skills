@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) NestJS Conventions"
-  short_description: "Apply NestJS conventions for modules, providers, controllers, guards, pipes, interceptors, and runtime setup."
-  default_prompt: "Use $nestjs-conventions when creating, modifying, or reviewing NestJS modules, providers, controllers, interceptors, guards, pipes, application bootstrap, or microservice runtimes."

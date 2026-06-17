@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) Code Documentation"
-  short_description: "Keep JSDoc, TSDoc, Storybook, MDX, and usage documentation synchronized with code changes."
-  default_prompt: "Use $code-documentation when Use whenever code is generated, edited, moved, split, refactored, or materially reviewed, and when public, reusable, or user-facing documentation, Storybook docs, examples, stories, MDX docs, or API usage notes change."

@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) Systematic Debugging"
-  short_description: "Diagnose failures through reproduction, falsifiable hypotheses, targeted probes, fixes, and regression checks."
-  default_prompt: "Use $systematic-debugging when encountering bugs, failing tests, build failures, performance problems, or unexpected behavior before proposing fixes."

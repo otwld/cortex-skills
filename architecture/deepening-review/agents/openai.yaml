@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) Architecture Deepening Review"
-  short_description: "Find shallow modules and propose deepening candidates using module, interface, seam, adapter, leverage, and locality language."
-  default_prompt: "Use $architecture-deepening-review when finding shallow modules, deepening candidates, test seams, or architecture improvements that should increase leverage and locality."

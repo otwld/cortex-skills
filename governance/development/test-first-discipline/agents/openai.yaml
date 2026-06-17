@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) Test First Discipline"
-  short_description: "Prefer a failing test or characterization before behavior changes, bug fixes, and risky refactors."
-  default_prompt: "Use $test-first-discipline when Use before behavior changes, bug fixes, or refactors where tests can prove the intended behavior or regression."

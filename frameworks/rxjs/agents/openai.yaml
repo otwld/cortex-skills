@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) RxJS Conventions"
-  short_description: "Design RxJS streams with clear ownership, cancellation, multicasting, error handling, and cleanup."
-  default_prompt: "Use $rxjs-conventions when creating, modifying, or reviewing RxJS observables, operators, subscriptions, subjects, multicasting, cleanup, or async stream composition."

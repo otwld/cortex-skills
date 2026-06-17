@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate skill structure, metadata, routing surfaces, and quality contracts."""
+"""Validate Cortex public skill, internal modules, routing, and quality contracts."""
 
 from __future__ import annotations
 
@@ -10,10 +10,13 @@ from pathlib import Path
 from typing import Iterable
 
 ROOT = Path(__file__).resolve().parents[1]
-GRAPH_PATH = ROOT / 'references' / 'skill-graph.md'
-CASCADE_PATH = ROOT / 'references' / 'skill-cascade.md'
+GRAPH_PATH = ROOT / 'references' / 'module-graph.md'
+CASCADE_PATH = ROOT / 'references' / 'module-cascade.md'
 CATALOG_PATH = ROOT / 'SKILL_CATALOG.md'
 SELF = Path(__file__).resolve()
+PUBLIC_SKILL_NAME = 'cortex'
+PUBLIC_SKILL_PATH = ROOT / 'governance' / 'core' / 'cortex' / 'SKILL.md'
+PUBLIC_METADATA_PATH = PUBLIC_SKILL_PATH.parent / 'agents' / 'openai.yaml'
 EDGE_LABELS = ('BEFORE', 'WITH', 'AFTER')
 TAXONOMY_HEADINGS = {
     'architecture': 'Architecture',
@@ -37,7 +40,7 @@ REQUIRED_WORKSPACE_REFERENCES = [
     'references/architecture-deepening.md',
     'references/prototype-guidance.md',
 ]
-REQUIRED_SKILL_SECTIONS = [
+REQUIRED_ARTIFACT_SECTIONS = [
     '# Output Marker',
     '## Overview',
     '## Workflow',
@@ -90,7 +93,7 @@ def valid_slug(value: str) -> bool:
 
 
 def parse_frontmatter(path: Path, errors: list[str]) -> dict[str, str]:
-    """Parse the minimal YAML frontmatter used by skills."""
+    """Parse the minimal YAML frontmatter used by Cortex artifacts."""
     text = read_text(path)
     if not text.startswith('---\n'):
         errors.append(f'{rel(path)}: missing YAML frontmatter')
@@ -108,25 +111,35 @@ def parse_frontmatter(path: Path, errors: list[str]) -> dict[str, str]:
 
 
 def parse_openai_metadata(path: Path, errors: list[str]) -> dict[str, str]:
-    """Parse required metadata fields from agents/openai.yaml."""
+    """Parse required public skill metadata fields from agents/openai.yaml."""
     if not path.exists():
         errors.append(f'{rel(path)}: missing agents/openai.yaml')
         return {}
     values: dict[str, str] = {}
     in_interface = False
+    in_policy = False
     saw_interface = False
     for line in read_text(path).splitlines():
         if line == 'interface:':
             in_interface = True
+            in_policy = False
             saw_interface = True
+            continue
+        if line == 'policy:':
+            in_interface = False
+            in_policy = True
             continue
         if line and not line.startswith((' ', '\t')):
             in_interface = False
-        if not in_interface:
-            continue
-        match = re.match(r'\s+(display_name|short_description|default_prompt):\s*(.+?)\s*$', line)
-        if match:
-            values[match.group(1)] = match.group(2).strip().strip('"').strip("'")
+            in_policy = False
+        if in_interface:
+            match = re.match(r'\s+(display_name|short_description|default_prompt):\s*(.+?)\s*$', line)
+            if match:
+                values[match.group(1)] = match.group(2).strip().strip('"').strip("'")
+        if in_policy:
+            match = re.match(r'\s+(allow_implicit_invocation):\s*(.+?)\s*$', line)
+            if match:
+                values[match.group(1)] = match.group(2).strip().strip('"').strip("'")
     if not saw_interface:
         errors.append(f'{rel(path)}: missing interface block')
     return values
@@ -141,9 +154,9 @@ def parse_list(value: str) -> list[str]:
 
 
 def parse_graph(errors: list[str]) -> dict[str, dict[str, list[str]]]:
-    """Parse references/skill-graph.md."""
+    """Parse references/module-graph.md."""
     if not GRAPH_PATH.exists():
-        errors.append(f'{rel(GRAPH_PATH)}: missing central skill graph')
+        errors.append(f'{rel(GRAPH_PATH)}: missing central module graph')
         return {}
     graph: dict[str, dict[str, list[str]]] = {}
     for line_number, line in enumerate(read_text(GRAPH_PATH).splitlines(), start=1):
@@ -164,7 +177,7 @@ def parse_graph(errors: list[str]) -> dict[str, dict[str, list[str]]]:
 
 
 def parse_cross_references(path: Path, errors: list[str]) -> dict[str, list[str]]:
-    """Parse a SKILL.md Cross-References section."""
+    """Parse a Cross-References section from a public skill or internal module."""
     lines = read_text(path).splitlines()
     try:
         start = lines.index('## Cross-References') + 1
@@ -198,27 +211,27 @@ def parse_cross_references(path: Path, errors: list[str]) -> dict[str, list[str]
     return edges
 
 
-def check_skill_location(skill_path: Path, errors: list[str]) -> bool:
-    """Validate taxonomy/group/slug directory shape."""
-    parts = skill_path.parent.relative_to(ROOT).parts
+def check_artifact_location(path: Path, errors: list[str], label: str) -> bool:
+    """Validate taxonomy/group/slug directory shape for a skill or module."""
+    parts = path.parent.relative_to(ROOT).parts
     if len(parts) not in (2, 3):
-        errors.append(f'{rel(skill_path)}: skill directory must match taxonomy/folder-slug or taxonomy/group/folder-slug')
+        errors.append(f'{rel(path)}: {label} directory must match taxonomy/folder-slug or taxonomy/group/folder-slug')
         return False
     taxonomy = parts[0]
     if taxonomy not in TAXONOMY_HEADINGS:
-        errors.append(f'{rel(skill_path)}: unknown skill taxonomy {taxonomy!r}')
+        errors.append(f'{rel(path)}: unknown {label} taxonomy {taxonomy!r}')
         return False
     bad = [part for part in parts if not valid_slug(part)]
     if bad:
-        errors.append(f'{rel(skill_path)}: directory parts must be lowercase slugs: {", ".join(bad)}')
+        errors.append(f'{rel(path)}: directory parts must be lowercase slugs: {", ".join(bad)}')
         return False
     return True
 
 
-def check_skill_quality(path: Path, errors: list[str]) -> None:
-    """Validate required active skill quality sections."""
+def check_artifact_quality(path: Path, errors: list[str]) -> None:
+    """Validate required active Cortex quality sections."""
     text = read_text(path)
-    for section in REQUIRED_SKILL_SECTIONS:
+    for section in REQUIRED_ARTIFACT_SECTIONS:
         if section not in text:
             errors.append(f'{rel(path)}: missing required quality section {section}')
     if re.search(r'\b(TBD|TODO)\b', text):
@@ -302,20 +315,23 @@ def check_cascade_reference(names: dict[str, Path], errors: list[str]) -> None:
         if token in allowed or '.' in token:
             continue
         if re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', token) and token not in names:
-            errors.append(f'{rel(CASCADE_PATH)}: unknown skill reference {token!r}')
+            errors.append(f'{rel(CASCADE_PATH)}: unknown module reference {token!r}')
 
 
-def check_catalog(names: dict[str, Path], errors: list[str]) -> None:
-    """Validate SKILL_CATALOG.md count, paths, and taxonomy sections."""
+def check_catalog(names: dict[str, Path], public_count: int, module_count: int, errors: list[str]) -> None:
+    """Validate SKILL_CATALOG.md counts, paths, and taxonomy sections."""
     if not CATALOG_PATH.exists():
         errors.append(f'{rel(CATALOG_PATH)}: missing skill catalog')
         return
     text = read_text(CATALOG_PATH)
-    count_match = re.search(r'Cortex Skills contains (\d+) skills', text)
+    count_match = re.search(r'Cortex Skills contains (\d+) public skill and (\d+) internal modules', text)
     if not count_match:
-        errors.append(f'{rel(CATALOG_PATH)}: missing skill count summary')
-    elif int(count_match.group(1)) != len(names):
-        errors.append(f'{rel(CATALOG_PATH)}: skill count says {count_match.group(1)}, expected {len(names)}')
+        errors.append(f'{rel(CATALOG_PATH)}: missing skill/module count summary')
+    else:
+        if int(count_match.group(1)) != public_count:
+            errors.append(f'{rel(CATALOG_PATH)}: public skill count says {count_match.group(1)}, expected {public_count}')
+        if int(count_match.group(2)) != module_count:
+            errors.append(f'{rel(CATALOG_PATH)}: module count says {count_match.group(2)}, expected {module_count}')
     rows: dict[str, tuple[int, str, str]] = {}
     heading = ''
     for line_number, line in enumerate(text.splitlines(), start=1):
@@ -326,24 +342,24 @@ def check_catalog(names: dict[str, Path], errors: list[str]) -> None:
         match = re.match(r'\| `([^`]+)` \| .* \| `([^`]+)` \|$', line)
         if not match:
             continue
-        skill, catalog_path = match.groups()
-        if skill in rows:
-            errors.append(f'{rel(CATALOG_PATH)}:{line_number}: duplicate catalog row for {skill!r}')
-        rows[skill] = (line_number, catalog_path, heading)
-    for skill, (line_number, _, _) in rows.items():
-        if skill not in names:
-            errors.append(f'{rel(CATALOG_PATH)}:{line_number}: unknown catalog skill {skill!r}')
-    for skill, skill_path in names.items():
-        expected_path = f'{rel(skill_path.parent)}/'
-        if skill not in rows:
-            errors.append(f'{rel(CATALOG_PATH)}: missing catalog row for {skill!r}')
+        name, catalog_path = match.groups()
+        if name in rows:
+            errors.append(f'{rel(CATALOG_PATH)}:{line_number}: duplicate catalog row for {name!r}')
+        rows[name] = (line_number, catalog_path, heading)
+    for name, (line_number, _, _) in rows.items():
+        if name not in names:
+            errors.append(f'{rel(CATALOG_PATH)}:{line_number}: unknown catalog entry {name!r}')
+    for name, artifact_path in names.items():
+        expected_path = f'{rel(artifact_path.parent)}/'
+        if name not in rows:
+            errors.append(f'{rel(CATALOG_PATH)}: missing catalog row for {name!r}')
             continue
-        line_number, catalog_path, row_heading = rows[skill]
+        line_number, catalog_path, row_heading = rows[name]
         if catalog_path != expected_path:
-            errors.append(f'{rel(CATALOG_PATH)}:{line_number}: catalog path for {skill!r} is {catalog_path!r}, expected {expected_path!r}')
-        expected_heading = TAXONOMY_HEADINGS[skill_path.parent.relative_to(ROOT).parts[0]]
+            errors.append(f'{rel(CATALOG_PATH)}:{line_number}: catalog path for {name!r} is {catalog_path!r}, expected {expected_path!r}')
+        expected_heading = TAXONOMY_HEADINGS[artifact_path.parent.relative_to(ROOT).parts[0]]
         if row_heading != expected_heading:
-            errors.append(f'{rel(CATALOG_PATH)}:{line_number}: catalog section for {skill!r} is {row_heading!r}, expected {expected_heading!r}')
+            errors.append(f'{rel(CATALOG_PATH)}:{line_number}: catalog section for {name!r} is {row_heading!r}, expected {expected_heading!r}')
 
 
 def cascade_order(graph: dict[str, dict[str, list[str]]], initial: list[str]) -> tuple[list[str], list[str]]:
@@ -352,6 +368,7 @@ def cascade_order(graph: dict[str, dict[str, list[str]]], initial: list[str]) ->
     seen: set[str] = set()
     visiting: list[str] = []
     cycles: list[str] = []
+
     def add(name: str) -> None:
         if name not in graph:
             return
@@ -366,6 +383,7 @@ def cascade_order(graph: dict[str, dict[str, list[str]]], initial: list[str]) ->
         visiting.pop()
         seen.add(name)
         order.append(name)
+
     for name in initial:
         add(name)
     return order, cycles
@@ -373,16 +391,16 @@ def cascade_order(graph: dict[str, dict[str, list[str]]], initial: list[str]) ->
 
 def check_cascade(graph: dict[str, dict[str, list[str]]], errors: list[str], show: bool) -> None:
     """Validate graph expansion is bounded and acyclic."""
-    if graph.get('using-cortex', {}).get('BEFORE'):
-        errors.append(f'{rel(GRAPH_PATH)}: using-cortex must not define hard BEFORE cascades')
+    if graph.get(PUBLIC_SKILL_NAME, {}).get('BEFORE'):
+        errors.append(f'{rel(GRAPH_PATH)}: {PUBLIC_SKILL_NAME} must not define hard BEFORE cascades')
     for name in graph:
         order, cycles = cascade_order(graph, [name])
         for cycle in cycles:
             errors.append(f'{rel(GRAPH_PATH)}: BEFORE cycle: {cycle}')
         if len(order) > MAX_BEFORE_CASCADE:
-            errors.append(f'cascade {name}: BEFORE cascade loads {len(order)} skills, expected at most {MAX_BEFORE_CASCADE}: {", ".join(order)}')
+            errors.append(f'cascade {name}: BEFORE cascade loads {len(order)} entries, expected at most {MAX_BEFORE_CASCADE}: {", ".join(order)}')
         if show:
-            print(f'cascade {name}: {len(order)} skill(s): {", ".join(order)}')
+            print(f'cascade {name}: {len(order)} entry(s): {", ".join(order)}')
 
 
 def iter_code_blocks(text: str) -> Iterable[tuple[int, str]]:
@@ -415,6 +433,49 @@ def check_example_universe(errors: list[str]) -> None:
                     errors.append(f'{rel(path)}:{start_line}: example code uses non-recruitment identifier {identifier}')
 
 
+def check_public_skill_paths(public_skill_paths: list[Path], errors: list[str]) -> None:
+    """Validate that Cortex exposes exactly one public SKILL.md surface."""
+    if PUBLIC_SKILL_PATH not in public_skill_paths:
+        errors.append(f'{rel(PUBLIC_SKILL_PATH)}: missing public Cortex SKILL.md')
+    for path in public_skill_paths:
+        if path != PUBLIC_SKILL_PATH:
+            errors.append(f'{rel(path)}: only {rel(PUBLIC_SKILL_PATH)} may be a public SKILL.md')
+
+
+def check_metadata_paths(module_paths: list[Path], errors: list[str]) -> None:
+    """Ensure OpenAI metadata exists only for the public Cortex skill."""
+    module_parents = {path.parent for path in module_paths}
+    for metadata_path in sorted(path for path in ROOT.rglob('agents/openai.yaml') if not skip(path)):
+        if metadata_path == PUBLIC_METADATA_PATH:
+            continue
+        if metadata_path.parent.parent in module_parents:
+            errors.append(f'{rel(metadata_path.parent.parent / "MODULE.md")}: internal module must not define agents/openai.yaml')
+        else:
+            errors.append(f'{rel(metadata_path)}: only {rel(PUBLIC_METADATA_PATH)} may define OpenAI skill metadata')
+
+
+def validate_artifact(path: Path, errors: list[str], names: dict[str, Path], label: str, marker_kind: str) -> str:
+    """Validate shared frontmatter, marker, quality, and resource rules."""
+    values = parse_frontmatter(path, errors)
+    name = values.get('name', '')
+    description = values.get('description', '')
+    if not name:
+        errors.append(f'{rel(path)}: missing frontmatter name')
+    elif not valid_slug(name):
+        errors.append(f'{rel(path)}: invalid {label} name {name!r}')
+    elif name in names:
+        errors.append(f'{rel(path)}: duplicate {label} name also in {rel(names[name])}')
+    elif check_artifact_location(path, errors, label):
+        names[name] = path
+    if not description:
+        errors.append(f'{rel(path)}: missing frontmatter description')
+    if name and f'using {marker_kind}: {name}' not in read_text(path):
+        errors.append(f'{rel(path)}: Output Marker must use frontmatter name')
+    check_artifact_quality(path, errors)
+    check_resource_references(path, errors)
+    return name
+
+
 def parse_args(argv: list[str] | None) -> argparse.Namespace:
     """Parse command-line arguments."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -428,60 +489,54 @@ def main(argv: list[str] | None = None) -> int:
     errors: list[str] = []
     graph = parse_graph(errors)
     names: dict[str, Path] = {}
-    metadata_count = 0
-    skill_paths = sorted(path for path in ROOT.rglob('SKILL.md') if not skip(path))
-    if not skill_paths:
-        errors.append('no skills found')
-    for skill_path in skill_paths:
-        values = parse_frontmatter(skill_path, errors)
-        name = values.get('name', '')
-        description = values.get('description', '')
-        if not name:
-            errors.append(f'{rel(skill_path)}: missing frontmatter name')
-        elif not valid_slug(name):
-            errors.append(f'{rel(skill_path)}: invalid skill name {name!r}')
-        elif name in names:
-            errors.append(f'{rel(skill_path)}: duplicate skill name also in {rel(names[name])}')
-        elif check_skill_location(skill_path, errors):
-            names[name] = skill_path
-        if not description:
-            errors.append(f'{rel(skill_path)}: missing frontmatter description')
-        if name and f'using skill: {name}' not in read_text(skill_path):
-            errors.append(f'{rel(skill_path)}: Output Marker must use frontmatter name')
-        check_skill_quality(skill_path, errors)
-        metadata_path = skill_path.parent / 'agents' / 'openai.yaml'
-        metadata = parse_openai_metadata(metadata_path, errors)
-        if metadata:
-            metadata_count += 1
+    public_skill_paths = sorted(path for path in ROOT.rglob('SKILL.md') if not skip(path))
+    module_paths = sorted(path for path in ROOT.rglob('MODULE.md') if not skip(path))
+    check_public_skill_paths(public_skill_paths, errors)
+    check_metadata_paths(module_paths, errors)
+
+    if PUBLIC_SKILL_PATH.exists():
+        name = validate_artifact(PUBLIC_SKILL_PATH, errors, names, 'public skill', 'skill')
+        if name and name != PUBLIC_SKILL_NAME:
+            errors.append(f'{rel(PUBLIC_SKILL_PATH)}: public skill name must be {PUBLIC_SKILL_NAME!r}')
+        metadata = parse_openai_metadata(PUBLIC_METADATA_PATH, errors)
         display_name = metadata.get('display_name', '')
         short_description = metadata.get('short_description', '')
         default_prompt = metadata.get('default_prompt', '')
-        if metadata_path.exists():
+        if PUBLIC_METADATA_PATH.exists():
             if '(otwld)' not in display_name:
-                errors.append(f'{rel(metadata_path)}: display_name must include (otwld)')
+                errors.append(f'{rel(PUBLIC_METADATA_PATH)}: display_name must include (otwld)')
             if not short_description:
-                errors.append(f'{rel(metadata_path)}: missing short_description')
+                errors.append(f'{rel(PUBLIC_METADATA_PATH)}: missing short_description')
             if not default_prompt:
-                errors.append(f'{rel(metadata_path)}: missing default_prompt')
-            elif name and not default_prompt.startswith(f'Use ${name} '):
-                errors.append(f'{rel(metadata_path)}: default_prompt must start with Use ${name} ')
-        edges = parse_cross_references(skill_path, errors)
-        if name and graph:
-            if name not in graph:
-                errors.append(f'{rel(GRAPH_PATH)}: missing graph row for {name}')
-            elif edges != graph[name]:
-                errors.append(f'{rel(skill_path)}: Cross-References do not match {rel(GRAPH_PATH)}')
-        check_resource_references(skill_path, errors)
+                errors.append(f'{rel(PUBLIC_METADATA_PATH)}: missing default_prompt')
+            elif not default_prompt.startswith(f'Use ${PUBLIC_SKILL_NAME} '):
+                errors.append(f'{rel(PUBLIC_METADATA_PATH)}: default_prompt must start with Use ${PUBLIC_SKILL_NAME} ')
+            if metadata.get('allow_implicit_invocation') != 'false':
+                errors.append(f'{rel(PUBLIC_METADATA_PATH)}: policy.allow_implicit_invocation must be false')
+
+    if not module_paths:
+        errors.append('no modules found')
+    for module_path in module_paths:
+        validate_artifact(module_path, errors, names, 'module', 'module')
+
+    for artifact_name, artifact_path in names.items():
+        edges = parse_cross_references(artifact_path, errors)
+        if graph:
+            if artifact_name not in graph:
+                errors.append(f'{rel(GRAPH_PATH)}: missing graph row for {artifact_name}')
+            elif edges != graph[artifact_name]:
+                errors.append(f'{rel(artifact_path)}: Cross-References do not match {rel(GRAPH_PATH)}')
     for name, edges in graph.items():
         if name not in names:
-            errors.append(f'{rel(GRAPH_PATH)}: graph row references missing skill {name}')
+            errors.append(f'{rel(GRAPH_PATH)}: graph row references missing module {name}')
         for label, targets in edges.items():
             for target in targets:
                 if target not in names:
-                    errors.append(f'{rel(GRAPH_PATH)}: {name} {label} references missing skill {target}')
+                    errors.append(f'{rel(GRAPH_PATH)}: {name} {label} references missing module {target}')
+
     check_required_workspace_references(errors)
     check_cascade_reference(names, errors)
-    check_catalog(names, errors)
+    check_catalog(names, len(public_skill_paths), len(module_paths), errors)
     for path in ROOT.rglob('*.md'):
         if not skip(path):
             check_legacy_heading(path, errors)
@@ -493,8 +548,9 @@ def main(argv: list[str] | None = None) -> int:
         for error in sorted(set(errors)):
             print(f'error: {error}', file=sys.stderr)
         return 1
-    print(f'validation ok: skills={len(skill_paths)} metadata={metadata_count}')
+    print(f'validation ok: skills={len(public_skill_paths)} modules={len(module_paths)} metadata=1')
     return 0
+
 
 if __name__ == '__main__':
     raise SystemExit(main(sys.argv[1:]))

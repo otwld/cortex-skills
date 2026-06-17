@@ -1,4 +1,0 @@
-interface:
-  display_name: "(otwld) Vitest Conventions"
-  short_description: "Maintain Vitest tests, environments, mocks, and Vite-integrated configuration with behavior-focused assertions."
-  default_prompt: "Use $vitest-conventions when creating, modifying, or reviewing Vitest configuration, Vitest tests, setup files, environments, mocks, or Vite-integrated test behavior."
