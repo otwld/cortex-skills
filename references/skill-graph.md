@@ -26,12 +26,13 @@ Use only these non-transitive advisory edge labels: `BEFORE`, `WITH`, `AFTER`, a
 | `storybook-conventions` | None | `typescript-code-style`, `code-documentation` | `skill-evolution` |
 | `vite-conventions` | None | `bundle-performance`, `typescript-code-style`, `code-documentation` | `skill-evolution` |
 | `vue-conventions` | None | `typescript-code-style`, `rxjs-conventions`, `code-documentation` | `skill-evolution` |
-| `using-cortex` | None | `design-intake`, `grill-with-docs`, `implementation-plan`, `issue-decomposition`, `prototype`, `project-memory-setup`, `plan-execution`, `agent-delegation`, `workspace-state-guard`, `test-first-discipline`, `systematic-debugging`, `completion-verification`, `review-gate`, `review-feedback-triage`, `branch-completion`, `code-documentation` | None |
+| `using-cortex` | None | `design-intake`, `grill-with-docs`, `implementation-plan`, `issue-decomposition`, `prototype`, `agent-instructions-bootstrap`, `project-memory-setup`, `plan-execution`, `agent-delegation`, `workspace-state-guard`, `test-first-discipline`, `systematic-debugging`, `completion-verification`, `review-gate`, `review-feedback-triage`, `branch-completion`, `code-documentation` | None |
 | `design-intake` | None | `grill-with-docs`, `prototype`, `architecture-drift-detector`, `library-placement-decision`, `public-api-design` | `implementation-plan` |
 | `grill-with-docs` | None | `design-intake`, `project-memory-setup`, `implementation-plan` | `issue-decomposition` |
 | `implementation-plan` | None | `design-intake`, `grill-with-docs`, `issue-decomposition`, `workspace-state-guard`, `test-first-discipline`, `architecture-drift-detector`, `library-placement-decision`, `public-api-design`, `code-documentation` | `plan-execution` |
 | `issue-decomposition` | None | `implementation-plan`, `project-memory-setup`, `grill-with-docs` | `plan-execution` |
 | `prototype` | None | `design-intake`, `test-first-discipline`, `code-documentation` | `issue-decomposition` |
+| `agent-instructions-bootstrap` | None | `grill-with-docs`, `project-memory-setup`, `workspace-state-guard`, `completion-verification` | `implementation-plan` |
 | `project-memory-setup` | None | `grill-with-docs`, `issue-decomposition` | None |
 | `plan-execution` | `workspace-state-guard` | `agent-delegation`, `test-first-discipline`, `code-documentation`, `review-gate`, `completion-verification` | `branch-completion` |
 | `agent-delegation` | None | `plan-execution`, `review-gate`, `systematic-debugging`, `completion-verification` | None |

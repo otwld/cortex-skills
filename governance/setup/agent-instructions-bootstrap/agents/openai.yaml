@@ -1,0 +1,4 @@
+interface:
+  display_name: "(otwld) Agent Instructions Bootstrap"
+  short_description: "Bootstrap AGENTS.md-first workspace instructions."
+  default_prompt: "Use $agent-instructions-bootstrap to bootstrap AGENTS.md-first agent instructions for this workspace."

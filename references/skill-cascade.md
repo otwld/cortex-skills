@@ -21,6 +21,7 @@ Use this reference from `using-cortex` when a request touches multiple domains o
 | Multi-step work | Cross-boundary change, migration, risky refactor, or substantial implementation | `implementation-plan` |
 | Issue breakdown | Plan, PRD, or large request must become vertical slices or briefs | `issue-decomposition` |
 | Throwaway design learning | User wants to prototype, compare UI variants, or test a state model | `prototype` |
+| Agent instruction bootstrap | AGENTS.md, nested agent instructions, or tool-specific AI guidance files are created, audited, or reconciled | `agent-instructions-bootstrap` |
 | Project memory setup | Glossary, ADR, out-of-scope, tracker, or label docs are created or verified | `project-memory-setup` |
 | Written plan execution | Plan exists and no design decision remains open | `plan-execution` |
 | Workspace collision risk | Substantial edits, cleanup, publish step, or dirty tree risk | `workspace-state-guard` |

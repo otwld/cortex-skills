@@ -1,6 +1,6 @@
 # Skill Catalog
 
-Cortex Skills contains 45 skills grouped by reusable purpose. Each skill has a
+Cortex Skills contains 46 skills grouped by reusable purpose. Each skill has a
 `SKILL.md` trigger description and `agents/openai.yaml` metadata.
 
 ## Architecture
@@ -48,6 +48,7 @@ Cortex Skills contains 45 skills grouped by reusable purpose. Each skill has a
 | `implementation-plan` | Turn stable requirements into a decision-complete execution path with validations and scope boundaries. | `governance/planning/implementation-plan/` |
 | `issue-decomposition` | Break plans into vertical issue slices and durable agent briefs for configurable issue trackers. | `governance/planning/issue-decomposition/` |
 | `prototype` | Create clearly throwaway logic or UI prototypes that answer one design question quickly. | `governance/prototyping/prototype/` |
+| `agent-instructions-bootstrap` | Bootstrap AGENTS.md-first workspace instructions with strict assumption grilling. | `governance/setup/agent-instructions-bootstrap/` |
 | `project-memory-setup` | Set up or verify glossary, ADR, out-of-scope, issue tracker, and triage-label project memory artifacts. | `governance/setup/project-memory-setup/` |
 | `plan-execution` | Execute a decision-complete plan in order while preserving scope, validation, and workspace safety. | `governance/execution/plan-execution/` |
 | `agent-delegation` | Delegate independent investigation, implementation, or review work with clear prompts and verification expectations. | `governance/delegation/agent-delegation/` |
