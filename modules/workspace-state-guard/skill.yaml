@@ -1,0 +1,32 @@
+name: workspace-state-guard
+description: "Internal Cortex module applied before substantial edits, plan execution, branch cleanup, publishing, or work that may collide with user changes or workspace isolation."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Workspace collision risk evidence for workspace-state-guard: Substantial edits, cleanup, publish step, or dirty tree risk"
+    medium:
+      - "Substantial edits, cleanup, publish step, or dirty tree risk"
+    weak:
+      - "Workspace collision risk"
+
+relations:
+  before: []
+  with:
+    - "branch-completion"
+    - "completion-verification"
+  after: []
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references: []
+  scripts: []
+  templates: []
+  assets: []

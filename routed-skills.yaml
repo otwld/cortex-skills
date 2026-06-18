@@ -1,0 +1,25 @@
+name: cortex
+root: .
+
+paths:
+  entry: entry
+  modules: modules
+  shared: shared
+  generated: generated
+  proposals: proposals
+
+artifacts:
+  metadata: skill.yaml
+  instructions: instructions.md
+
+entry:
+  required: true
+  path: entry/cortex
+
+generated:
+  catalog: generated/SKILL_CATALOG.md
+  graph: generated/module-graph.md
+  cascade: generated/module-cascade.md
+
+validation:
+  max_before_depth: 3

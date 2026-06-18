@@ -1,0 +1,35 @@
+name: prototype
+description: "Internal Cortex module applied when building a throwaway prototype to answer a design question, compare UI variants, or test a state model before committing production code."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Throwaway design learning evidence for prototype: User wants to prototype, compare UI variants, or test a state model"
+    medium:
+      - "User wants to prototype, compare UI variants, or test a state model"
+    weak:
+      - "Throwaway design learning"
+
+relations:
+  before: []
+  with:
+    - "design-intake"
+    - "test-first-discipline"
+    - "code-documentation"
+  after:
+    - "issue-decomposition"
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references:
+    - "shared/prototype-guidance.md"
+  scripts: []
+  templates: []
+  assets: []

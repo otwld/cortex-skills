@@ -1,0 +1,37 @@
+name: systematic-debugging
+description: "Internal Cortex module applied when encountering bugs, failing tests, build failures, performance problems, or unexpected behavior before proposing fixes."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Failure investigation evidence for systematic-debugging: Failing test, build failure, bug, performance problem, or unexpected behavior"
+    medium:
+      - "Failing test, build failure, bug, performance problem, or unexpected behavior"
+    weak:
+      - "Failure investigation"
+
+relations:
+  before: []
+  with:
+    - "test-first-discipline"
+    - "completion-verification"
+    - "architecture-drift-detector"
+  after:
+    - "skill-evolution"
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references:
+    - "condition-based-waiting.md"
+    - "defense-in-depth.md"
+    - "root-cause-tracing.md"
+  scripts: []
+  templates: []
+  assets: []

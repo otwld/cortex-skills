@@ -1,0 +1,36 @@
+name: design-intake
+description: "Internal Cortex module applied before ambiguous, creative, behavioral, user-facing, or architecture-affecting work where intent, constraints, or success criteria are not already clear."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Ambiguous or creative work evidence for design-intake: Goal, behavior, architecture, or user experience is not clear"
+    medium:
+      - "Goal, behavior, architecture, or user experience is not clear"
+    weak:
+      - "Ambiguous or creative work"
+
+relations:
+  before: []
+  with:
+    - "grill-with-docs"
+    - "prototype"
+    - "architecture-drift-detector"
+    - "library-placement-decision"
+    - "public-api-design"
+  after:
+    - "implementation-plan"
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references: []
+  scripts: []
+  templates: []
+  assets: []

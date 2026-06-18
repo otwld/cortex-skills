@@ -1,0 +1,34 @@
+name: agent-delegation
+description: "Internal Cortex module applied when independent tasks, investigations, or review passes can be delegated without shared state or sequential dependencies."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong: []
+    medium: []
+    weak: []
+
+relations:
+  before: []
+  with:
+    - "plan-execution"
+    - "review-gate"
+    - "systematic-debugging"
+    - "completion-verification"
+  after: []
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references:
+    - "code-reviewer-prompt.md"
+    - "implementer-prompt.md"
+    - "spec-reviewer-prompt.md"
+  scripts: []
+  templates: []
+  assets: []

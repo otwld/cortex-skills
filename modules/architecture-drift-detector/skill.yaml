@@ -1,0 +1,34 @@
+name: architecture-drift-detector
+description: "Internal Cortex module applied when starting significant work, reviewing recent changes, planning refactors, or seeing commit bursts that may indicate structural drift."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Architecture drift or deepening evidence for architecture-drift-detector: Broad churn, shallow modules, weak seams, poor locality, or low leverage"
+    medium:
+      - "Broad churn, shallow modules, weak seams, poor locality, or low leverage"
+    weak:
+      - "Architecture drift or deepening"
+
+relations:
+  before: []
+  with:
+    - "architecture-deepening-review"
+    - "library-placement-decision"
+    - "nx-module-boundaries"
+  after: []
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references:
+    - "shared/architecture-deepening.md"
+  scripts: []
+  templates: []
+  assets: []

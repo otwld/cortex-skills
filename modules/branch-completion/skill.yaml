@@ -1,0 +1,33 @@
+name: branch-completion
+description: "Internal Cortex module applied when implementation is complete and the user asks to merge, push, open a pull request, publish, discard, clean up, or finish branch work."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Completion or publishing evidence for branch-completion: Success claim, commit, push, pull request, merge, release, or finish decision"
+    medium:
+      - "Success claim, commit, push, pull request, merge, release, or finish decision"
+    weak:
+      - "Completion or publishing"
+
+relations:
+  before:
+    - "workspace-state-guard"
+    - "completion-verification"
+  with:
+    - "review-gate"
+  after: []
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references: []
+  scripts: []
+  templates: []
+  assets: []

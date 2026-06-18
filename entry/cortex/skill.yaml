@@ -1,0 +1,5 @@
+name: cortex
+description: "Public entry skill for the Cortex routed skill workspace."
+activation: entry
+visibility: public
+status: active

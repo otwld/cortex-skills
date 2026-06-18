@@ -1,0 +1,31 @@
+name: example-universe-enforcer
+description: "Internal Cortex module applied when producing examples, sample code, DTOs, API payloads, Storybook data, docs snippets, tests, or illustrative data."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Documentation or examples evidence for example-universe-enforcer: JSDoc, TSDoc, public docs, examples, stories, fixtures, payloads, or illustrative data change"
+    medium:
+      - "JSDoc, TSDoc, public docs, examples, stories, fixtures, payloads, or illustrative data change"
+    weak:
+      - "Documentation or examples"
+
+relations:
+  before: []
+  with: []
+  after: []
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references:
+    - "recruitment-universe.md"
+  scripts: []
+  templates: []
+  assets: []

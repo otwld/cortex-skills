@@ -1,0 +1,38 @@
+name: code-documentation
+description: "Internal Cortex module applied whenever code is generated, edited, moved, split, refactored, or materially reviewed, and when public, reusable, or user-facing documentation, Storybook docs, examples, stories, MDX docs, or API usage notes change."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Code edit evidence for code-documentation: Code is generated, edited, moved, split, refactored, or materially reviewed"
+      - "Documentation or examples evidence for code-documentation: JSDoc, TSDoc, public docs, examples, stories, fixtures, payloads, or illustrative data change"
+    medium:
+      - "Code is generated, edited, moved, split, refactored, or materially reviewed"
+      - "JSDoc, TSDoc, public docs, examples, stories, fixtures, payloads, or illustrative data change"
+    weak:
+      - "Code edit"
+      - "Documentation or examples"
+
+relations:
+  before: []
+  with:
+    - "example-universe-enforcer"
+    - "storybook-conventions"
+  after:
+    - "skill-evolution"
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references:
+    - "shared/recruitment-universe.md"
+    - "shared/skill-quality-standard.md"
+  scripts: []
+  templates: []
+  assets: []

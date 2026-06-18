@@ -1,0 +1,33 @@
+name: nx-conventions
+description: "Internal Cortex module applied when creating, modifying, or reviewing Nx workspace configuration, generators, targets, project metadata, inferred tasks, or project graph behavior."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Monorepo structure evidence for nx-conventions: Workspace graph, metadata, tags, boundaries, generators, or inferred targets matter"
+    medium:
+      - "Workspace graph, metadata, tags, boundaries, generators, or inferred targets matter"
+    weak:
+      - "Monorepo structure"
+
+relations:
+  before: []
+  with:
+    - "nx-module-boundaries"
+    - "library-placement-decision"
+  after: []
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references:
+    - "legacy-extracted-patterns.md"
+  scripts: []
+  templates: []
+  assets: []

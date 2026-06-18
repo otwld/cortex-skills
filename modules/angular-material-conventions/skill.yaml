@@ -1,0 +1,35 @@
+name: angular-material-conventions
+description: "Internal Cortex module applied when adding, modifying, or reviewing Angular Material or Angular CDK components, utilities, theming, overlays, accessibility, or density settings."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Angular Material or CDK evidence for angular-material-conventions: Material component, CDK utility, overlay, theme, accessibility, or density changes"
+    medium:
+      - "Material component, CDK utility, overlay, theme, accessibility, or density changes"
+    weak:
+      - "Angular Material or CDK"
+
+relations:
+  before:
+    - "angular-conventions"
+  with:
+    - "bundle-performance"
+    - "typescript-code-style"
+    - "code-documentation"
+  after:
+    - "skill-evolution"
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references: []
+  scripts: []
+  templates: []
+  assets: []

@@ -1,0 +1,38 @@
+name: architecture-deepening-review
+description: "Internal Cortex module applied when finding shallow modules, deepening candidates, test seams, or architecture improvements that should increase leverage and locality."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Architecture drift or deepening evidence for architecture-deepening-review: Broad churn, shallow modules, weak seams, poor locality, or low leverage"
+    medium:
+      - "Broad churn, shallow modules, weak seams, poor locality, or low leverage"
+    weak:
+      - "Architecture drift or deepening"
+
+relations:
+  before: []
+  with:
+    - "architecture-drift-detector"
+    - "library-placement-decision"
+    - "public-api-design"
+    - "test-first-discipline"
+    - "code-documentation"
+  after:
+    - "skill-evolution"
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references:
+    - "shared/architecture-deepening.md"
+    - "shared/project-memory.md"
+  scripts: []
+  templates: []
+  assets: []

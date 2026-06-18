@@ -1,0 +1,34 @@
+name: vue-conventions
+description: "Internal Cortex module applied when creating, modifying, or reviewing Vue 3 Single-File Components, Composition API code, `<script setup>`, props, emits, slots, or component naming."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Vue surface evidence for vue-conventions: Vue component, Composition API, script setup, prop, emit, slot, or component naming changes"
+    medium:
+      - "Vue component, Composition API, script setup, prop, emit, slot, or component naming changes"
+    weak:
+      - "Vue surface"
+
+relations:
+  before: []
+  with:
+    - "typescript-code-style"
+    - "rxjs-conventions"
+    - "code-documentation"
+  after:
+    - "skill-evolution"
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references: []
+  scripts: []
+  templates: []
+  assets: []

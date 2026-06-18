@@ -1,0 +1,31 @@
+name: skill-evolution
+description: "Internal Cortex module applied after repeated implementation patterns, technical discussions, refactors, reviews, folder or diff analysis, or module-library changes reveal a reusable agent workflow or doctrine gap."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Reusable doctrine gap evidence for skill-evolution: Repeated agent failure, recurring workflow, or durable convention emerges"
+    medium:
+      - "Repeated agent failure, recurring workflow, or durable convention emerges"
+    weak:
+      - "Reusable doctrine gap"
+
+relations:
+  before: []
+  with: []
+  after: []
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references:
+    - "shared/skill-quality-standard.md"
+  scripts: []
+  templates: []
+  assets: []

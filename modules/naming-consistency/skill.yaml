@@ -1,0 +1,34 @@
+name: naming-consistency
+description: "Internal Cortex module applied when creating or renaming files, classes, functions, exports, DTOs, contracts, events, commands, providers, factories, or reusable abstractions."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Library surface evidence for naming-consistency: New library, shared code, public export, entry point, contract, or import path change"
+    medium:
+      - "New library, shared code, public export, entry point, contract, or import path change"
+    weak:
+      - "Library surface"
+
+relations:
+  before: []
+  with:
+    - "public-api-design"
+    - "typescript-api-conventions"
+    - "code-documentation"
+  after: []
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references:
+    - "shared/domain-glossary.md"
+  scripts: []
+  templates: []
+  assets: []

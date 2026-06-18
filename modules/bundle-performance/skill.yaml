@@ -1,0 +1,28 @@
+name: bundle-performance
+description: "Internal Cortex module applied when changes may affect bundle size, tree-shaking, side effects, UI dependencies, entry points, or broadly consumed runtime code."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong: []
+    medium: []
+    weak: []
+
+relations:
+  before: []
+  with:
+    - "public-api-design"
+  after: []
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references: []
+  scripts: []
+  templates: []
+  assets: []

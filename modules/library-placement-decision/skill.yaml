@@ -1,0 +1,37 @@
+name: library-placement-decision
+description: "Internal Cortex module applied when deciding where new code, shared abstractions, moved files, extracted logic, or public entry points belong inside a modular TypeScript workspace."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Monorepo structure evidence for library-placement-decision: Workspace graph, metadata, tags, boundaries, generators, or inferred targets matter"
+      - "Library surface evidence for library-placement-decision: New library, shared code, public export, entry point, contract, or import path change"
+    medium:
+      - "Workspace graph, metadata, tags, boundaries, generators, or inferred targets matter"
+      - "New library, shared code, public export, entry point, contract, or import path change"
+    weak:
+      - "Monorepo structure"
+      - "Library surface"
+
+relations:
+  before: []
+  with:
+    - "nx-module-boundaries"
+    - "public-api-design"
+    - "naming-consistency"
+  after:
+    - "skill-evolution"
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references: []
+  scripts: []
+  templates: []
+  assets: []

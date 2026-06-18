@@ -1,0 +1,33 @@
+name: jest-conventions
+description: "Internal Cortex module applied when creating, modifying, or reviewing Jest configuration, Jest tests, setup files, custom matchers, test environments, or Jest mocks."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Test runner surface evidence for jest-conventions: Jest, Vitest, or Playwright config, tests, setup, mocks, fixtures, locators, or assertions change"
+    medium:
+      - "Jest, Vitest, or Playwright config, tests, setup, mocks, fixtures, locators, or assertions change"
+    weak:
+      - "Test runner surface"
+
+relations:
+  before: []
+  with:
+    - "typescript-code-style"
+    - "code-documentation"
+  after:
+    - "skill-evolution"
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references: []
+  scripts: []
+  templates: []
+  assets: []

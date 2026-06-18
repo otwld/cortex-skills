@@ -7,15 +7,9 @@
 
 Governed AI skill library for reusable TypeScript ecosystem agent workflows.
 
-Cortex Skills is a public `$cortex` router, explicit setup command skills, and
-agent-readable internal modules. It is for AI builders and engineering teams
-who want reusable guidance with explicit invocation, validation, and
-cross-module coordination.
-
-This is not a package manager, framework, or prompt dump. The public Codex
-surface uses `SKILL.md` with OpenAI-facing metadata; each internal module is a
-small directory with `MODULE.md` plus optional references or scripts for
-deterministic checks.
+Cortex Skills is a routed skill workspace with one public `$cortex` entry skill,
+hidden routed modules, explicit command artifacts, generated routing views, and
+deterministic validation.
 
 ## Quick Start
 
@@ -26,34 +20,34 @@ git clone git@github.com:otwld/cortex-skills.git
 cd cortex-skills
 ```
 
-Inspect the catalog:
+Inspect the generated catalog:
 
 ```bash
-less SKILL_CATALOG.md
+less generated/SKILL_CATALOG.md
 ```
 
-Validate the library:
+Validate the workspace:
 
 ```bash
-python3 scripts/validate-skills.py
+python3 scripts/validate-routed-skills.py routed-skills.yaml
 ```
 
-Preview the module cascade simulations:
+Rebuild generated artifacts after metadata changes:
 
 ```bash
-python3 scripts/validate-skills.py --cascade
+python3 scripts/rebuild-routed-skills.py routed-skills.yaml
 ```
 
-Run validator fixture tests after changing validator behavior:
+Run validator fixture tests after changing validation or rebuild behavior:
 
 ```bash
-python3 scripts/test-validate-skills.py
+python3 scripts/test-validate-routed-skills.py
 ```
 
-Use the repository as a complete Cortex library with compatible agent tooling.
-Invoke `$cortex` explicitly to route a task through the internal modules, or
-invoke setup command skills such as `$agent-instructions-bootstrap` and
-`$project-memory-setup` directly when you want those workflows.
+Invoke `$cortex` explicitly to route work through hidden modules. Explicit
+command artifacts such as `agent-instructions-bootstrap`,
+`bootstrap-routed-skill-workspace`, and `project-memory-setup` are represented
+in metadata but excluded from routed cascade selection.
 
 ## What Is Included
 
@@ -61,79 +55,68 @@ invoke setup command skills such as `$agent-instructions-bootstrap` and
   boundaries, and bundle impact.
 - Framework modules for Angular, Angular Material, Angular TanStack Query,
   NestJS, NestJS Mongoose, Nx, RxJS, Storybook, Vite, and Vue.
-- Governance modules for Cortex routing, intake, planning, execution,
-  delegation, workspace safety, debugging, verification, review, and branch
-  completion.
-- Explicit setup command skills for agent instructions and project memory.
+- Governance modules for intake, planning, execution, delegation, workspace
+  safety, debugging, verification, review, and branch completion.
+- Explicit setup command artifacts for agent instructions, project memory, and
+  routed skill workspaces.
 - Testing modules for Jest, Playwright, and Vitest.
 - Tool modules for source-management CLI workflows such as Bricks.
 - TypeScript modules for source style and public API conventions.
 - Maintenance modules for diary entries, example consistency, and skill
   evolution.
 
-See [SKILL_CATALOG.md](SKILL_CATALOG.md) for the full list.
+See [generated/SKILL_CATALOG.md](generated/SKILL_CATALOG.md) for the generated
+artifact list.
 
-## Governance Model
+## Workspace Model
 
-The public router follows the structure defined in [AGENTS.md](AGENTS.md):
+The workspace follows the contract in [AGENTS.md](AGENTS.md):
 
 ```text
-governance/core/cortex/
+routed-skills.yaml
+entry/cortex/
 |-- SKILL.md
-`-- agents/
-    `-- openai.yaml
+|-- agents/openai.yaml
+`-- skill.yaml
+modules/<artifact-name>/
+|-- instructions.md
+`-- skill.yaml
+shared/
+generated/
+scripts/
+proposals/
 ```
 
-Explicit setup command skills use the same public-skill shape under
-`governance/setup/<command-slug>/` and are excluded from module routing.
-
-Internal modules use:
-
-```text
-taxonomy[/group]/folder-slug/
-`-- MODULE.md
-```
-
-The repository also includes:
-
-- [references/module-graph.md](references/module-graph.md), the canonical
-  non-transitive module graph.
-- [scripts/validate-skills.py](scripts/validate-skills.py), the structural,
-  OpenAI metadata, catalog taxonomy, residue, example, and cascade validator.
-- [scripts/test-validate-skills.py](scripts/test-validate-skills.py), fixture
-  regression tests for validator behavior.
-- A shared recruitment job-board example universe for all illustrative examples.
-- Required `(otwld)` display name in public `agents/openai.yaml` files for easy
-  discovery in agent UIs and CLIs.
+`skill.yaml` files are the source of truth for names, descriptions, activation,
+visibility, routing signals, relations, declared resources, and generated
+catalog data. `instructions.md` files contain selected-module runtime guidance.
+Files under `generated/` are rebuilt outputs and should not be hand-edited.
 
 ## Optional Codex Usage
 
-The module instructions are intentionally agent-neutral. Public skills include
-`agents/openai.yaml` metadata for OpenAI/Codex-style discovery; internal modules
-do not.
+The public Codex-facing surface is `entry/cortex/SKILL.md` plus
+`entry/cortex/agents/openai.yaml`. Routed modules are hidden and selected by
+the public entry using generated metadata views.
 
 Common usage patterns:
 
-- Clone this repository and point compatible tooling at the public skill
-  directories.
-- Keep internal modules with the public skill so `$cortex` can route work
-  through `references/module-cascade.md`.
-- Use `$agent-instructions-bootstrap` or `$project-memory-setup` directly for
-  user-invoked setup workflows.
-- Use `SKILL_CATALOG.md` to inspect the public commands and module names.
-
-Always run the validator after copying, editing, or contributing Cortex
-artifacts.
+- Point compatible tooling at `entry/cortex/` for the `$cortex` entry.
+- Use `generated/module-cascade.md` and `generated/module-graph.md` to inspect
+  routing decisions.
+- Update module `skill.yaml` metadata when adding signals, relations, or
+  resources.
+- Run validation after copying, editing, or contributing artifacts.
 
 ## Contributing
 
-Pull requests are welcome. Keep the public skill and internal modules focused,
-project-agnostic, and validated.
+Pull requests are welcome. Keep artifacts focused, project-agnostic, and
+validated.
 
 Before opening a PR:
 
 ```bash
-python3 scripts/validate-skills.py
+python3 scripts/rebuild-routed-skills.py --check routed-skills.yaml
+python3 scripts/validate-routed-skills.py routed-skills.yaml
 ```
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the contribution rules.

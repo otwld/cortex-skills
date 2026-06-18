@@ -1,0 +1,33 @@
+name: rxjs-conventions
+description: "Internal Cortex module applied when creating, modifying, or reviewing RxJS observables, operators, subscriptions, subjects, multicasting, cleanup, or async stream composition."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "RxJS surface evidence for rxjs-conventions: Observable, operator, subject, subscription, multicasting, or cleanup changes"
+    medium:
+      - "Observable, operator, subject, subscription, multicasting, or cleanup changes"
+    weak:
+      - "RxJS surface"
+
+relations:
+  before: []
+  with:
+    - "typescript-code-style"
+    - "code-documentation"
+  after:
+    - "skill-evolution"
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references: []
+  scripts: []
+  templates: []
+  assets: []

@@ -1,0 +1,35 @@
+name: review-gate
+description: "Internal Cortex module applied after major features or refactors, before merge, pull request, push, publish, or when a completed change needs independent quality review."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Completion or publishing evidence for review-gate: Success claim, commit, push, pull request, merge, release, or finish decision"
+    medium:
+      - "Success claim, commit, push, pull request, merge, release, or finish decision"
+    weak:
+      - "Completion or publishing"
+
+relations:
+  before: []
+  with:
+    - "agent-delegation"
+    - "completion-verification"
+    - "review-feedback-triage"
+    - "public-api-design"
+    - "architecture-drift-detector"
+  after: []
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references: []
+  scripts: []
+  templates: []
+  assets: []

@@ -1,0 +1,34 @@
+name: vite-conventions
+description: "Internal Cortex module applied when creating, modifying, or reviewing Vite configuration, library builds, aliases, plugins, source maps, dependency externalization, or dev-server settings."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Vite surface evidence for vite-conventions: Vite config, library build, alias, plugin, source map, externalization, or dev server changes"
+    medium:
+      - "Vite config, library build, alias, plugin, source map, externalization, or dev server changes"
+    weak:
+      - "Vite surface"
+
+relations:
+  before: []
+  with:
+    - "bundle-performance"
+    - "typescript-code-style"
+    - "code-documentation"
+  after:
+    - "skill-evolution"
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references: []
+  scripts: []
+  templates: []
+  assets: []

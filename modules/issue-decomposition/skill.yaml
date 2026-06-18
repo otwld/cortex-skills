@@ -1,0 +1,36 @@
+name: issue-decomposition
+description: "Internal Cortex module applied when turning a PRD, plan, design, or large request into vertical slices, durable agent briefs, issue tracker work, or ready-for-agent implementation units."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Issue breakdown evidence for issue-decomposition: Plan, PRD, or large request must become vertical slices or briefs"
+    medium:
+      - "Plan, PRD, or large request must become vertical slices or briefs"
+    weak:
+      - "Issue breakdown"
+
+relations:
+  before: []
+  with:
+    - "implementation-plan"
+    - "grill-with-docs"
+  after:
+    - "plan-execution"
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references:
+    - "shared/agent-briefs.md"
+    - "shared/issue-tracker-setup.md"
+    - "shared/vertical-slices.md"
+  scripts: []
+  templates: []
+  assets: []

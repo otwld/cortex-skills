@@ -1,0 +1,36 @@
+name: grill-with-docs
+description: "Internal Cortex module applied when stress-testing a plan against project vocabulary, documented decisions, domain rules, or when a deep questioning session should update glossary and ADR artifacts."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Deep questioning with memory evidence for grill-with-docs: Vocabulary is fuzzy, ADRs matter, or decisions should update memory"
+    medium:
+      - "Vocabulary is fuzzy, ADRs matter, or decisions should update memory"
+    weak:
+      - "Deep questioning with memory"
+
+relations:
+  before: []
+  with:
+    - "design-intake"
+    - "implementation-plan"
+  after:
+    - "issue-decomposition"
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references:
+    - "shared/adr-format.md"
+    - "shared/domain-glossary.md"
+    - "shared/project-memory.md"
+  scripts: []
+  templates: []
+  assets: []

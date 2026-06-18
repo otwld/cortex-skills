@@ -1,0 +1,43 @@
+name: bootstrap-routed-skill-workspace
+description: "Use only when the user explicitly includes $bootstrap-routed-skill-workspace; bootstraps, analyzes, validates, rebuilds, or evolves generic routed skill workspaces with one public entry skill, hidden routed modules, explicit routing metadata, local resources, generated catalogs and graphs, and deterministic integrity checks."
+activation: explicit
+visibility: public
+status: active
+
+routing:
+  priority: 0
+  signals:
+    strong: []
+    medium: []
+    weak: []
+
+relations:
+  before: []
+  with: []
+  after: []
+  excludes: []
+  replaces: []
+
+uses:
+  - "scripts/rebuild-routed-skills.py"
+  - "scripts/validate-routed-skills.py"
+  - "scripts/test-validate-routed-skills.py"
+
+resources:
+  references:
+    - "operations.md"
+    - "routed-workspace-contract.md"
+  scripts: []
+  templates: []
+  assets:
+    - "templates/entry/SKILL.md.template"
+    - "templates/entry/agents/openai.yaml.template"
+    - "templates/entry/skill.yaml"
+    - "templates/explicit-command/instructions.md"
+    - "templates/explicit-command/skill.yaml"
+    - "templates/generated/SKILL_CATALOG.md"
+    - "templates/generated/module-cascade.md"
+    - "templates/generated/module-graph.md"
+    - "templates/module/instructions.md"
+    - "templates/module/skill.yaml"
+    - "templates/routed-skills.yaml"

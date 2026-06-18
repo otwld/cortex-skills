@@ -1,0 +1,42 @@
+name: implementation-plan
+description: "Internal Cortex module applied when requirements are known and the work is multi-step, cross-boundary, migration-related, high-risk, or needs a written execution path before edits."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Multi-step work evidence for implementation-plan: Cross-boundary change, migration, risky refactor, or substantial implementation"
+    medium:
+      - "Cross-boundary change, migration, risky refactor, or substantial implementation"
+    weak:
+      - "Multi-step work"
+
+relations:
+  before: []
+  with:
+    - "design-intake"
+    - "grill-with-docs"
+    - "issue-decomposition"
+    - "workspace-state-guard"
+    - "test-first-discipline"
+    - "architecture-drift-detector"
+    - "library-placement-decision"
+    - "public-api-design"
+    - "code-documentation"
+  after:
+    - "plan-execution"
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references:
+    - "shared/skill-quality-standard.md"
+    - "shared/vertical-slices.md"
+  scripts: []
+  templates: []
+  assets: []

@@ -1,0 +1,34 @@
+name: typescript-api-conventions
+description: "Internal Cortex module applied when designing or reviewing TypeScript public APIs, exported types, DTOs, contracts, generics, strict typing, entry points, or reusable type surfaces."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "TypeScript public API evidence for typescript-api-conventions: Exported type, DTO, contract, generic, or reusable type surface changes"
+    medium:
+      - "Exported type, DTO, contract, generic, or reusable type surface changes"
+    weak:
+      - "TypeScript public API"
+
+relations:
+  before: []
+  with:
+    - "public-api-design"
+    - "naming-consistency"
+    - "typescript-code-style"
+    - "code-documentation"
+  after: []
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references: []
+  scripts: []
+  templates: []
+  assets: []

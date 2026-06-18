@@ -1,0 +1,35 @@
+name: test-first-discipline
+description: "Internal Cortex module applied before behavior changes, bug fixes, or refactors where tests can prove the intended behavior or regression."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Behavior change evidence for test-first-discipline: New behavior, bug fix, refactor, or regression risk"
+    medium:
+      - "New behavior, bug fix, refactor, or regression risk"
+    weak:
+      - "Behavior change"
+
+relations:
+  before: []
+  with:
+    - "systematic-debugging"
+    - "completion-verification"
+    - "jest-conventions"
+    - "vitest-conventions"
+    - "playwright-conventions"
+  after: []
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references: []
+  scripts: []
+  templates: []
+  assets: []

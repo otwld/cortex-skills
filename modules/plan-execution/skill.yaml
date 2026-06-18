@@ -1,0 +1,37 @@
+name: plan-execution
+description: "Internal Cortex module applied when executing a written implementation plan task-by-task with validation checkpoints and no remaining design decisions."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Written plan execution evidence for plan-execution: Plan exists and no design decision remains open"
+    medium:
+      - "Plan exists and no design decision remains open"
+    weak:
+      - "Written plan execution"
+
+relations:
+  before:
+    - "workspace-state-guard"
+  with:
+    - "agent-delegation"
+    - "test-first-discipline"
+    - "code-documentation"
+    - "review-gate"
+    - "completion-verification"
+  after:
+    - "branch-completion"
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references: []
+  scripts: []
+  templates: []
+  assets: []

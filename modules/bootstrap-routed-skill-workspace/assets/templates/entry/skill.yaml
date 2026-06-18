@@ -1,0 +1,5 @@
+name: {{entry_name}}
+description: Public entry skill for the {{workspace_name}} routed skill workspace.
+activation: entry
+visibility: public
+status: active

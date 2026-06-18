@@ -1,0 +1,34 @@
+name: storybook-conventions
+description: "Internal Cortex module applied when creating, modifying, or reviewing Storybook stories, MDX docs, preview setup, addons, mocks, visual regression data, or story organization."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Storybook surface evidence for storybook-conventions: Story, MDX docs, preview setup, addon, mock, or story organization changes"
+    medium:
+      - "Story, MDX docs, preview setup, addon, mock, or story organization changes"
+    weak:
+      - "Storybook surface"
+
+relations:
+  before: []
+  with:
+    - "typescript-code-style"
+    - "code-documentation"
+  after:
+    - "skill-evolution"
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references:
+    - "legacy-extracted-patterns.md"
+  scripts: []
+  templates: []
+  assets: []

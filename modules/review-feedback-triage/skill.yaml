@@ -1,0 +1,34 @@
+name: review-feedback-triage
+description: "Internal Cortex module applied when receiving code review, CI review, agent review, or external technical feedback before implementing suggested changes."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Review feedback evidence for review-feedback-triage: User, CI, reviewer, or agent gives technical feedback"
+    medium:
+      - "User, CI, reviewer, or agent gives technical feedback"
+    weak:
+      - "Review feedback"
+
+relations:
+  before: []
+  with:
+    - "systematic-debugging"
+    - "test-first-discipline"
+    - "completion-verification"
+    - "review-gate"
+  after: []
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references: []
+  scripts: []
+  templates: []
+  assets: []

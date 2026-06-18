@@ -1,0 +1,36 @@
+name: nestjs-mongoose-conventions
+description: "Internal Cortex module applied when creating or reviewing NestJS Mongoose schemas, models, repositories, aggregation helpers, ObjectId handling, or persistence-facing DTO contracts."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Mongoose persistence evidence for nestjs-mongoose-conventions: Schema, model, repository, aggregation, ObjectId, or persistence DTO changes"
+    medium:
+      - "Schema, model, repository, aggregation, ObjectId, or persistence DTO changes"
+    weak:
+      - "Mongoose persistence"
+
+relations:
+  before:
+    - "nestjs-conventions"
+  with:
+    - "typescript-api-conventions"
+    - "public-api-design"
+    - "code-documentation"
+  after:
+    - "skill-evolution"
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references:
+    - "legacy-extracted-patterns.md"
+  scripts: []
+  templates: []
+  assets: []

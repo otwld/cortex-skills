@@ -1,0 +1,27 @@
+name: {{module_name}}
+description: {{module_description}}
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong: []
+    medium: []
+    weak: []
+
+relations:
+  before: []
+  with: []
+  after: []
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references: []
+  scripts: []
+  templates: []
+  assets: []

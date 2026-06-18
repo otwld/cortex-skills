@@ -1,0 +1,27 @@
+name: {{command_name}}
+description: {{command_description}}
+activation: explicit
+visibility: public
+status: active
+
+routing:
+  priority: 0
+  signals:
+    strong: []
+    medium: []
+    weak: []
+
+relations:
+  before: []
+  with: []
+  after: []
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references: []
+  scripts: []
+  templates: []
+  assets: []

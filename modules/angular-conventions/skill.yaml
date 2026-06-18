@@ -1,0 +1,35 @@
+name: angular-conventions
+description: "Internal Cortex module applied when creating, modifying, or reviewing Angular components, directives, pipes, services, templates, styles, forms, inputs, outputs, or dependency injection."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Angular surface evidence for angular-conventions: Angular component, directive, pipe, service, template, form, input, output, or DI changes"
+    medium:
+      - "Angular component, directive, pipe, service, template, form, input, output, or DI changes"
+    weak:
+      - "Angular surface"
+
+relations:
+  before: []
+  with:
+    - "rxjs-conventions"
+    - "typescript-code-style"
+    - "code-documentation"
+  after:
+    - "skill-evolution"
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references:
+    - "legacy-extracted-patterns.md"
+  scripts: []
+  templates: []
+  assets: []

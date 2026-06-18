@@ -1,0 +1,31 @@
+name: diary
+description: "Internal Cortex module applied when the user asks to log, journal, summarize, hand off, or preserve agent work history, decisions, blockers, validations, or completed outcomes."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Work history evidence for diary: User asks to log, summarize, hand off, preserve decisions, or record validation"
+    medium:
+      - "User asks to log, summarize, hand off, preserve decisions, or record validation"
+    weak:
+      - "Work history"
+
+relations:
+  before: []
+  with: []
+  after: []
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references: []
+  scripts:
+    - "diary.py"
+  templates: []
+  assets: []

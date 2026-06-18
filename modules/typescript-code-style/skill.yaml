@@ -1,0 +1,36 @@
+name: typescript-code-style
+description: "Internal Cortex module applied when writing, editing, generating, refactoring, or reviewing TypeScript or TSX source files, tests, build scripts, imports, exports, classes, functions, or interfaces."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "TypeScript implementation evidence for typescript-code-style: TypeScript source, tests, imports, classes, functions, or strict typing are edited"
+    medium:
+      - "TypeScript source, tests, imports, classes, functions, or strict typing are edited"
+    weak:
+      - "TypeScript implementation"
+
+relations:
+  before: []
+  with:
+    - "code-documentation"
+  after: []
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references:
+    - "comments-tooling-policy.md"
+    - "language-features.md"
+    - "source-modules.md"
+    - "types-naming.md"
+  scripts:
+    - "ts_style_preflight.py"
+  templates: []
+  assets: []

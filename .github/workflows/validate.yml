@@ -17,5 +17,5 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Validate skills
-        run: python3 scripts/validate-skills.py
+      - name: Validate routed skills
+        run: python3 scripts/validate-routed-skills.py routed-skills.yaml

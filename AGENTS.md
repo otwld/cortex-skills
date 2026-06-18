@@ -2,15 +2,13 @@
 
 ## Purpose
 
-This workspace contains public Cortex skills and internal Cortex modules. Public
-skills are either the `$cortex` router or explicit setup command skills under
-`governance/setup/`. Treat each artifact as a small, self-contained operating
-guide for agents. Keep instructions precise, maintainable, and easy to
-discover.
+This workspace is a routed Cortex skill workspace. It has exactly one public
+entry skill, `$cortex`, and hidden routed modules selected through explicit
+metadata. Treat `skill.yaml` files and instruction files as source artifacts;
+treat generated catalogs and routing views as disposable rebuild outputs.
 
-These rules primarily govern writing and maintaining Cortex skill and module
-artifacts in this workspace. They are intentionally agent-neutral except where
-the public Codex skill surface is described.
+These rules govern writing and maintaining routed skill artifacts in this
+repository. Keep guidance precise, project-agnostic, and easy to validate.
 
 ## Documentation Lookup
 
@@ -46,183 +44,106 @@ question as the query. Do not run more than three Context7 commands per
 question. Do not include secrets, tokens, credentials, or private values in
 Context7 queries.
 
-If the user provides a valid `/org/project` library ID, use it directly for the
-docs command. For version-specific docs, use the versioned ID returned by the
-library command.
-
 If Context7 fails with a quota error, tell the user and suggest logging in or
-setting a `CONTEXT7_API_KEY`. If your environment is sandboxed and Context7
-fails with DNS, host resolution, or fetch errors, retry outside the default
-sandbox.
+setting a `CONTEXT7_API_KEY`. If the environment is sandboxed and Context7 fails
+with DNS, host resolution, or fetch errors, retry outside the default sandbox.
 
-## Workspace Taxonomy
+## Workspace Shape
 
-Skills are grouped by reusable purpose:
-
-- `architecture/` for boundaries, placement, public APIs, extraction, naming,
-  and performance doctrine.
-- `documentation/` for generated or maintained code documentation rules.
-- `frameworks/` for framework-specific conventions.
-- `governance/` for agent workflow gates, routing, planning, review,
-  verification, workspace safety, and release completion.
-- `maintenance/` for workspace maintenance skills and example policy.
-- `testing/` for test-runner and end-to-end testing conventions.
-- `tools/` for source-management CLIs, developer tools, and their workflow
-  conventions.
-- `typescript/` for TypeScript language, API, and style conventions.
-- `references/` for workspace-wide references such as the module graph.
-- `scripts/` for workspace-wide validation and maintenance scripts.
-
-## Artifact Directory Standard
-
-The public `cortex` skill is the only Cortex router. Explicit command skills
-under `governance/setup/` are direct Codex skill surfaces that users invoke by
-name, not internal modules selected by `$cortex`. Every other operating guide is
-an internal Cortex module.
-
-Every artifact must live in its own short directory slug under the relevant
-taxonomy folder. Related ecosystems may introduce one grouping level before the
-artifact slug:
+The routed workspace root is this repository root:
 
 ```text
-taxonomy[/group]/folder-slug/
-`-- MODULE.md
-```
-
-Public skills use this shape:
-
-```text
-governance/core/cortex/
+routed-skills.yaml
+entry/cortex/
 |-- SKILL.md
-`-- agents/
-    `-- openai.yaml
-
-governance/setup/command-slug/
-|-- SKILL.md
-`-- agents/
-    `-- openai.yaml
-```
-
-The frontmatter `name` remains the canonical artifact name. The folder slug
-should omit words already made obvious by the taxonomy and group path, such as
-`frameworks/angular/core` for `angular-conventions`,
-`frameworks/angular/material` for `angular-material-conventions`,
-`governance/core/cortex` for `cortex`,
-`governance/setup/project-memory-setup` for `project-memory-setup`,
-`testing/jest` for `jest-conventions`, and `typescript/api` for
-`typescript-api-conventions`.
-
-Optional supporting directories:
-
-- `references/` for detailed reference material that should be loaded only when
-  needed.
-- `scripts/` for deterministic or repeated operations.
-- `assets/` for templates, images, fixtures, or other output resources.
-
-Do not add extra README, changelog, quick-reference, or installation files
-unless the artifact genuinely needs them at runtime.
-
-## SKILL.md and MODULE.md Standard
-
-`SKILL.md` is reserved for the public `cortex` router and explicit command
-skills. All internal modules must use `MODULE.md`, which is a Cortex workspace
-convention rather than an official Codex skill format.
-
-Every `SKILL.md` and `MODULE.md` must start with YAML frontmatter:
-
-```markdown
----
-name: artifact-name
-description: Clear routing guidance explaining when this artifact should apply.
----
-```
-
-For public skills, `description` is the Codex discovery surface and must state
-that the skill applies only when the user explicitly includes its `$skill-name`.
-For modules, `description` is internal routing guidance used after `$cortex` is
-already selected.
-
-After the frontmatter, every public skill must include this standardized output
-marker:
-
-```markdown
-# Output Marker
-
-Display:
-using skill: <skill-name>
-```
-
-Every module must use:
-
-```markdown
-# Output Marker
-
-Display:
-using module: <module-name>
-```
-
-Use the actual frontmatter `name` value in the marker.
-
-Every `SKILL.md` and `MODULE.md` must also include:
-
-- A purpose, overview, or operating policy section.
-- The core workflow, rules, or decision process the artifact teaches.
-- Any hard-stop conditions or precedence rules that affect behavior.
-- A usage checklist when the artifact has validation or completion criteria.
-- A `Cross-References` section, even if it is empty.
-
-The `Cross-References` section should identify related modules, reference files,
-or follow-on modules for the `cortex` router and internal modules. Explicit
-command skills must not define module Cross-References; use `None`.
-
-Use only these labels in `Cross-References`:
-
-- `BEFORE` for modules that should be loaded or applied first. `BEFORE` edges
-  may be followed recursively.
-- `WITH` for modules that should be applied alongside this one only when the task
-  or changed files already touch that area. Do not expand `WITH` transitively.
-- `AFTER` for follow-on modules to consider once the task is complete. Do not
-  expand `AFTER` transitively.
-
-Inline cross-references for the `cortex` router and internal modules must match
-`references/module-graph.md`. Keep the graph and artifact body synchronized in
-the same change. Explicit command skills must stay out of
-`references/module-graph.md` and `references/module-cascade.md`.
-
-## OpenAI Metadata Standard
-
-Every public skill must include `agents/openai.yaml`, with at least:
-
-```yaml
-interface:
-  display_name: "(otwld) Human Readable Name"
-  short_description: "Short description for skill lists"
-  default_prompt: "Use $skill-name when ..."
-policy:
-  allow_implicit_invocation: false
+|-- agents/openai.yaml
+`-- skill.yaml
+modules/<artifact-name>/
+|-- instructions.md
+`-- skill.yaml
+shared/
+generated/
+scripts/
+proposals/
 ```
 
 Rules:
 
-- `interface.display_name` must include `(otwld)` for easy discovery in agent
-  UIs and CLIs.
-- `interface.short_description` must be brief and user-facing.
-- `interface.default_prompt` must name the public skill and describe a
-  realistic invocation.
-- `policy.allow_implicit_invocation` must be `false` so public skills are
-  explicit-only.
-- Explicit command skill metadata must live under `governance/setup/<slug>/`.
-- Internal modules must not include `agents/openai.yaml`.
-- Keep metadata synchronized with `SKILL.md` whenever a public skill changes.
+- `entry/cortex/SKILL.md` is the only public agent skill entry point.
+- Routed modules live under `modules/` with `activation: routed` and
+  `visibility: hidden`.
+- Explicit command artifacts live under `modules/` with `activation: explicit`
+  and `visibility: public`; they are direct-invocation only and excluded from
+  routed cascade selection.
+- Do not add `MODULE.md`, taxonomy folders, extra public `SKILL.md` files,
+  compatibility shims, hidden inheritance, or implicit resource sharing.
+- Do not hand-edit files under `generated/`.
+
+## Metadata And Instructions
+
+Every entry, module, and explicit command has a `skill.yaml` metadata file.
+Routed module and explicit command behavior belongs in `instructions.md`.
+Public entry behavior belongs in `entry/cortex/SKILL.md`; do not add
+`entry/cortex/instructions.md`.
+
+Use `skill.yaml` for:
+
+- `name`, `description`, `activation`, `visibility`, and `status`.
+- Routing priority and strong, medium, and weak signals.
+- `relations.before`, `relations.with`, `relations.after`, `relations.excludes`,
+  and `relations.replaces`.
+- Explicit `uses` and `resources` declarations.
+
+Use `instructions.md` for:
+
+- Purpose, usage, workflow, gates, hard stops, output format, checklist, and
+  cross-reference prose.
+- Concise runtime behavior that agents need after the module is selected.
+
+Keep routing evidence in metadata and execution guidance in instructions. Do not
+duplicate every routing signal in prose.
+
+## Resources
+
+Module-owned support files live inside the owning module under `references/`,
+`scripts/`, `templates/`, or `assets/`, and must be declared in `skill.yaml`.
+
+Cross-cutting files live under `shared/`. A module that uses a shared file must
+declare it, usually as a `resources.references` entry such as
+`shared/project-memory.md`.
+
+No resource is shared automatically. If a module depends on another module's
+behavior, declare the module in `uses` instead of linking to its private files.
+
+## Generated Artifacts
+
+The following files are generated from `routed-skills.yaml` and module
+metadata:
+
+- `generated/SKILL_CATALOG.md`
+- `generated/module-graph.md`
+- `generated/module-cascade.md`
+
+Rebuild them after metadata, relation, signal, or artifact changes:
+
+```bash
+python3 scripts/rebuild-routed-skills.py routed-skills.yaml
+```
+
+Check freshness without writing:
+
+```bash
+python3 scripts/rebuild-routed-skills.py --check routed-skills.yaml
+```
 
 ## Examples Policy
 
-All illustrative examples must follow the `example-universe-enforcer` skill.
+All illustrative examples must follow the `example-universe-enforcer` module.
 Use the recruitment agency job board universe for sample code, DTOs, API
 payloads, Storybook data, docs snippets, and other examples.
 
 Do not introduce unrelated example domains unless the user explicitly requests
-one and the skill being edited requires that exception.
+one and the selected module requires that exception.
 
 ## Code Documentation Policy
 
@@ -238,89 +159,44 @@ Document the touched code at the right level:
 - When private code is touched, document the nearest owning function, class,
   module, or public surface when that code path would otherwise be undocumented.
 - When code is moved or split, move or update the associated JSDoc/TSDoc and
-  any project-native docs, such as Storybook, MDX, README, API docs, or
-  migration notes.
-- Do not add placeholder comments or comments that merely restate the code.
-  Prefer clearer names and stronger types where prose would be noise.
-
-## Progressive Disclosure
-
-Keep `SKILL.md` and `MODULE.md` focused on the essential procedure and decision
-rules. There is no hard size limit, but large stable details should move into
-supporting files:
-
-- Put detailed documentation, schemas, policies, and examples in `references/`.
-- Put fragile or repeated mechanical work in `scripts/`.
-- Put reusable output resources in `assets/`.
-
-When a supporting file exists, the owning `SKILL.md` or `MODULE.md` must say
-when to read or use it. Avoid duplicating the same guidance in both the owning
-artifact and a reference file.
-
-Extracted project-specific APIs, package names, application names, helper names,
-and workflow names are not active rules. Move retained historical details into a
-`references/legacy-*.md` file whose first markdown heading includes `Legacy`.
-Legacy files are non-normative: they may explain provenance, but active skill
-instructions must remain project-agnostic and reusable across TypeScript
-ecosystem projects.
+  any project-native docs.
+- Do not add placeholder comments that restate the code.
 
 ## Maintenance Rules
 
-- Preserve narrow artifact scope. Prefer small focused artifacts over broad
-  doctrine documents.
-- Follow the existing local style unless this file defines a stricter rule.
-- Update related metadata, references, scripts, and cross-references when a
-  skill or module changes.
-- Update `SKILL_CATALOG.md` when adding, removing, moving, or renaming a skill
-  or module.
-- Avoid unrelated rewrites, formatting churn, and broad reorganization.
-- Keep examples, names, and prompts consistent across public `SKILL.md` files
-  and `agents/openai.yaml`; keep module names synchronized with `MODULE.md`.
-- Keep source-project residue out of active skill instructions.
-- If adding a script, make it deterministic and document the command or trigger
-  in the owning `SKILL.md` or `MODULE.md`.
-- If adding a reference file, make it directly discoverable from the owning
-  `SKILL.md` or `MODULE.md`.
-- Do not add per-command or per-module registries to validation scripts.
-  Validation should derive discovery from taxonomy paths, frontmatter, metadata,
-  `references/module-graph.md`, and `SKILL_CATALOG.md`.
+- Preserve narrow artifact scope.
+- Use metadata relations instead of inline graph maintenance.
+- Update `skill.yaml` and `instructions.md` together when behavior changes.
+- Add new routed modules only after checking existing names, descriptions,
+  strong signals, relations, and resources for overlap.
+- Create a challenge or merge proposal under `proposals/` when responsibilities
+  overlap materially.
+- If adding a script, make it deterministic and declare or document its use.
+- If adding a reference, template, or asset, make it discoverable from the
+  owning artifact metadata.
 
 ## Validation Checklist
 
-Before finishing any Cortex artifact change, verify:
+Before finishing any routed workspace change, verify:
 
-- Public `SKILL.md` files exist only for `governance/core/cortex/` and explicit
-  command skills under `governance/setup/`.
-- Every public `SKILL.md` has valid YAML frontmatter with `name` and
-  `description`.
-- Every internal module uses `MODULE.md`, not `SKILL.md`.
-- Each artifact includes the standardized `Output Marker`.
-- Each artifact includes `Cross-References`, with `None` if empty.
-- Command skills use `Cross-References` with `None` and are absent from
-  `references/module-graph.md` and `references/module-cascade.md`.
-- Public metadata exists for every public skill and includes
-  `interface.display_name`,
-  `interface.short_description`, and `interface.default_prompt`.
-- OpenAI metadata fields live under the top-level `interface:` block.
-- `interface.display_name` contains `(otwld)`.
-- `policy.allow_implicit_invocation` is `false`.
-- Internal modules do not include `agents/openai.yaml`.
-- `SKILL_CATALOG.md` lists each skill and module once under the correct
-  taxonomy heading with the correct directory path.
-- Any referenced files, scripts, or assets actually exist.
-- Any touched scripts still run or have been validated appropriately.
+- There is exactly one public entry skill under `entry/cortex/`.
+- No `MODULE.md` files or taxonomy-era skill directories remain.
+- Routed modules are hidden and explicit commands are public direct-invocation
+  artifacts.
+- Relation targets name existing entry, routed, or explicit artifacts.
+- Shared and module-owned resources are declared and not orphaned.
+- Generated artifacts were rebuilt from metadata and are fresh.
 - Examples follow `example-universe-enforcer`.
-- The artifact remains focused on a clear task, domain, or workflow.
 
-Run the workspace validator before finishing:
+Run:
 
 ```bash
-python3 scripts/validate-skills.py
+python3 scripts/rebuild-routed-skills.py routed-skills.yaml
+python3 scripts/validate-routed-skills.py routed-skills.yaml
 ```
 
-When `scripts/validate-skills.py` or validation-facing routing contracts change,
-also run:
+When validation-facing routing contracts or scripts change, also run:
 
 ```bash
-python3 scripts/test-validate-skills.py
+python3 scripts/test-validate-routed-skills.py
 ```

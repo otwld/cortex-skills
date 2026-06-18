@@ -1,0 +1,34 @@
+name: vitest-conventions
+description: "Internal Cortex module applied when creating, modifying, or reviewing Vitest configuration, Vitest tests, setup files, environments, mocks, or Vite-integrated test behavior."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Test runner surface evidence for vitest-conventions: Jest, Vitest, or Playwright config, tests, setup, mocks, fixtures, locators, or assertions change"
+    medium:
+      - "Jest, Vitest, or Playwright config, tests, setup, mocks, fixtures, locators, or assertions change"
+    weak:
+      - "Test runner surface"
+
+relations:
+  before: []
+  with:
+    - "vite-conventions"
+    - "typescript-code-style"
+    - "code-documentation"
+  after:
+    - "skill-evolution"
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references: []
+  scripts: []
+  templates: []
+  assets: []

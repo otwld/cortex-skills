@@ -4,26 +4,27 @@
 
 ### Added
 
+- Added the explicit `$bootstrap-routed-skill-workspace` setup skill for
+  creating and maintaining generic routed skill workspaces.
 - Added the `bricks` tool skill for Bricks consumer workflows and
   worktree-based source contribution guidance.
-- Added catalog synchronization and taxonomy-heading checks to the workspace
-  validator.
-- Added validator fixture regression tests for skill discovery, catalog
-  taxonomy, and support-file references.
-- Added validation that OpenAI metadata fields live under the required
-  `interface:` block.
+- Added routed workspace rebuild and validation scripts.
+- Added validator fixture regression tests for routed workspace structure,
+  metadata, generated freshness, resources, and explicit command handling.
 
 ### Changed
 
-- Converted Cortex routing to an explicit public `$cortex` skill backed by internal
-  `MODULE.md` files, hiding non-public guidance from direct Codex skill
-  invocation.
-- Converted setup workflows into explicit-only command skills under
-  `governance/setup/`, with OpenAI metadata that disables implicit invocation
-  and excludes them from `$cortex` module routing.
-- Replaced the skill graph and cascade references with module routing references.
-- Replaced the validator's closed per-skill directory registry with generic
-  taxonomy path validation.
+- Aggressively realigned the repository to the generic routed skill workspace
+  contract: one public `$cortex` entry, hidden routed modules, explicit command
+  metadata, shared resources, and generated routing artifacts.
+- Replaced hand-maintained root catalog, graph, and cascade files with
+  `generated/` outputs rebuilt from `skill.yaml` metadata.
+- Replaced the Cortex taxonomy validator with routed workspace rebuild and
+  validation scripts.
+- Converted setup workflows into explicit command artifacts under `modules/`,
+  excluding them from `$cortex` routed cascade selection.
+- Replaced taxonomy folders and `MODULE.md` files with `modules/<name>/`
+  folders containing `instructions.md` and `skill.yaml`.
 
 ## v0.1.0 Public Seed - 2026-05-28
 

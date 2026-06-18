@@ -1,0 +1,37 @@
+name: angular-tanstack-query-conventions
+description: "Internal Cortex module applied when creating, modifying, or reviewing TanStack Query integration in Angular code, including query keys, query options, mutations, pagination, and skippable inputs."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Angular TanStack Query evidence for angular-tanstack-query-conventions: Query key, options, mutation, pagination, or skippable input changes"
+    medium:
+      - "Query key, options, mutation, pagination, or skippable input changes"
+    weak:
+      - "Angular TanStack Query"
+
+relations:
+  before:
+    - "angular-conventions"
+  with:
+    - "rxjs-conventions"
+    - "typescript-api-conventions"
+    - "public-api-design"
+    - "code-documentation"
+  after:
+    - "skill-evolution"
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references:
+    - "legacy-extracted-patterns.md"
+  scripts: []
+  templates: []
+  assets: []

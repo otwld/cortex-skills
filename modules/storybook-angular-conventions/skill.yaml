@@ -1,0 +1,35 @@
+name: storybook-angular-conventions
+description: "Internal Cortex module applied when creating, modifying, or reviewing Angular Storybook stories, Angular story providers, module metadata, standalone story setup, or Angular story mocks."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Storybook surface evidence for storybook-angular-conventions: Story, MDX docs, preview setup, addon, mock, or story organization changes"
+    medium:
+      - "Story, MDX docs, preview setup, addon, mock, or story organization changes"
+    weak:
+      - "Storybook surface"
+
+relations:
+  before:
+    - "storybook-conventions"
+    - "angular-conventions"
+  with:
+    - "typescript-code-style"
+    - "code-documentation"
+  after:
+    - "skill-evolution"
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references: []
+  scripts: []
+  templates: []
+  assets: []

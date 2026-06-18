@@ -1,0 +1,34 @@
+name: public-api-design
+description: "Internal Cortex module applied when adding or changing exports, shared contracts, DTOs, reusable abstractions, entry points, package boundaries, or import paths."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Library surface evidence for public-api-design: New library, shared code, public export, entry point, contract, or import path change"
+    medium:
+      - "New library, shared code, public export, entry point, contract, or import path change"
+    weak:
+      - "Library surface"
+
+relations:
+  before:
+    - "library-placement-decision"
+  with:
+    - "naming-consistency"
+    - "typescript-api-conventions"
+    - "code-documentation"
+  after: []
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references: []
+  scripts: []
+  templates: []
+  assets: []

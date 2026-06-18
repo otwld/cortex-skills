@@ -1,0 +1,68 @@
+---
+name: {{entry_name}}
+description: Use only when the user explicitly includes {{entry_invocation}}; routes work through the {{workspace_name}} routed skill workspace and its hidden modules.
+---
+
+# Output Marker
+
+Display:
+using skill: {{entry_name}}
+
+---
+
+# {{entry_display_name}}
+
+## Overview
+
+Route explicit {{entry_invocation}} requests through the hidden modules in this
+routed skill workspace.
+
+Use the routed workspace metadata as the source of truth:
+
+- `../../routed-skills.yaml`
+- `../../generated/SKILL_CATALOG.md`
+- `../../generated/module-graph.md`
+- `../../generated/module-cascade.md`
+
+## Workflow
+
+1. Inspect the request for direct routing evidence.
+2. Select routed modules using the generated cascade.
+3. Expand required `before` relations up to the configured depth cap.
+4. Add `with` modules only when they have independent evidence.
+5. Defer `after` modules until the later phase is relevant.
+6. Reject excluded module combinations.
+7. Use local resources only when a selected module references them.
+
+## Gates
+
+- This public entry skill is invoked only by explicit {{entry_invocation}} use.
+- Modules are hidden behind this entry point.
+- Generated artifacts are derived from module metadata.
+- Routing decisions remain inspectable.
+
+## Hard Stops
+
+- Do not use this skill through implicit invocation.
+- Do not load hidden modules without direct evidence or required relations.
+- Do not treat generated catalog, graph, or cascade files as source files.
+
+## Output Format
+
+State the selected modules and any skipped tempting modules when routing is
+broad or ambiguous.
+
+## Checklist
+
+- Generated catalog was available.
+- Generated graph was available.
+- Generated cascade was available.
+- Relations and exclusions were respected.
+
+## Cross References
+
+- Routed entry metadata: `skill.yaml`
+- UI metadata: `agents/openai.yaml`
+- Catalog: `../../generated/SKILL_CATALOG.md`
+- Graph: `../../generated/module-graph.md`
+- Cascade: `../../generated/module-cascade.md`

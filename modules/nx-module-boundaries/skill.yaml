@@ -1,0 +1,32 @@
+name: nx-module-boundaries
+description: "Internal Cortex module applied when working in an Nx workspace and adding, moving, or reviewing projects, tags, dependencies, or module-boundary rules."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "Monorepo structure evidence for nx-module-boundaries: Workspace graph, metadata, tags, boundaries, generators, or inferred targets matter"
+    medium:
+      - "Workspace graph, metadata, tags, boundaries, generators, or inferred targets matter"
+    weak:
+      - "Monorepo structure"
+
+relations:
+  before:
+    - "library-placement-decision"
+  with:
+    - "public-api-design"
+  after: []
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references: []
+  scripts: []
+  templates: []
+  assets: []

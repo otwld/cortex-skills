@@ -1,0 +1,35 @@
+name: nestjs-conventions
+description: "Internal Cortex module applied when creating, modifying, or reviewing NestJS modules, providers, controllers, interceptors, guards, pipes, application bootstrap, or microservice runtimes."
+activation: routed
+visibility: hidden
+status: active
+
+routing:
+  priority: 5
+  signals:
+    strong:
+      - "NestJS surface evidence for nestjs-conventions: Module, provider, controller, guard, pipe, interceptor, bootstrap, or runtime changes"
+    medium:
+      - "Module, provider, controller, guard, pipe, interceptor, bootstrap, or runtime changes"
+    weak:
+      - "NestJS surface"
+
+relations:
+  before: []
+  with:
+    - "rxjs-conventions"
+    - "typescript-code-style"
+    - "code-documentation"
+  after:
+    - "skill-evolution"
+  excludes: []
+  replaces: []
+
+uses: []
+
+resources:
+  references:
+    - "legacy-extracted-patterns.md"
+  scripts: []
+  templates: []
+  assets: []
