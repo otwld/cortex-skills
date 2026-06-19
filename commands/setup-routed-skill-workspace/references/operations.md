@@ -14,8 +14,9 @@ product intent or risk decisions that files cannot answer.
 4. Create exactly one entry skill under `entry/<entry-slug>/` with `SKILL.md`,
    `agents/openai.yaml`, and `skill.yaml`. Do not create entry
    `instructions.md`; the `SKILL.md` body is the public entry instructions.
-5. Create only the minimum routed modules: `module-creation` and
-   `quality-standard`.
+5. Create only user-requested routed modules. A generic scaffold may start with
+   no routed modules; do not copy Cortex-specific always-loaded modules unless
+   the user explicitly requests that policy.
 6. Create `commands/`, `shared/`, `generated/`, `scripts/`, and `proposals/`.
 7. Copy or adapt the bundled validation and rebuild scripts into the target
    workspace when the user wants local scripts.
@@ -43,13 +44,16 @@ generated output.
 3. If overlap is low, create `modules/<module-name>/skill.yaml` and
    `instructions.md` from templates, preserving the `using module:
    <module-name>` output marker.
-4. If overlap is high, create a challenge report that recommends create, merge,
+4. Keep new modules in `status: draft` until at least one concrete routing
+   signal and module-specific instruction behavior are written; active modules
+   with empty signals fail validation.
+5. If overlap is high, create a challenge report that recommends create, merge,
    update, or reject.
-5. Rebuild generated artifacts.
-6. Validate.
+6. Rebuild generated artifacts.
+7. Validate.
 
-Creation should be direct when risk is low. Challenge only when overlap,
-ambiguity, or routing risk is detected.
+Creation should be direct when risk is low and routing evidence is concrete.
+Challenge when overlap, ambiguity, missing signals, or routing risk is detected.
 
 ## Create Command Skill
 
@@ -79,8 +83,9 @@ python3 scripts/validate-routed-skills.py routed-skills.yaml
 ```
 
 Validation checks structure, metadata, relations, resources, routing
-constraints, generated freshness, command skill exclusion, duplicate strong
-signals, and public agent-skill shapes.
+constraints, active module reachability, instruction prose quality, generated
+freshness, command skill exclusion, duplicate strong signals, and public
+agent-skill shapes.
 
 ## Propose Merge
 

@@ -26,15 +26,16 @@ Use the routed workspace metadata as the source of truth:
 
 ## Workflow
 
-1. Inspect the request for direct routing evidence.
-2. Select routed modules using the generated cascade.
-3. Expand required `before` relations up to the configured depth cap.
-4. Add `with` modules only when they have independent evidence.
-5. Defer `after` modules until the later phase is relevant.
-6. Reject excluded module combinations.
-7. Use local resources only when a selected module references them.
+1. Load always-loaded modules listed in the generated cascade.
+2. Inspect the request for direct routing evidence.
+3. Select additional routed modules using the generated cascade.
+4. Expand required `before` relations up to the configured depth cap.
+5. Add `with` modules only when they have independent evidence.
+6. Defer `after` modules until the later phase is relevant.
+7. Reject excluded module combinations.
+8. Use local resources only when a selected module references them.
 
-## Gates
+## Quality Gates
 
 - This public entry skill is invoked only by explicit {{entry_invocation}} use.
 - Modules are hidden behind this entry point.
@@ -44,7 +45,8 @@ Use the routed workspace metadata as the source of truth:
 ## Hard Stops
 
 - Do not use this skill through implicit invocation.
-- Do not load hidden modules without direct evidence or required relations.
+- Do not load hidden modules unless they are always-loaded, directly evidenced,
+  or required by relations.
 - Do not treat generated catalog, graph, or cascade files as source files.
 
 ## Output Format
@@ -52,11 +54,12 @@ Use the routed workspace metadata as the source of truth:
 State the selected modules and any skipped tempting modules when routing is
 broad or ambiguous.
 
-## Checklist
+## Usage Checklist
 
 - Generated catalog was available.
 - Generated graph was available.
 - Generated cascade was available.
+- Always-loaded modules were loaded before evidence-selected modules.
 - Relations and exclusions were respected.
 
 ## Cross References

@@ -5,43 +5,36 @@ using module: {{module_name}}
 
 ---
 
-# Purpose
+# {{module_name}}
+
+## Overview
 
 {{module_purpose}}
 
-# When To Use
-
-Use this module when the selected routing signals directly match the user's
-request or required context.
-
-# Workflow
+## Workflow
 
 1. Confirm the module responsibility matches the request.
-2. Apply the module-specific guidance.
+2. Apply focused {{module_name}} guidance.
 3. Use only resources listed in module metadata.
 4. Name validation or acceptance evidence before completion.
 
-# Gates
+## Quality Gates
 
-- Routing evidence is direct or relation-required.
-- Shared behavior is referenced explicitly.
+- {{module_name}} routing evidence is direct or relation-required.
+- {{module_name}} shared behavior is referenced explicitly.
+- {{module_name}} validation evidence names the checked artifact or command.
 
-# Hard Stops
+## Hard Stops
 
-- Do not broaden this module beyond its stated responsibility.
-- Do not rely on unlisted resources.
+- Do not broaden {{module_name}} beyond its stated responsibility.
+- Do not let {{module_name}} rely on unlisted resources.
 
-# Output Format
+## Usage Checklist
 
-Use the output shape requested by the user unless this module defines a stricter
-format.
+- {{module_name}} responsibility matched.
+- {{module_name}} resources were explicit.
+- {{module_name}} validation evidence was stated.
 
-# Checklist
-
-- Responsibility matched.
-- Resources were explicit.
-- Validation evidence was stated.
-
-# Cross References
+## Cross References
 
 - None

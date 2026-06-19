@@ -59,18 +59,21 @@ treat generated catalogs, graphs, and cascades as disposable outputs.
   only, and generated artifacts are derived from metadata.
 - Routing remains reviewable through strong, medium, and weak signals plus
   priority and explicit relations.
+- Active routed modules have at least one routing signal; draft modules may
+  remain incomplete while trigger evidence is still being designed.
 - Shared behavior is named through `uses` or resources; no implicit inheritance
   or hidden coupling is introduced.
-- The scaffold starts with only the entry skill, `module-creation`, and
-  `quality-standard` unless the user explicitly asks for more.
+- Generic scaffolds start with the public entry and user-requested modules only;
+  Cortex-specific always-loaded modules are not copied into new workspaces by default.
 - Validation evidence is current when claiming that a routed workspace is ready.
 
 ## Example
 
 When asked to create `$ascend`, initialize `.skills/routed-skills.yaml`, create
 one public entry skill under `entry/ascend/` with `SKILL.md`,
-`agents/openai.yaml`, and `skill.yaml`, add only the minimum routed modules,
-generate the catalog, graph, and cascade, then validate the workspace.
+`agents/openai.yaml`, and `skill.yaml`, add only user-requested modules with
+concrete routing signals or leave them as drafts, generate the catalog, graph,
+and cascade, then validate the workspace.
 
 ## Hard Stops
 
@@ -91,7 +94,8 @@ generate the catalog, graph, and cascade, then validate the workspace.
 - Root, entry slug, and manifest path are explicit.
 - Entry, routed modules, command skills, resources, and generated artifacts
   follow the generic contract.
-- Overlap and relation conflicts were checked before creating modules.
+- Overlap, relation conflicts, and missing active-module signals were checked
+  before creating modules.
 - Catalog, graph, and cascade were rebuilt from metadata.
 - Routed workspace validation was run or the remaining blocker is stated.
 

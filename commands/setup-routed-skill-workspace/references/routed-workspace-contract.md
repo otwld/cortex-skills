@@ -57,6 +57,9 @@ entry:
   required: true
   path: entry/routed-skills
 
+routing:
+  always: []
+
 generated:
   catalog: generated/SKILL_CATALOG.md
   graph: generated/module-graph.md
@@ -146,6 +149,10 @@ visibility values are `public` and `hidden`. Routed modules must be hidden.
 Command skills live under `commands/`, use `activation: explicit`, are public,
 direct-invocation only, and are excluded from routing.
 
+Active routed modules must have at least one strong, medium, or weak routing
+signal. Draft routed modules may keep empty signals while their trigger evidence
+is still being designed, but they should not be listed in `routing.always`.
+
 ## Command Skills
 
 Command skills are full public agent skills. Required files are `SKILL.md`,
@@ -173,25 +180,23 @@ using module: <module-name>
 ```
 
 Use `using skill: <entry-name>` for the public entry skill and
-`using skill: <command-name>` for command skills. Use these sections after the
-marker unless the artifact has a narrower need:
+`using skill: <command-name>` for command skills. Active routed module
+instructions must use these sections after the marker:
 
 ```markdown
-# Purpose
+# <Module Name>
 
-# When To Use
+## Overview
 
-# Workflow
+## Workflow
 
-# Gates
+## Quality Gates
 
-# Hard Stops
+## Hard Stops
 
-# Output Format
+## Usage Checklist
 
-# Checklist
-
-# Cross References
+## Cross References
 ```
 
 Do not duplicate every routing signal in prose. Keep routing evidence in
@@ -201,15 +206,20 @@ metadata and execution behavior in instructions.
 
 Routing is heuristic and reviewable:
 
-1. Collect direct evidence from the user request and relevant files.
-2. Prefer strong signals over medium signals.
-3. Prefer medium signals over weak signals.
-4. Break ties using `routing.priority`.
-5. Load `before` modules recursively up to `validation.max_before_depth`.
-6. Load `with` modules only when they also have direct evidence.
-7. Suggest `after` modules only when the later phase becomes relevant.
-8. Reject combinations declared in `excludes`.
-9. Prefer modules that declare a matched module in `replaces`.
+1. Load modules listed in manifest `routing.always` for every routed request.
+2. Collect direct evidence from the user request and relevant files.
+3. Prefer strong signals over medium signals.
+4. Prefer medium signals over weak signals.
+5. Break ties using `routing.priority`.
+6. Load `before` modules recursively up to `validation.max_before_depth`.
+7. Load `with` modules only when they also have direct evidence.
+8. Suggest `after` modules only when the later phase becomes relevant.
+9. Reject combinations declared in `excludes`.
+10. Prefer modules that declare a matched module in `replaces`.
+
+Manifest `routing.always` is optional. When present, every target must name an
+active hidden routed module. Always-loaded modules may still declare `before`
+dependencies, but their `with` modules require independent evidence.
 
 Do not use embeddings, classifiers, scoring engines, vector databases,
 inheritance, or hidden coupling.

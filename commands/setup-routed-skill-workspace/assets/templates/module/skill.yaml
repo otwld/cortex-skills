@@ -2,7 +2,7 @@ name: {{module_name}}
 description: {{module_description}}
 activation: routed
 visibility: hidden
-status: active
+status: draft
 
 routing:
   priority: 5
