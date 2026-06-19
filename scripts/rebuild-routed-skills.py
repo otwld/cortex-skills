@@ -12,6 +12,7 @@ from typing import Any
 DEFAULT_PATHS = {
     'entry': 'entry',
     'modules': 'modules',
+    'commands': 'commands',
     'shared': 'shared',
     'generated': 'generated',
     'proposals': 'proposals',
@@ -35,7 +36,7 @@ class RoutedSkillError(Exception):
 
 @dataclass(frozen=True)
 class Artifact:
-    """Loaded entry, routed module, or explicit command metadata."""
+    """Loaded entry, routed module, or command skill metadata."""
 
     name: str
     description: str
@@ -53,20 +54,21 @@ class Artifact:
 
 @dataclass(frozen=True)
 class Workspace:
-    """Loaded routed skill workspace model."""
+    """Loaded routed skill workspace model with separated module and command collections."""
 
     manifest_path: Path
     root: Path
     manifest: dict[str, Any]
     entry: Artifact
     modules: list[Artifact]
+    commands: list[Artifact]
     metadata_name: str
     instructions_name: str
 
     @property
     def artifacts(self) -> list[Artifact]:
         """Return all loaded artifacts in deterministic order."""
-        return [self.entry, *self.modules]
+        return [self.entry, *self.modules, *self.commands]
 
 
 def parse_scalar(value: str) -> Any:
@@ -268,7 +270,20 @@ def load_workspace(raw_manifest: str | None = None) -> Workspace:
     if modules_root.exists():
         for child in sorted(modules_root.iterdir()):
             if child.is_dir() and (child / artifacts['metadata']).exists():
-                modules.append(load_artifact(child, artifacts['metadata'], root))
+                artifact = load_artifact(child, artifacts['metadata'], root)
+                if artifact.activation == 'explicit':
+                    raise RoutedSkillError(f'{artifact.relative_path}: command skill must live under {paths["commands"]}')
+                modules.append(artifact)
+
+    commands_root = root / paths['commands']
+    commands: list[Artifact] = []
+    if commands_root.exists():
+        for child in sorted(commands_root.iterdir()):
+            if child.is_dir() and (child / artifacts['metadata']).exists():
+                artifact = load_artifact(child, artifacts['metadata'], root)
+                if artifact.activation != 'explicit':
+                    raise RoutedSkillError(f'{artifact.relative_path}: command skill must use activation explicit')
+                commands.append(artifact)
 
     return Workspace(
         manifest_path=manifest_path,
@@ -276,6 +291,7 @@ def load_workspace(raw_manifest: str | None = None) -> Workspace:
         manifest=manifest,
         entry=entry,
         modules=modules,
+        commands=commands,
         metadata_name=artifacts['metadata'],
         instructions_name=artifacts['instructions'],
     )
@@ -309,7 +325,7 @@ def generated_paths(workspace: Workspace) -> dict[str, Path]:
 def render_catalog(workspace: Workspace) -> str:
     """Render the generated skill catalog."""
     routed = [artifact for artifact in workspace.modules if artifact.activation == 'routed']
-    explicit = [artifact for artifact in workspace.modules if artifact.activation == 'explicit']
+    commands = [artifact for artifact in workspace.commands if artifact.activation == 'explicit']
     lines = [
         '# Skill Catalog',
         '',
@@ -335,13 +351,13 @@ def render_catalog(workspace: Workspace) -> str:
         lines.append('| None | None | None | None | None |')
     lines.extend([
         '',
-        '## Explicit Commands',
+        '## Command Skills',
         '',
         '| Command | Description | Status | Path |',
         '| --- | --- | --- | --- |',
     ])
-    if explicit:
-        for artifact in explicit:
+    if commands:
+        for artifact in commands:
             lines.append(f'| `{artifact.name}` | {text_cell(artifact.description)} | `{artifact.status}` | `{artifact.relative_path}/` |')
     else:
         lines.append('| None | None | None | None |')
@@ -368,13 +384,14 @@ def render_graph(workspace: Workspace) -> str:
     lines = [
         '# Module Graph',
         '',
-        'Generated from module relation metadata. Do not edit by hand.',
+        'Generated from routed module and command skill relation metadata. Do not edit by hand.',
         '',
-        '| Module | Activation | Before | With | After | Excludes | Replaces |',
+        '| Artifact | Activation | Before | With | After | Excludes | Replaces |',
         '| --- | --- | --- | --- | --- | --- | --- |',
     ]
-    if workspace.modules:
-        for artifact in workspace.modules:
+    relation_artifacts = [*workspace.modules, *workspace.commands]
+    if relation_artifacts:
+        for artifact in relation_artifacts:
             relations = artifact.relations
             lines.append(
                 f'| `{artifact.name}` | `{artifact.activation}` | {cell(relations["before"])} | '
@@ -389,7 +406,7 @@ def render_graph(workspace: Workspace) -> str:
 def render_cascade(workspace: Workspace) -> str:
     """Render the generated routing cascade."""
     routed = [artifact for artifact in workspace.modules if artifact.activation == 'routed']
-    explicit = [artifact for artifact in workspace.modules if artifact.activation == 'explicit']
+    commands = [artifact for artifact in workspace.commands if artifact.activation == 'explicit']
     lines = [
         '# Module Cascade',
         '',
@@ -425,15 +442,15 @@ def render_cascade(workspace: Workspace) -> str:
         lines.append('| None | None | None | None | None | None | None | None | None | None |')
     lines.extend([
         '',
-        '## Explicit Commands',
+        '## Command Skills',
         '',
-        'Explicit commands are public direct-invocation modules and are excluded from routed cascade selection.',
+        'Command skills are public direct-invocation skills and are excluded from routed cascade selection.',
         '',
         '| Command | Path |',
         '| --- | --- |',
     ])
-    if explicit:
-        for artifact in explicit:
+    if commands:
+        for artifact in commands:
             lines.append(f'| `{artifact.name}` | `{artifact.relative_path}/` |')
     else:
         lines.append('| None | None |')

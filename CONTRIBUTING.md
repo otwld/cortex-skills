@@ -1,6 +1,6 @@
 # Contributing
 
-Pull requests are welcome for routed modules, explicit command artifacts,
+Pull requests are welcome for routed modules, command skills,
 metadata refinements, validation improvements, generated artifact handling, and
 documentation updates.
 
@@ -13,7 +13,7 @@ documentation updates.
 - Use `skill.yaml` as the source of truth for routing, relations, resources,
   activation, visibility, and generated catalog data.
 - Keep selected-module behavior in `instructions.md`.
-- Keep the public `$cortex` entry as the only public agent `SKILL.md`.
+- Keep the public `$cortex` entry as the only public routed entry skill.
 - Do not add `MODULE.md`, taxonomy folders, compatibility shims, implicit
   inheritance, or hidden resource sharing.
 - Keep all illustrative examples inside the recruitment job-board universe.
@@ -31,7 +31,7 @@ entry/cortex/
 `-- skill.yaml
 ```
 
-Routed modules and explicit commands use:
+Routed modules use:
 
 ```text
 modules/artifact-name/
@@ -39,7 +39,17 @@ modules/artifact-name/
 `-- skill.yaml
 ```
 
-Optional runtime support files belong under the owning module:
+Command skills use:
+
+```text
+commands/command-name/
+|-- SKILL.md
+|-- agents/
+|   `-- openai.yaml
+`-- skill.yaml
+```
+
+Optional runtime support files belong under the owning artifact:
 
 - `references/` for detailed guidance loaded only when needed.
 - `scripts/` for deterministic checks or repeated operations.
@@ -69,17 +79,17 @@ For validator or rebuild changes, run the fixture regression suite:
 python3 scripts/test-validate-routed-skills.py
 ```
 
-The validator checks entry shape, metadata, activation and visibility rules,
-relations, resources, duplicate strong signals, generated freshness, explicit
-command exclusion, and the public entry's agent-skill shape.
+The validator checks entry shape, command skill shape, metadata, activation and
+visibility rules, relations, resources, duplicate strong signals, generated
+freshness, and routed cascade exclusion for command skills.
 
 ## Pull Request Checklist
 
 - The changed artifact remains focused on one task, domain, or workflow.
 - Metadata and instructions are updated together.
 - Routed modules use `activation: routed` and `visibility: hidden`.
-- Explicit command artifacts use `activation: explicit`, `visibility: public`,
-  and say they run only when directly invoked.
+- Command skills live under `commands/`, use `activation: explicit` and
+  `visibility: public`, and say they run only when directly invoked.
 - New or moved resources are declared.
 - Generated artifacts were rebuilt or verified fresh.
 - New examples use `JobOffer`, `Candidate`, `Application`, `Recruiter`,

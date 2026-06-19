@@ -1,0 +1,6 @@
+interface:
+  display_name: "Setup Project Memory"
+  short_description: "Set up durable project memory"
+  default_prompt: "Use $setup-project-memory to set up or verify project memory for this repository."
+policy:
+  allow_implicit_invocation: false

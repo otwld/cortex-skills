@@ -7,7 +7,7 @@ artifact names and taxonomy folders.
 ## Workspace Shape
 
 A routed skill workspace contains one public entry skill, hidden routed modules,
-optional explicit command modules, shared resources, generated artifacts,
+optional public command skills, shared resources, generated artifacts,
 validation scripts, and proposals.
 
 Default layout:
@@ -20,6 +20,10 @@ Default layout:
     agents/openai.yaml
     skill.yaml
   modules/<module-name>/
+  commands/<command-name>/
+    SKILL.md
+    agents/openai.yaml
+    skill.yaml
   shared/
   generated/
   scripts/
@@ -40,6 +44,7 @@ root: .skills
 paths:
   entry: entry
   modules: modules
+  commands: commands
   shared: shared
   generated: generated
   proposals: proposals
@@ -138,14 +143,25 @@ resources:
 
 Supported activation values are `entry`, `routed`, and `explicit`. Supported
 visibility values are `public` and `hidden`. Routed modules must be hidden.
-Explicit commands are public, direct-invocation only, and excluded from routing.
+Command skills live under `commands/`, use `activation: explicit`, are public,
+direct-invocation only, and are excluded from routing.
+
+## Command Skills
+
+Command skills are full public agent skills. Required files are `SKILL.md`,
+`agents/openai.yaml`, and `skill.yaml`. They may own the same optional
+`references/`, `scripts/`, `templates/`, and `assets/` folders as modules.
+
+Command metadata uses the shared artifact shape with `activation: explicit`,
+`visibility: public`, empty routing signals by default, and explicit `uses` and
+`resources` declarations.
 
 ## Instructions
 
-Routed module and explicit command behavior belongs in `instructions.md`, not
-in generated files. Public entry behavior belongs in `entry/<entry-slug>/SKILL.md`.
-Each instruction artifact must start with an output marker so invocation is
-visible in supporting clients:
+Routed module behavior belongs in `instructions.md`, not in generated files.
+Public entry and command skill behavior belongs in `SKILL.md`. Each runtime
+instruction artifact must start with an output marker so invocation is visible
+in supporting clients:
 
 ```markdown
 # Output Marker
@@ -157,8 +173,8 @@ using module: <module-name>
 ```
 
 Use `using skill: <entry-name>` for the public entry skill and
-`using skill: <command-name>` for explicit commands. Use these sections after
-the marker unless the module has a narrower need:
+`using skill: <command-name>` for command skills. Use these sections after the
+marker unless the artifact has a narrower need:
 
 ```markdown
 # Purpose
@@ -208,13 +224,15 @@ Use exactly these relation types:
 - `excludes`: modules that should not be active together.
 - `replaces`: modules superseded by this module.
 
-Relation targets must name existing entry, routed, or explicit modules.
+Relation targets must name existing entry, routed module, or command skill
+artifacts.
 
 ## Resources
 
-Shared resources live under `shared/`. Modules may reference shared resources or
-other modules explicitly through `uses`. Module-owned files in `references/`,
-`scripts/`, `templates/`, and `assets/` must be listed under `resources`.
+Shared resources live under `shared/`. Modules and command skills may reference
+shared resources or other artifacts explicitly through `uses`. Artifact-owned
+files in `references/`, `scripts/`, `templates/`, and `assets/` must be listed
+under `resources`.
 
 No resource is automatically shared. Avoid implicit inheritance and hidden
 resource coupling.
@@ -227,5 +245,5 @@ Generated files are disposable:
 - `generated/module-graph.md`
 - `generated/module-cascade.md`
 
-Regenerate them from entry and module metadata. Manual edits should be rejected
-by validation or overwritten by rebuild.
+Regenerate them from entry, module, and command skill metadata. Manual edits
+should be rejected by validation or overwritten by rebuild.

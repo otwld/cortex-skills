@@ -61,6 +61,10 @@ entry/cortex/
 modules/<artifact-name>/
 |-- instructions.md
 `-- skill.yaml
+commands/<command-name>/
+|-- SKILL.md
+|-- agents/openai.yaml
+`-- skill.yaml
 shared/
 generated/
 scripts/
@@ -69,22 +73,22 @@ proposals/
 
 Rules:
 
-- `entry/cortex/SKILL.md` is the only public agent skill entry point.
+- `entry/cortex/SKILL.md` is the only public routed entry skill.
 - Routed modules live under `modules/` with `activation: routed` and
   `visibility: hidden`.
-- Explicit command artifacts live under `modules/` with `activation: explicit`
-  and `visibility: public`; they are direct-invocation only and excluded from
-  routed cascade selection.
-- Do not add `MODULE.md`, taxonomy folders, extra public `SKILL.md` files,
-  compatibility shims, hidden inheritance, or implicit resource sharing.
+- Command skills live under `commands/` with `activation: explicit` and
+  `visibility: public`; they are direct-invocation only and excluded from routed
+  cascade selection.
+- Do not add `MODULE.md`, taxonomy folders, compatibility shims, hidden
+  inheritance, or implicit resource sharing.
 - Do not hand-edit files under `generated/`.
 
 ## Metadata And Instructions
 
-Every entry, module, and explicit command has a `skill.yaml` metadata file.
-Routed module and explicit command behavior belongs in `instructions.md`.
-Public entry behavior belongs in `entry/cortex/SKILL.md`; do not add
-`entry/cortex/instructions.md`.
+Every entry, module, and command skill has a `skill.yaml` metadata file.
+Routed module behavior belongs in `instructions.md`. Public entry and command
+skill behavior belongs in `SKILL.md`; do not add `entry/cortex/instructions.md`
+or command `instructions.md` files.
 
 Use `skill.yaml` for:
 
@@ -105,15 +109,16 @@ duplicate every routing signal in prose.
 
 ## Resources
 
-Module-owned support files live inside the owning module under `references/`,
-`scripts/`, `templates/`, or `assets/`, and must be declared in `skill.yaml`.
+Artifact-owned support files live inside the owning module or command skill
+under `references/`, `scripts/`, `templates/`, or `assets/`, and must be
+declared in `skill.yaml`.
 
-Cross-cutting files live under `shared/`. A module that uses a shared file must
-declare it, usually as a `resources.references` entry such as
+Cross-cutting files live under `shared/`. An artifact that uses a shared file
+must declare it, usually as a `resources.references` entry such as
 `shared/project-memory.md`.
 
-No resource is shared automatically. If a module depends on another module's
-behavior, declare the module in `uses` instead of linking to its private files.
+No resource is shared automatically. If an artifact depends on another
+artifact's behavior, declare it in `uses` instead of linking to private files.
 
 ## Generated Artifacts
 
@@ -181,9 +186,10 @@ Before finishing any routed workspace change, verify:
 
 - There is exactly one public entry skill under `entry/cortex/`.
 - No `MODULE.md` files or taxonomy-era skill directories remain.
-- Routed modules are hidden and explicit commands are public direct-invocation
+- Routed modules are hidden and command skills are public direct-invocation
+  artifacts under `commands/`.
+- Relation targets name existing entry, routed module, or command skill
   artifacts.
-- Relation targets name existing entry, routed, or explicit artifacts.
 - Shared and module-owned resources are declared and not orphaned.
 - Generated artifacts were rebuilt from metadata and are fresh.
 - Examples follow `example-universe-enforcer`.

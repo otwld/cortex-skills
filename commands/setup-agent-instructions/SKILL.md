@@ -1,19 +1,23 @@
+---
+name: setup-agent-instructions
+description: Use only when the user explicitly includes $setup-agent-instructions; sets up or audits workspace AI-agent instruction files such as AGENTS.md, nested AGENTS.md, CLAUDE.md, .github/copilot-instructions.md, .cursorrules, .cursor/rules, .windsurf, or .clinerules.
+---
 
 # Output Marker
 
 Display:
-using skill: agent-instructions-bootstrap
+using skill: setup-agent-instructions
 
 ---
 
-# Agent Instructions Bootstrap
+# Setup Agent Instructions
 
 ## Overview
 
-This explicit command runs only when directly invoked as `$agent-instructions-bootstrap`.
+This command skill runs only when directly invoked as `$setup-agent-instructions`.
 
 
-Bootstrap durable workspace instructions with `AGENTS.md` as the canonical
+Set up durable workspace instructions with `AGENTS.md` as the canonical
 default. Challenge assumptions before writing instructions that future agents
 will treat as operating rules.
 
@@ -63,7 +67,7 @@ root `AGENTS.md` plus a nested app guide only if the app has distinct rules.
 
 ## Hard Stops
 
-- Do not bootstrap from memory when repo facts can be inspected.
+- Do not set up instructions from memory when repo facts can be inspected.
 - Do not create an AI instruction bundle by default; start with `AGENTS.md`.
 - Do not copy large sections from `README`, contribution docs, or architecture
   docs when a link and short operating rule is enough.

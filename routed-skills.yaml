@@ -4,6 +4,7 @@ root: .
 paths:
   entry: entry
   modules: modules
+  commands: commands
   shared: shared
   generated: generated
   proposals: proposals

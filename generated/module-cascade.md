@@ -62,12 +62,12 @@ Generated from routed module metadata. Do not edit by hand.
 | `vue-conventions` | 5 | Vue surface evidence for vue-conventions: Vue component, Composition API, script setup, prop, emit, slot, or component naming changes | Vue component, Composition API, script setup, prop, emit, slot, or component naming changes | Vue surface | None | `typescript-code-style`, `rxjs-conventions`, `code-documentation` | `skill-evolution` | None | None |
 | `workspace-state-guard` | 5 | Workspace collision risk evidence for workspace-state-guard: Substantial edits, cleanup, publish step, or dirty tree risk | Substantial edits, cleanup, publish step, or dirty tree risk | Workspace collision risk | None | `branch-completion`, `completion-verification` | None | None | None |
 
-## Explicit Commands
+## Command Skills
 
-Explicit commands are public direct-invocation modules and are excluded from routed cascade selection.
+Command skills are public direct-invocation skills and are excluded from routed cascade selection.
 
 | Command | Path |
 | --- | --- |
-| `agent-instructions-bootstrap` | `modules/agent-instructions-bootstrap/` |
-| `bootstrap-routed-skill-workspace` | `modules/bootstrap-routed-skill-workspace/` |
-| `project-memory-setup` | `modules/project-memory-setup/` |
+| `setup-agent-instructions` | `commands/setup-agent-instructions/` |
+| `setup-project-memory` | `commands/setup-project-memory/` |
+| `setup-routed-skill-workspace` | `commands/setup-routed-skill-workspace/` |

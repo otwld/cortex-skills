@@ -1,16 +1,20 @@
+---
+name: setup-routed-skill-workspace
+description: Use only when the user explicitly includes $setup-routed-skill-workspace; sets up, analyzes, validates, rebuilds, or evolves generic routed skill workspaces with one public entry skill, hidden routed modules, command skills, explicit routing metadata, local resources, generated catalogs and graphs, and deterministic integrity checks.
+---
 
 # Output Marker
 
 Display:
-using skill: bootstrap-routed-skill-workspace
+using skill: setup-routed-skill-workspace
 
 ---
 
-# Bootstrap Routed Skill Workspace
+# Setup Routed Skill Workspace
 
 ## Overview
 
-This explicit command runs only when directly invoked as `$bootstrap-routed-skill-workspace`.
+This command skill runs only when directly invoked as `$setup-routed-skill-workspace`.
 
 
 Create and maintain routed skill workspaces without preserving Cortex-specific
@@ -22,7 +26,7 @@ treat generated catalogs, graphs, and cascades as disposable outputs.
 - Use `references/routed-workspace-contract.md` when defining workspace shape,
   metadata, routing, relations, generated artifacts, or validation rules.
 - Use `references/operations.md` when initializing, analyzing, creating modules
-  or explicit commands, rebuilding, validating, or proposing merges.
+  or command skills, rebuilding, validating, or proposing merges.
 - Use `scripts/rebuild-routed-skills.py` to regenerate target workspace artifacts.
 - Use `scripts/validate-routed-skills.py` to check target workspace integrity.
 
@@ -34,7 +38,7 @@ treat generated catalogs, graphs, and cascades as disposable outputs.
 2. Identify the target root from user intent or the manifest; default to
    `.skills` only when no stronger evidence exists.
 3. Apply the generic contract: exactly one public entry skill, hidden routed
-   modules, explicit commands outside routing, explicit relations, and explicit
+   modules, command skills outside routing, explicit relations, and explicit
    resource ownership.
 4. Use templates from `assets/templates/` for scaffolded files, then adapt names,
    descriptions, signals, and instructions to the user's requested workspace.
@@ -51,7 +55,7 @@ treat generated catalogs, graphs, and cascades as disposable outputs.
   routed metadata alone is not enough.
 - The public entry uses `SKILL.md` as its instructions file; do not add entry
   `instructions.md`.
-- Routed modules are hidden, explicit commands are public and direct-invocation
+- Routed modules are hidden, command skills are public and direct-invocation
   only, and generated artifacts are derived from metadata.
 - Routing remains reviewable through strong, medium, and weak signals plus
   priority and explicit relations.
@@ -85,7 +89,7 @@ generate the catalog, graph, and cascade, then validate the workspace.
 
 - Existing workspace shape or absence was inspected.
 - Root, entry slug, and manifest path are explicit.
-- Entry, routed modules, explicit commands, resources, and generated artifacts
+- Entry, routed modules, command skills, resources, and generated artifacts
   follow the generic contract.
 - Overlap and relation conflicts were checked before creating modules.
 - Catalog, graph, and cascade were rebuilt from metadata.

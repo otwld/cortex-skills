@@ -33,6 +33,7 @@ root: {root_name}
 paths:
   entry: entry
   modules: modules
+  commands: commands
   shared: shared
   generated: generated
   proposals: proposals
@@ -94,6 +95,26 @@ def agent_metadata(allow_implicit: bool = False) -> str:
   default_prompt: "Use $ascend to route work through hidden modules."
 policy:
   allow_implicit_invocation: {implicit}
+'''
+
+
+def command_skill(name: str = 'setup-ci') -> str:
+    """Return fixture public command skill instructions."""
+    return f'''---
+name: {name}
+description: Use only when the user explicitly includes ${name}; runs a direct command workflow.
+---
+
+# Output Marker
+
+Display:
+using skill: {name}
+
+---
+
+# {name}
+
+Run only when directly invoked as `${name}`.
 '''
 
 
@@ -197,7 +218,7 @@ def create_workspace(temp_dir: Path, root_name: str = '.skills', *, max_depth: i
     write(root / 'modules' / 'module-creation' / 'instructions.md', instructions('Create modules.', name='module-creation'))
     write(root / 'modules' / 'quality-standard' / 'skill.yaml', module_metadata('quality-standard', strong='user asks for quality gates'))
     write(root / 'modules' / 'quality-standard' / 'instructions.md', instructions('Apply quality standards.', name='quality-standard'))
-    for folder in ('shared', 'generated', 'scripts', 'proposals'):
+    for folder in ('commands', 'shared', 'generated', 'scripts', 'proposals'):
         (root / folder).mkdir(parents=True, exist_ok=True)
     result = run([sys.executable, str(REBUILD), str(root / 'routed-skills.yaml')], temp_dir)
     if result.returncode != 0:
@@ -236,9 +257,10 @@ def expect_failure(name: str, mutate, expected: str, *, rebuild_after: bool = Fa
 
 
 def add_explicit_command(root: Path) -> None:
-    """Add a valid explicit command module."""
-    write(root / 'modules' / 'setup-ci' / 'skill.yaml', module_metadata('setup-ci', activation='explicit', visibility='public'))
-    write(root / 'modules' / 'setup-ci' / 'instructions.md', instructions('Set up CI when directly invoked.', name='setup-ci', marker='skill'))
+    """Add a valid command skill."""
+    write(root / 'commands' / 'setup-ci' / 'skill.yaml', module_metadata('setup-ci', activation='explicit', visibility='public'))
+    write(root / 'commands' / 'setup-ci' / 'SKILL.md', command_skill())
+    write(root / 'commands' / 'setup-ci' / 'agents' / 'openai.yaml', agent_metadata())
     run([sys.executable, str(REBUILD), str(root / 'routed-skills.yaml')], root.parent)
 
 
@@ -325,10 +347,42 @@ def missing_module_output_marker(root: Path) -> None:
 
 
 def wrong_explicit_output_marker(root: Path) -> None:
-    """Use a routed module display marker for an explicit command."""
-    write(root / 'modules' / 'setup-ci' / 'skill.yaml', module_metadata('setup-ci', activation='explicit', visibility='public'))
-    write(root / 'modules' / 'setup-ci' / 'instructions.md', instructions('Set up CI when directly invoked.', name='setup-ci', marker='module'))
+    """Use a routed module display marker for a command skill."""
+    write(root / 'commands' / 'setup-ci' / 'skill.yaml', module_metadata('setup-ci', activation='explicit', visibility='public'))
+    write(root / 'commands' / 'setup-ci' / 'SKILL.md', command_skill().replace('using skill: setup-ci', 'using module: setup-ci'))
+    write(root / 'commands' / 'setup-ci' / 'agents' / 'openai.yaml', agent_metadata())
     run([sys.executable, str(REBUILD), str(root / 'routed-skills.yaml')], root.parent)
+
+
+def explicit_under_modules(root: Path) -> None:
+    """Add a legacy command skill under the routed modules folder."""
+    write(root / 'modules' / 'setup-ci' / 'skill.yaml', module_metadata('setup-ci', activation='explicit', visibility='public'))
+    write(root / 'modules' / 'setup-ci' / 'instructions.md', instructions('Set up CI when directly invoked.', name='setup-ci', marker='skill'))
+
+
+def missing_command_skill(root: Path) -> None:
+    """Add a command skill without its public SKILL.md."""
+    write(root / 'commands' / 'setup-ci' / 'skill.yaml', module_metadata('setup-ci', activation='explicit', visibility='public'))
+    write(root / 'commands' / 'setup-ci' / 'agents' / 'openai.yaml', agent_metadata())
+
+
+def missing_command_agent_metadata(root: Path) -> None:
+    """Add a command skill without UI metadata."""
+    write(root / 'commands' / 'setup-ci' / 'skill.yaml', module_metadata('setup-ci', activation='explicit', visibility='public'))
+    write(root / 'commands' / 'setup-ci' / 'SKILL.md', command_skill())
+
+
+def allow_implicit_command(root: Path) -> None:
+    """Allow implicit invocation for a direct command skill."""
+    write(root / 'commands' / 'setup-ci' / 'skill.yaml', module_metadata('setup-ci', activation='explicit', visibility='public'))
+    write(root / 'commands' / 'setup-ci' / 'SKILL.md', command_skill())
+    write(root / 'commands' / 'setup-ci' / 'agents' / 'openai.yaml', agent_metadata(True))
+
+
+def legacy_command_instructions(root: Path) -> None:
+    """Add legacy instructions beside a command SKILL.md."""
+    add_explicit_command(root)
+    write(root / 'commands' / 'setup-ci' / 'instructions.md', instructions('Legacy command instructions.', name='setup-ci', marker='skill'))
 
 
 def stale_generated(root: Path) -> None:
@@ -358,12 +412,12 @@ def main() -> int:
     expect_success('valid workspace in .skills')
     expect_success('valid workspace in skills', root_name='skills')
     expect_success('valid workspace at repository root', root_name='.')
-    expect_success('explicit command validates', add_explicit_command)
+    expect_success('command skill validates', add_explicit_command)
     expect_failure('missing entry fails', remove_entry, 'expected exactly one entry skill')
     expect_failure('multiple entries fail', add_second_entry, 'expected exactly one entry skill')
     expect_failure('missing entry SKILL.md fails', remove_entry_skill, 'missing SKILL.md')
     expect_failure('missing entry agents metadata fails', remove_entry_agent_metadata, 'missing agents/openai.yaml')
-    expect_failure('entry SKILL.md name mismatch fails', mismatch_entry_skill_name, 'does not match entry metadata')
+    expect_failure('entry SKILL.md name mismatch fails', mismatch_entry_skill_name, 'does not match metadata')
     expect_failure('entry output marker mismatch fails', wrong_entry_output_marker, 'missing output marker: using skill: ascend')
     expect_failure('entry implicit invocation fails', allow_implicit_entry, 'allow_implicit_invocation must be false')
     expect_failure('legacy entry instructions fail', add_legacy_entry_instructions, 'entry instructions belong in SKILL.md')
@@ -371,6 +425,11 @@ def main() -> int:
     expect_failure('missing metadata fails', add_missing_metadata_module, 'missing skill.yaml')
     expect_failure('missing instructions fails', add_missing_instructions_module, 'missing instructions.md')
     expect_failure('missing module output marker fails', missing_module_output_marker, 'missing output marker: using module: module-creation')
+    expect_failure('legacy command skill under modules fails', explicit_under_modules, 'command skill must live under commands')
+    expect_failure('missing command SKILL.md fails', missing_command_skill, 'missing SKILL.md')
+    expect_failure('missing command agents metadata fails', missing_command_agent_metadata, 'missing agents/openai.yaml')
+    expect_failure('command implicit invocation fails', allow_implicit_command, 'allow_implicit_invocation must be false')
+    expect_failure('legacy command instructions fail', legacy_command_instructions, 'command behavior belongs in SKILL.md')
     expect_failure('explicit output marker mismatch fails', wrong_explicit_output_marker, 'missing output marker: using skill: setup-ci')
     expect_failure('broken relation fails', add_broken_relation, 'before target does not exist: missing-module', rebuild_after=True)
     expect_failure('before cycle fails', add_cycle, 'before cycle', rebuild_after=True)

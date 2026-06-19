@@ -16,7 +16,7 @@ product intent or risk decisions that files cannot answer.
    `instructions.md`; the `SKILL.md` body is the public entry instructions.
 5. Create only the minimum routed modules: `module-creation` and
    `quality-standard`.
-6. Create `shared/`, `generated/`, `scripts/`, and `proposals/`.
+6. Create `commands/`, `shared/`, `generated/`, `scripts/`, and `proposals/`.
 7. Copy or adapt the bundled validation and rebuild scripts into the target
    workspace when the user wants local scripts.
 8. Rebuild catalog, graph, and cascade.
@@ -25,7 +25,7 @@ product intent or risk decisions that files cannot answer.
 ## Analyze Repository
 
 Classify existing files as entry skill candidate, routed module candidate,
-explicit command candidate, shared resource, generated artifact, domain-specific
+command skill candidate, shared resource, generated artifact, domain-specific
 content, or local tooling noise.
 
 Extract generic principles such as entry routing, module metadata, instruction
@@ -51,12 +51,13 @@ generated output.
 Creation should be direct when risk is low. Challenge only when overlap,
 ambiguity, or routing risk is detected.
 
-## Create Explicit Command
+## Create Command Skill
 
-Create a module-shaped folder with `activation: explicit` and
-`visibility: public`. Its instructions must say it runs only when directly
-invoked and preserve the `using skill: <command-name>` output marker. Do not
-include explicit commands in routed cascade selection.
+Create `commands/<command-name>/` with `SKILL.md`, `agents/openai.yaml`, and
+`skill.yaml`. Use `activation: explicit` and `visibility: public`. The skill
+body must say it runs only when directly invoked and preserve the
+`using skill: <command-name>` output marker. Do not include command skills in
+routed cascade selection.
 
 ## Rebuild Workspace
 
@@ -78,8 +79,8 @@ python3 scripts/validate-routed-skills.py routed-skills.yaml
 ```
 
 Validation checks structure, metadata, relations, resources, routing
-constraints, generated freshness, explicit command exclusion, duplicate strong
-signals, and the public entry's agent-skill shape.
+constraints, generated freshness, command skill exclusion, duplicate strong
+signals, and public agent-skill shapes.
 
 ## Propose Merge
 

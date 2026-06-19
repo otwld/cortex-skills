@@ -1,16 +1,20 @@
+---
+name: setup-project-memory
+description: Use only when the user explicitly includes $setup-project-memory; sets up or verifies project-memory artifacts such as domain glossary, ADR location, out-of-scope decisions, issue tracker config, or triage label mapping.
+---
 
 # Output Marker
 
 Display:
-using skill: project-memory-setup
+using skill: setup-project-memory
 
 ---
 
-# Project Memory Setup
+# Setup Project Memory
 
 ## Overview
 
-This explicit command runs only when directly invoked as `$project-memory-setup`.
+This command skill runs only when directly invoked as `$setup-project-memory`.
 
 
 Establish durable project memory so agents can use shared language, decisions, and

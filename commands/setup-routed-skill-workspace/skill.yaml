@@ -1,5 +1,5 @@
-name: bootstrap-routed-skill-workspace
-description: "Use only when the user explicitly includes $bootstrap-routed-skill-workspace; bootstraps, analyzes, validates, rebuilds, or evolves generic routed skill workspaces with one public entry skill, hidden routed modules, explicit routing metadata, local resources, generated catalogs and graphs, and deterministic integrity checks."
+name: setup-routed-skill-workspace
+description: "Use only when the user explicitly includes $setup-routed-skill-workspace; sets up, analyzes, validates, rebuilds, or evolves generic routed skill workspaces with one public entry skill, hidden routed modules, command skills, explicit routing metadata, local resources, generated catalogs and graphs, and deterministic integrity checks."
 activation: explicit
 visibility: public
 status: active
@@ -33,8 +33,9 @@ resources:
     - "templates/entry/SKILL.md.template"
     - "templates/entry/agents/openai.yaml.template"
     - "templates/entry/skill.yaml"
-    - "templates/explicit-command/instructions.md"
-    - "templates/explicit-command/skill.yaml"
+    - "templates/command/SKILL.md.template"
+    - "templates/command/agents/openai.yaml.template"
+    - "templates/command/skill.yaml"
     - "templates/generated/SKILL_CATALOG.md"
     - "templates/generated/module-cascade.md"
     - "templates/generated/module-graph.md"

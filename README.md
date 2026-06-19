@@ -19,7 +19,7 @@ with the right constraints.
 - One public entry: [`$cortex`](entry/cortex/SKILL.md).
 - 40+ hidden modules for real engineering situations.
 - Generated routing maps you can inspect, review, and validate.
-- Explicit setup commands for project memory, agent instructions, and routed
+- Direct setup command skills for project memory, agent instructions, and routed
   skill workspaces.
 
 ## Copy These Prompts
@@ -87,7 +87,7 @@ Routing follows a few plain rules:
 - `with` modules join only when they have their own evidence.
 - `after` modules wait until that phase is actually relevant.
 - `excludes` and `replaces` keep bad combinations out.
-- Explicit commands are public but direct-invocation only; they do not join
+- Command skills are public but direct-invocation only; they do not join
   normal `$cortex` routing.
 
 The generated routing views are checked into the repo so you can inspect how the
@@ -212,22 +212,22 @@ Cortex covers reusable engineering workflows across:
   and skill evolution.
 
 See the generated [skill catalog](generated/SKILL_CATALOG.md) for every module
-and explicit command.
+and command skill.
 
-## Explicit Commands
+## Command Skills
 
-Some workflows are public commands, but they are not selected by `$cortex`
-routing. Invoke them directly when you want that setup job:
+Some workflows are public direct-invocation skills, but they are not selected by
+`$cortex` routing. Invoke them directly when you want that setup job:
 
 | Command | Use when |
 | --- | --- |
-| `$agent-instructions-bootstrap` | Creating or auditing durable agent instruction files such as `AGENTS.md`. |
-| `$bootstrap-routed-skill-workspace` | Creating, validating, or evolving another routed skill workspace. |
-| `$project-memory-setup` | Setting up project glossary, ADR, out-of-scope, or tracker memory. |
+| `$setup-agent-instructions` | Creating or auditing durable agent instruction files such as `AGENTS.md`. |
+| `$setup-routed-skill-workspace` | Creating, validating, or evolving another routed skill workspace. |
+| `$setup-project-memory` | Setting up project glossary, ADR, out-of-scope, or tracker memory. |
 
 ## Install Or Point Your Agent
 
-The public Codex-facing surface is:
+The public routed Codex-facing surface is:
 
 ```text
 entry/cortex/
@@ -237,8 +237,8 @@ entry/cortex/
 ```
 
 Compatible agent tooling should point at `entry/cortex/` for the `$cortex`
-entry. Routed modules stay hidden under `modules/` and are selected through
-metadata.
+entry. Routed modules stay hidden under `modules/`, while direct command skills
+live under `commands/`.
 
 Clone the repository if you want the full workspace locally:
 

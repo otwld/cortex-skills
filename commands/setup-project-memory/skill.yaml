@@ -1,5 +1,5 @@
-name: project-memory-setup
-description: "Use only when the user explicitly includes $project-memory-setup; sets up or verifies project-memory artifacts such as domain glossary, ADR location, out-of-scope decisions, issue tracker config, or triage label mapping."
+name: setup-project-memory
+description: "Use only when the user explicitly includes $setup-project-memory; sets up or verifies project-memory artifacts such as domain glossary, ADR location, out-of-scope decisions, issue tracker config, or triage label mapping."
 activation: explicit
 visibility: public
 status: active

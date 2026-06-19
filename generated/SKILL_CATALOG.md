@@ -58,13 +58,13 @@ Workspace: `cortex`
 | `vue-conventions` | Internal Cortex module applied when creating, modifying, or reviewing Vue 3 Single-File Components, Composition API code, `<script setup>`, props, emits, slots, or component naming. | 5 | `active` | `modules/vue-conventions/` |
 | `workspace-state-guard` | Internal Cortex module applied before substantial edits, plan execution, branch cleanup, publishing, or work that may collide with user changes or workspace isolation. | 5 | `active` | `modules/workspace-state-guard/` |
 
-## Explicit Commands
+## Command Skills
 
 | Command | Description | Status | Path |
 | --- | --- | --- | --- |
-| `agent-instructions-bootstrap` | Use only when the user explicitly includes $agent-instructions-bootstrap; bootstraps or audits workspace AI-agent instruction files such as AGENTS.md, nested AGENTS.md, CLAUDE.md, .github/copilot-instructions.md, .cursorrules, .cursor/rules, .windsurf, or .clinerules. | `active` | `modules/agent-instructions-bootstrap/` |
-| `bootstrap-routed-skill-workspace` | Use only when the user explicitly includes $bootstrap-routed-skill-workspace; bootstraps, analyzes, validates, rebuilds, or evolves generic routed skill workspaces with one public entry skill, hidden routed modules, explicit routing metadata, local resources, generated catalogs and graphs, and deterministic integrity checks. | `active` | `modules/bootstrap-routed-skill-workspace/` |
-| `project-memory-setup` | Use only when the user explicitly includes $project-memory-setup; sets up or verifies project-memory artifacts such as domain glossary, ADR location, out-of-scope decisions, issue tracker config, or triage label mapping. | `active` | `modules/project-memory-setup/` |
+| `setup-agent-instructions` | Use only when the user explicitly includes $setup-agent-instructions; sets up or audits workspace AI-agent instruction files such as AGENTS.md, nested AGENTS.md, CLAUDE.md, .github/copilot-instructions.md, .cursorrules, .cursor/rules, .windsurf, or .clinerules. | `active` | `commands/setup-agent-instructions/` |
+| `setup-project-memory` | Use only when the user explicitly includes $setup-project-memory; sets up or verifies project-memory artifacts such as domain glossary, ADR location, out-of-scope decisions, issue tracker config, or triage label mapping. | `active` | `commands/setup-project-memory/` |
+| `setup-routed-skill-workspace` | Use only when the user explicitly includes $setup-routed-skill-workspace; sets up, analyzes, validates, rebuilds, or evolves generic routed skill workspaces with one public entry skill, hidden routed modules, command skills, explicit routing metadata, local resources, generated catalogs and graphs, and deterministic integrity checks. | `active` | `commands/setup-routed-skill-workspace/` |
 
 ## Routing Signals
 

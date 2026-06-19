@@ -1,17 +1,15 @@
 # Module Graph
 
-Generated from module relation metadata. Do not edit by hand.
+Generated from routed module and command skill relation metadata. Do not edit by hand.
 
-| Module | Activation | Before | With | After | Excludes | Replaces |
+| Artifact | Activation | Before | With | After | Excludes | Replaces |
 | --- | --- | --- | --- | --- | --- | --- |
 | `agent-delegation` | `routed` | None | `plan-execution`, `review-gate`, `systematic-debugging`, `completion-verification` | None | None | None |
-| `agent-instructions-bootstrap` | `explicit` | None | None | None | None | None |
 | `angular-conventions` | `routed` | None | `rxjs-conventions`, `typescript-code-style`, `code-documentation` | `skill-evolution` | None | None |
 | `angular-material-conventions` | `routed` | `angular-conventions` | `bundle-performance`, `typescript-code-style`, `code-documentation` | `skill-evolution` | None | None |
 | `angular-tanstack-query-conventions` | `routed` | `angular-conventions` | `rxjs-conventions`, `typescript-api-conventions`, `public-api-design`, `code-documentation` | `skill-evolution` | None | None |
 | `architecture-deepening-review` | `routed` | None | `architecture-drift-detector`, `library-placement-decision`, `public-api-design`, `test-first-discipline`, `code-documentation` | `skill-evolution` | None | None |
 | `architecture-drift-detector` | `routed` | None | `architecture-deepening-review`, `library-placement-decision`, `nx-module-boundaries` | None | None | None |
-| `bootstrap-routed-skill-workspace` | `explicit` | None | None | None | None | None |
 | `branch-completion` | `routed` | `workspace-state-guard`, `completion-verification` | `review-gate` | None | None | None |
 | `bricks` | `routed` | None | `workspace-state-guard`, `nx-conventions`, `completion-verification` | None | None | None |
 | `bundle-performance` | `routed` | None | `public-api-design` | None | None | None |
@@ -33,7 +31,6 @@ Generated from module relation metadata. Do not edit by hand.
 | `nx-module-boundaries` | `routed` | `library-placement-decision` | `public-api-design` | None | None | None |
 | `plan-execution` | `routed` | `workspace-state-guard` | `agent-delegation`, `test-first-discipline`, `code-documentation`, `review-gate`, `completion-verification` | `branch-completion` | None | None |
 | `playwright-conventions` | `routed` | None | `typescript-code-style`, `code-documentation` | `skill-evolution` | None | None |
-| `project-memory-setup` | `explicit` | None | None | None | None | None |
 | `prototype` | `routed` | None | `design-intake`, `test-first-discipline`, `code-documentation` | `issue-decomposition` | None | None |
 | `public-api-design` | `routed` | `library-placement-decision` | `naming-consistency`, `typescript-api-conventions`, `code-documentation` | None | None | None |
 | `review-feedback-triage` | `routed` | None | `systematic-debugging`, `test-first-discipline`, `completion-verification`, `review-gate` | None | None | None |
@@ -50,3 +47,6 @@ Generated from module relation metadata. Do not edit by hand.
 | `vitest-conventions` | `routed` | None | `vite-conventions`, `typescript-code-style`, `code-documentation` | `skill-evolution` | None | None |
 | `vue-conventions` | `routed` | None | `typescript-code-style`, `rxjs-conventions`, `code-documentation` | `skill-evolution` | None | None |
 | `workspace-state-guard` | `routed` | None | `branch-completion`, `completion-verification` | None | None | None |
+| `setup-agent-instructions` | `explicit` | None | None | None | None | None |
+| `setup-project-memory` | `explicit` | None | None | None | None | None |
+| `setup-routed-skill-workspace` | `explicit` | None | None | None | None | None |

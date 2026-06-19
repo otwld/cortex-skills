@@ -154,7 +154,20 @@ def load_agent_skill_frontmatter(root: Path, skill_path: Path, errors: list[str]
 
 def validate_agent_entry(root: Path, entry_dir: Path, expected_name: str, instructions_name: str, errors: list[str]) -> None:
     """Validate the public entry is also an invokable agent skill."""
-    skill_path = entry_dir / AGENT_SKILL_NAME
+    validate_agent_skill_folder(root, entry_dir, expected_name, errors)
+
+    legacy_agent_metadata = entry_dir / 'openai.yaml'
+    if legacy_agent_metadata.exists():
+        errors.append(f'{rel(root, legacy_agent_metadata)}: use agents/openai.yaml instead')
+
+    entry_instructions = entry_dir / instructions_name
+    if entry_instructions.exists():
+        errors.append(f'{rel(root, entry_instructions)}: entry instructions belong in {AGENT_SKILL_NAME}')
+
+
+def validate_agent_skill_folder(root: Path, skill_dir: Path, expected_name: str, errors: list[str]) -> None:
+    """Validate a public agent skill folder and direct-invocation policy."""
+    skill_path = skill_dir / AGENT_SKILL_NAME
     frontmatter = load_agent_skill_frontmatter(root, skill_path, errors)
     validate_output_marker(root, skill_path, f'using skill: {expected_name}', errors)
     name = frontmatter.get('name')
@@ -164,30 +177,22 @@ def validate_agent_entry(root: Path, entry_dir: Path, expected_name: str, instru
     elif not AGENT_SKILL_NAME_RE.fullmatch(name):
         errors.append(f'{rel(root, skill_path)}: invalid skill name {name!r}')
     elif name != expected_name:
-        errors.append(f'{rel(root, skill_path)}: name {name!r} does not match entry metadata {expected_name!r}')
+        errors.append(f'{rel(root, skill_path)}: name {name!r} does not match metadata {expected_name!r}')
     if not isinstance(description, str) or not description:
         errors.append(f'{rel(root, skill_path)}: missing description in frontmatter')
 
-    agent_metadata = entry_dir / AGENT_METADATA_PATH
+    agent_metadata = skill_dir / AGENT_METADATA_PATH
     if not agent_metadata.exists():
-        errors.append(f'{rel(root, entry_dir)}: missing {AGENT_METADATA_PATH.as_posix()}')
+        errors.append(f'{rel(root, skill_dir)}: missing {AGENT_METADATA_PATH.as_posix()}')
+        return
+    try:
+        metadata = rebuild.load_yaml(agent_metadata)
+        policy = rebuild.as_mapping(metadata.get('policy'), 'agents.openai.yaml.policy')
+    except Exception as error:
+        errors.append(f'{rel(root, agent_metadata)}: {error}')
     else:
-        try:
-            metadata = rebuild.load_yaml(agent_metadata)
-            policy = rebuild.as_mapping(metadata.get('policy'), 'agents.openai.yaml.policy')
-        except Exception as error:
-            errors.append(f'{rel(root, agent_metadata)}: {error}')
-        else:
-            if policy.get('allow_implicit_invocation') is not False:
-                errors.append(f'{rel(root, agent_metadata)}: policy.allow_implicit_invocation must be false')
-
-    legacy_agent_metadata = entry_dir / 'openai.yaml'
-    if legacy_agent_metadata.exists():
-        errors.append(f'{rel(root, legacy_agent_metadata)}: use agents/openai.yaml instead')
-
-    entry_instructions = entry_dir / instructions_name
-    if entry_instructions.exists():
-        errors.append(f'{rel(root, entry_instructions)}: entry instructions belong in {AGENT_SKILL_NAME}')
+        if policy.get('allow_implicit_invocation') is not False:
+            errors.append(f'{rel(root, agent_metadata)}: policy.allow_implicit_invocation must be false')
 
 
 def validate_output_marker(root: Path, path: Path, expected_line: str, errors: list[str]) -> None:
@@ -246,10 +251,30 @@ def validate_workspace(raw_manifest: str | None) -> list[str]:
         for child in sorted(modules_root.iterdir()):
             if not child.is_dir():
                 continue
-            if not (child / metadata_name).exists():
+            metadata_path = child / metadata_name
+            if not metadata_path.exists():
                 errors.append(f'{rel(root, child)}: missing {metadata_name}')
+                metadata = {}
+            else:
+                try:
+                    metadata = rebuild.load_yaml(metadata_path)
+                except Exception as error:
+                    errors.append(f'{rel(root, metadata_path)}: {error}')
+                    metadata = {}
+                if metadata.get('activation') == 'explicit':
+                    errors.append(f'{rel(root, child)}: command skill must live under {paths["commands"]}')
             if not (child / instructions_name).exists():
                 errors.append(f'{rel(root, child)}: missing {instructions_name}')
+
+    commands_root = root / paths['commands']
+    if commands_root.exists():
+        for child in sorted(commands_root.iterdir()):
+            if not child.is_dir():
+                continue
+            if not (child / metadata_name).exists():
+                errors.append(f'{rel(root, child)}: missing {metadata_name}')
+            if (child / instructions_name).exists():
+                errors.append(f'{rel(root, child / instructions_name)}: command behavior belongs in {AGENT_SKILL_NAME}')
 
     try:
         workspace = rebuild.load_workspace(str(manifest_path))
@@ -271,17 +296,18 @@ def validate_workspace(raw_manifest: str | None) -> list[str]:
         if artifact.activation == 'routed' and artifact.visibility != 'hidden':
             errors.append(f'{artifact.name}: routed module must be hidden')
         if artifact.activation == 'explicit' and artifact.visibility != 'public':
-            errors.append(f'{artifact.name}: explicit command must be public')
-        if artifact.activation != 'entry' and not (artifact.directory / instructions_name).exists():
+            errors.append(f'{artifact.name}: command skill must be public')
+        if artifact.activation == 'routed' and not (artifact.directory / instructions_name).exists():
             errors.append(f'{artifact.name}: missing {instructions_name}')
-        if artifact.activation in ('routed', 'explicit'):
-            marker_kind = 'module' if artifact.activation == 'routed' else 'skill'
+        if artifact.activation == 'routed':
             validate_output_marker(
                 workspace.root,
                 artifact.directory / instructions_name,
-                f'using {marker_kind}: {artifact.name}',
+                f'using module: {artifact.name}',
                 errors,
             )
+        if artifact.activation == 'explicit':
+            validate_agent_skill_folder(workspace.root, artifact.directory, artifact.name, errors)
 
     if workspace.entry.activation != 'entry':
         errors.append(f'{workspace.entry.name}: entry skill must use activation entry')
@@ -290,7 +316,7 @@ def validate_workspace(raw_manifest: str | None) -> list[str]:
     validate_agent_entry(workspace.root, workspace.entry.directory, workspace.entry.name, instructions_name, errors)
 
     name_set = set(names)
-    for artifact in workspace.modules:
+    for artifact in [*workspace.modules, *workspace.commands]:
         for key in RELATION_KEYS:
             for target in artifact.relations[key]:
                 if target not in name_set:
@@ -331,7 +357,7 @@ def validate_workspace(raw_manifest: str | None) -> list[str]:
     shared_root = workspace.root / paths['shared']
     used_shared = {
         value.removeprefix('shared/')
-        for artifact in workspace.modules
+        for artifact in [*workspace.modules, *workspace.commands]
         for value in [*artifact.uses, *sum((artifact.resources[key] for key in RESOURCE_KEYS), [])]
         if value.startswith('shared/')
     }
