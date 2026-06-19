@@ -11,6 +11,13 @@
 - Added routed workspace rebuild and validation scripts.
 - Added validator fixture regression tests for routed workspace structure,
   metadata, generated freshness, resources, and command skill handling.
+- Added always-loaded module support through `routing.always`, used by Cortex
+  for `no-transitional-architecture`.
+- Added validator checks for active module reachability, legacy-only declared
+  resources, required instruction sections, copied template prose, and repeated
+  instruction bullets.
+- Added setup workspace template fixture coverage for empty generic workspaces,
+  active modules with concrete signals, and active modules missing signals.
 
 ### Changed
 
@@ -26,6 +33,13 @@
 - Renamed setup command skills to the `$setup-*` naming convention.
 - Replaced taxonomy folders and `MODULE.md` files with `modules/<name>/`
   folders containing `instructions.md` and `skill.yaml`.
+- Narrowed broad routing signals for architecture drift, architecture
+  deepening, test runners, verification, review, and branch completion.
+- Removed legacy-only extracted pattern resources from active routed modules.
+- Replaced repeated routed-module instruction boilerplate with module-named
+  quality gates, hard stops, and usage checklist items.
+- Aligned `$setup-routed-skill-workspace` templates and contract references with
+  stricter active-module signal and instruction-quality validation.
 
 ## v0.1.0 Public Seed - 2026-05-28
 

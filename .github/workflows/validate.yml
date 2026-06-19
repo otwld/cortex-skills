@@ -17,5 +17,11 @@ jobs:
         with:
           python-version: "3.x"
 
+      - name: Check generated routed skill artifacts
+        run: python3 scripts/rebuild-routed-skills.py --check routed-skills.yaml
+
       - name: Validate routed skills
         run: python3 scripts/validate-routed-skills.py routed-skills.yaml
+
+      - name: Test routed skill validator
+        run: python3 scripts/test-validate-routed-skills.py

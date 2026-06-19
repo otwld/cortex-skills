@@ -191,6 +191,9 @@ Before finishing any routed workspace change, verify:
 - Relation targets name existing entry, routed module, or command skill
   artifacts.
 - Shared and module-owned resources are declared and not orphaned.
+- Active routed modules have direct routing signals.
+- Active instruction files avoid copied template prose and repeated low-value
+  checklist bullets.
 - Generated artifacts were rebuilt from metadata and are fresh.
 - Examples follow `example-universe-enforcer`.
 
@@ -198,6 +201,7 @@ Run:
 
 ```bash
 python3 scripts/rebuild-routed-skills.py routed-skills.yaml
+python3 scripts/rebuild-routed-skills.py --check routed-skills.yaml
 python3 scripts/validate-routed-skills.py routed-skills.yaml
 ```
 

@@ -73,6 +73,7 @@ The public skill is only the front door. The work happens in hidden modules.
 ```text
 your request
   -> $cortex entry
+  -> always-loaded modules
   -> routing signals
   -> required before modules
   -> evidence-backed with modules
@@ -82,6 +83,8 @@ your request
 
 Routing follows a few plain rules:
 
+- Cortex always loads `no-transitional-architecture` before evidence-selected
+  modules so cleanup and implementation work do not preserve shims by default.
 - Strong signals beat medium signals; medium signals beat weak signals.
 - `before` modules run first when another module depends on them.
 - `with` modules join only when they have their own evidence.
@@ -259,6 +262,12 @@ less generated/module-graph.md
 
 `skill.yaml` files are the source of truth. Generated files are rebuilt outputs.
 
+Check generated freshness without writing:
+
+```bash
+python3 scripts/rebuild-routed-skills.py --check routed-skills.yaml
+```
+
 Validate the routed workspace:
 
 ```bash
@@ -269,12 +278,6 @@ Rebuild generated artifacts after metadata changes:
 
 ```bash
 python3 scripts/rebuild-routed-skills.py routed-skills.yaml
-```
-
-Check generated freshness without writing:
-
-```bash
-python3 scripts/rebuild-routed-skills.py --check routed-skills.yaml
 ```
 
 Run validator fixture tests after changing validation or rebuild behavior:

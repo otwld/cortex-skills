@@ -19,6 +19,30 @@ RESOURCE_KEYS = ('references', 'scripts', 'templates', 'assets')
 AGENT_SKILL_NAME = 'SKILL.md'
 AGENT_METADATA_PATH = Path('agents') / 'openai.yaml'
 AGENT_SKILL_NAME_RE = re.compile(r'^[a-z0-9]+(?:-[a-z0-9]+)*$')
+INSTRUCTION_REQUIRED_MARKERS = (
+    '# Output Marker',
+    '## Overview',
+    '## Workflow',
+    '## Quality Gates',
+    '## Hard Stops',
+    '## Usage Checklist',
+    '## Cross References',
+)
+PROHIBITED_RESOURCE_NAMES = {'legacy-extracted-patterns.md'}
+PROHIBITED_PROSE_PHRASES = (
+    'Apply the module-specific rules:',
+    'Guidance is grounded in current files or explicit user intent.',
+    'Output uses project vocabulary and the recruitment example universe when examples are needed.',
+    'Decisions are recorded in the right artifact instead of hidden in transient chat.',
+    'Validation or acceptance criteria are named when the module changes behavior or workflow.',
+    'Do not create placeholder guidance, examples, metadata, or documentation.',
+    'Trigger signal is explicit.',
+    'Relevant existing convention or memory was checked.',
+    'Module-specific rules were applied.',
+    'Remaining decisions, risks, or validation gaps are stated.',
+)
+NON_CONTENT_BULLET_SECTIONS = {'Reference Routing', 'Cross References'}
+DUPLICATED_BULLET_LIMIT = 2
 
 
 def load_rebuild_module() -> Any:
@@ -104,6 +128,8 @@ def validate_resources(workspace: Any, artifact: Any, names: set[str], errors: l
         normalized = set(declared)
         normalized.update(f'{kind}/{value}' for value in declared)
         for value in declared:
+            if artifact.status == 'active' and Path(value).name in PROHIBITED_RESOURCE_NAMES:
+                errors.append(f'{artifact.name}: legacy-only {kind} resource declared: {value}')
             if not any(candidate.exists() for candidate in resource_candidates(artifact, workspace, kind, value)):
                 errors.append(f'{artifact.name}: missing {kind} resource: {value}')
         folder = artifact.directory / kind
@@ -125,6 +151,57 @@ def validate_generated(workspace: Any, errors: list[str]) -> None:
         actual = path.read_text(encoding='utf-8')
         if actual != expected:
             errors.append(f'{rel(workspace.root, path)}: stale generated artifact')
+
+
+def validate_always_loaded_modules(workspace: Any, names: dict[str, Any], errors: list[str]) -> None:
+    """Validate manifest-level always-loaded routed modules."""
+    for target in workspace.always:
+        artifact = names.get(target)
+        if artifact is None:
+            errors.append(f'routing.always target does not exist: {target}')
+            continue
+        if artifact.activation != 'routed':
+            errors.append(f'routing.always target must be a routed module: {target}')
+        if artifact.visibility != 'hidden':
+            errors.append(f'routing.always target must be hidden: {target}')
+        if artifact.status != 'active':
+            errors.append(f'routing.always target must be active: {target}')
+
+
+def validate_active_routed_module_content(
+    workspace: Any,
+    active_routed: list[Any],
+    instructions_name: str,
+    errors: list[str],
+) -> None:
+    """Validate active module reachability and instruction prose quality."""
+    duplicated_bullets: dict[str, list[str]] = {}
+    for artifact in active_routed:
+        if not any(artifact.signals[key] for key in rebuild.SIGNAL_KEYS):
+            errors.append(f'{artifact.name}: active routed module has no routing signals')
+
+        instruction_path = artifact.directory / instructions_name
+        if not instruction_path.exists():
+            continue
+        text = instruction_path.read_text(encoding='utf-8')
+        for marker in INSTRUCTION_REQUIRED_MARKERS:
+            if marker not in text:
+                errors.append(f'{rel(workspace.root, instruction_path)}: missing required instruction section: {marker}')
+        for phrase in PROHIBITED_PROSE_PHRASES:
+            if phrase in text:
+                errors.append(f'{rel(workspace.root, instruction_path)}: template prose remains: {phrase}')
+
+        section = ''
+        for line_number, line in enumerate(text.splitlines(), 1):
+            if line.startswith('## '):
+                section = line[3:].strip()
+            if not line.startswith('- ') or section in NON_CONTENT_BULLET_SECTIONS:
+                continue
+            duplicated_bullets.setdefault(line, []).append(f'{rel(workspace.root, instruction_path)}:{line_number}')
+
+    for bullet, locations in duplicated_bullets.items():
+        if len(locations) > DUPLICATED_BULLET_LIMIT:
+            errors.append(f'duplicated instruction bullet across active modules: {bullet}')
 
 
 def load_agent_skill_frontmatter(root: Path, skill_path: Path, errors: list[str]) -> dict[str, Any]:
@@ -314,6 +391,7 @@ def validate_workspace(raw_manifest: str | None) -> list[str]:
     if workspace.entry.visibility != 'public':
         errors.append(f'{workspace.entry.name}: entry skill must be public')
     validate_agent_entry(workspace.root, workspace.entry.directory, workspace.entry.name, instructions_name, errors)
+    validate_always_loaded_modules(workspace, names, errors)
 
     name_set = set(names)
     for artifact in [*workspace.modules, *workspace.commands]:
@@ -340,6 +418,7 @@ def validate_workspace(raw_manifest: str | None) -> list[str]:
         artifact for artifact in workspace.modules
         if artifact.activation == 'routed' and artifact.status == 'active'
     ]
+    validate_active_routed_module_content(workspace, active_routed, instructions_name, errors)
     signals: dict[str, list[Any]] = {}
     for artifact in active_routed:
         for signal in artifact.signals['strong']:

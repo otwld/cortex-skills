@@ -80,8 +80,9 @@ python3 scripts/test-validate-routed-skills.py
 ```
 
 The validator checks entry shape, command skill shape, metadata, activation and
-visibility rules, relations, resources, duplicate strong signals, generated
-freshness, and routed cascade exclusion for command skills.
+visibility rules, relations, resources, active module reachability, instruction
+prose quality, duplicate strong signals, generated freshness, and routed
+cascade exclusion for command skills.
 
 ## Pull Request Checklist
 
@@ -91,11 +92,17 @@ freshness, and routed cascade exclusion for command skills.
 - Command skills live under `commands/`, use `activation: explicit` and
   `visibility: public`, and say they run only when directly invoked.
 - New or moved resources are declared.
+- Active routed modules have routing signals and no legacy-only declared
+  resources.
+- Instruction changes avoid copied template prose and repeated low-value
+  checklist bullets.
 - Generated artifacts were rebuilt or verified fresh.
 - New examples use `JobOffer`, `Candidate`, `Application`, `Recruiter`,
   `Company`, `Interview`, `Contract`, or `SkillTag` where examples need domain
   entities.
 - `python3 scripts/validate-routed-skills.py routed-skills.yaml` passes.
+- `python3 scripts/rebuild-routed-skills.py --check routed-skills.yaml`
+  passes.
 - `python3 scripts/test-validate-routed-skills.py` passes when validator
   behavior changes.
 

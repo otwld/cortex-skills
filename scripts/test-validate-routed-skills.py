@@ -12,6 +12,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 REBUILD = SCRIPT_DIR / 'rebuild-routed-skills.py'
 VALIDATE = SCRIPT_DIR / 'validate-routed-skills.py'
+SETUP_TEMPLATE_ROOT = SCRIPT_DIR.parent / 'commands' / 'setup-routed-skill-workspace' / 'assets' / 'templates'
 
 
 def run(command: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
@@ -25,8 +26,23 @@ def write(path: Path, text: str) -> None:
     path.write_text(text, encoding='utf-8')
 
 
-def manifest(root_name: str, *, max_depth: int = 3) -> str:
+def render_setup_template(relative_path: str, values: dict[str, str]) -> str:
+    """Render a bundled setup template for validator fixture coverage."""
+    text = (SETUP_TEMPLATE_ROOT / relative_path).read_text(encoding='utf-8')
+    for key, value in values.items():
+        text = text.replace(f'{{{{{key}}}}}', value)
+    if '{{' in text or '}}' in text:
+        raise AssertionError(f'unresolved template placeholder in {relative_path}')
+    return text
+
+
+def manifest(root_name: str, *, max_depth: int = 3, always: str = '') -> str:
     """Return fixture manifest text."""
+    routing_block = f'''
+routing:
+  always:
+    - {always}
+''' if always else ''
     return f'''name: ascend
 root: {root_name}
 
@@ -46,6 +62,7 @@ entry:
   required: true
   path: entry/ascend
 
+{routing_block}
 generated:
   catalog: generated/SKILL_CATALOG.md
   graph: generated/module-graph.md
@@ -118,11 +135,112 @@ Run only when directly invoked as `${name}`.
 '''
 
 
+def setup_template_values() -> dict[str, str]:
+    """Return placeholder values for setup-template fixtures."""
+    return {
+        'workspace_name': 'ascend',
+        'root': '.skills',
+        'entry_slug': 'ascend',
+        'entry_name': 'ascend',
+        'entry_invocation': '$ascend',
+        'entry_display_name': 'Ascend',
+        'entry_short_description': 'Route workspace modules.',
+    }
+
+
+def module_setup_template_values(name: str) -> dict[str, str]:
+    """Return module placeholder values for setup-template fixtures."""
+    return {
+        'module_name': name,
+        'module_description': f'Guidance for {name}.',
+        'module_purpose': f'Validate generated guidance for {name}.',
+    }
+
+
+def create_workspace_from_setup_templates(temp_dir: Path) -> Path:
+    """Create an empty routed workspace using bundled setup templates."""
+    root = temp_dir / '.skills'
+    values = setup_template_values()
+    write(root / 'routed-skills.yaml', render_setup_template('routed-skills.yaml', values))
+    write(root / 'entry' / 'ascend' / 'SKILL.md', render_setup_template('entry/SKILL.md.template', values))
+    write(root / 'entry' / 'ascend' / 'agents' / 'openai.yaml', render_setup_template('entry/agents/openai.yaml.template', values))
+    write(root / 'entry' / 'ascend' / 'skill.yaml', render_setup_template('entry/skill.yaml', values))
+    for folder in ('modules', 'commands', 'shared', 'generated', 'scripts', 'proposals'):
+        (root / folder).mkdir(parents=True, exist_ok=True)
+    result = run([sys.executable, str(REBUILD), str(root / 'routed-skills.yaml')], temp_dir)
+    if result.returncode != 0:
+        raise AssertionError(f'setup-template rebuild failed\nstdout:\n{result.stdout}\nstderr:\n{result.stderr}')
+    return root
+
+
+def module_from_setup_template(name: str, *, status: str = 'draft', strong: str = '') -> str:
+    """Return rendered module metadata from the bundled setup template."""
+    text = render_setup_template('module/skill.yaml', module_setup_template_values(name))
+    text = text.replace('status: draft', f'status: {status}')
+    if strong:
+        text = text.replace('strong: []', f'strong:\n      - {strong}')
+    return text
+
+
+def module_instructions_from_setup_template(name: str) -> str:
+    """Return rendered module instructions from the bundled setup template."""
+    return render_setup_template('module/instructions.md', module_setup_template_values(name))
+
+
+def setup_templates_empty_workspace_validates() -> None:
+    """Validate an empty workspace created from bundled setup templates."""
+    with tempfile.TemporaryDirectory(prefix='routed-skills-') as raw:
+        temp_dir = Path(raw)
+        root = create_workspace_from_setup_templates(temp_dir)
+        result = run([sys.executable, str(VALIDATE), str(root / 'routed-skills.yaml')], temp_dir)
+        if result.returncode != 0:
+            raise AssertionError(f'setup-template empty workspace should validate\nstdout:\n{result.stdout}\nstderr:\n{result.stderr}')
+        print('ok: setup templates empty workspace validates')
+
+
+def setup_templates_active_modules_validate() -> None:
+    """Validate several active modules created from bundled setup templates."""
+    with tempfile.TemporaryDirectory(prefix='routed-skills-') as raw:
+        temp_dir = Path(raw)
+        root = create_workspace_from_setup_templates(temp_dir)
+        modules = {
+            'module-creation': 'user asks to create a module',
+            'quality-standard': 'user asks for quality gates',
+            'final-check': 'user asks for final check',
+        }
+        for name, signal in modules.items():
+            write(root / 'modules' / name / 'skill.yaml', module_from_setup_template(name, status='active', strong=signal))
+            write(root / 'modules' / name / 'instructions.md', module_instructions_from_setup_template(name))
+        run([sys.executable, str(REBUILD), str(root / 'routed-skills.yaml')], temp_dir)
+        result = run([sys.executable, str(VALIDATE), str(root / 'routed-skills.yaml')], temp_dir)
+        if result.returncode != 0:
+            raise AssertionError(f'setup-template active modules should validate\nstdout:\n{result.stdout}\nstderr:\n{result.stderr}')
+        print('ok: setup templates active modules validate')
+
+
+def setup_template_active_empty_signals_fail() -> None:
+    """Validate active setup-template modules still need routing signals."""
+    with tempfile.TemporaryDirectory(prefix='routed-skills-') as raw:
+        temp_dir = Path(raw)
+        root = create_workspace_from_setup_templates(temp_dir)
+        write(root / 'modules' / 'module-creation' / 'skill.yaml', module_from_setup_template('module-creation', status='active'))
+        write(root / 'modules' / 'module-creation' / 'instructions.md', module_instructions_from_setup_template('module-creation'))
+        run([sys.executable, str(REBUILD), str(root / 'routed-skills.yaml')], temp_dir)
+        result = run([sys.executable, str(VALIDATE), str(root / 'routed-skills.yaml')], temp_dir)
+        output = f'{result.stdout}\n{result.stderr}'
+        if result.returncode == 0:
+            raise AssertionError(f'setup-template active empty-signal module should fail\n{output}')
+        if 'active routed module has no routing signals' not in output:
+            raise AssertionError(f'setup-template active empty-signal failure missing diagnostic\n{output}')
+        print('ok: setup template active empty signals fail')
+
+
 def module_metadata(
     name: str,
     *,
     activation: str = 'routed',
     visibility: str = 'hidden',
+    status: str = 'active',
     strong: str = '',
     before: str = '',
     uses: str = '',
@@ -137,7 +255,7 @@ def module_metadata(
 description: Guidance for {name}.
 activation: {activation}
 visibility: {visibility}
-status: active
+status: {status}
 
 routing:
   priority: 5
@@ -172,36 +290,30 @@ using {marker}: {name}
 
 ---
 
-# Purpose
+# {title}
 
-{title}
+## Overview
 
-# When To Use
+Validate fixture guidance for {name}.
 
-Use when routed evidence matches.
-
-# Workflow
+## Workflow
 
 1. Inspect the request.
-2. Apply the module guidance.
+2. Apply focused {name} guidance.
 
-# Gates
+## Quality Gates
 
 - Evidence is direct.
 
-# Hard Stops
+## Hard Stops
 
 - Do not broaden scope.
 
-# Output Format
-
-Report the result.
-
-# Checklist
+## Usage Checklist
 
 - Evidence checked.
 
-# Cross References
+## Cross References
 
 - None
 '''
@@ -390,11 +502,87 @@ def stale_generated(root: Path) -> None:
     (root / 'generated' / 'module-graph.md').write_text('# Manual edit\n', encoding='utf-8')
 
 
+def enable_always_loaded_module(root: Path) -> None:
+    """Configure an active routed module as always loaded."""
+    write(root / 'routed-skills.yaml', manifest('.skills', always='quality-standard'))
+    run([sys.executable, str(REBUILD), str(root / 'routed-skills.yaml')], root.parent)
+
+
+def generated_always_loaded_module_is_rendered() -> None:
+    """Validate generated cascade output includes always-loaded modules."""
+    with tempfile.TemporaryDirectory(prefix='routed-skills-') as raw:
+        temp_dir = Path(raw)
+        root = create_workspace(temp_dir)
+        enable_always_loaded_module(root)
+        cascade = (root / 'generated' / 'module-cascade.md').read_text(encoding='utf-8')
+        if '## Always Loaded Modules' not in cascade or '| `quality-standard` |' not in cascade:
+            raise AssertionError('always-loaded module missing from generated cascade')
+        result = run([sys.executable, str(VALIDATE), str(root / 'routed-skills.yaml')], temp_dir)
+        if result.returncode != 0:
+            raise AssertionError(f'always-loaded generated output should validate\nstdout:\n{result.stdout}\nstderr:\n{result.stderr}')
+        print('ok: always-loaded generated output is rendered')
+
+
+def always_loaded_missing_target(root: Path) -> None:
+    """Point routing.always at a missing module."""
+    write(root / 'routed-skills.yaml', manifest('.skills', always='missing-module'))
+
+
+def always_loaded_command_target(root: Path) -> None:
+    """Point routing.always at a command skill."""
+    write(root / 'commands' / 'setup-ci' / 'skill.yaml', module_metadata('setup-ci', activation='explicit', visibility='public'))
+    write(root / 'commands' / 'setup-ci' / 'SKILL.md', command_skill())
+    write(root / 'commands' / 'setup-ci' / 'agents' / 'openai.yaml', agent_metadata())
+    write(root / 'routed-skills.yaml', manifest('.skills', always='setup-ci'))
+
+
+def always_loaded_inactive_target(root: Path) -> None:
+    """Point routing.always at an inactive routed module."""
+    write(root / 'modules' / 'quality-standard' / 'skill.yaml', module_metadata('quality-standard', status='draft'))
+    write(root / 'routed-skills.yaml', manifest('.skills', always='quality-standard'))
+
+
+def always_loaded_scalar_target(root: Path) -> None:
+    """Configure routing.always as a scalar instead of a list."""
+    write(root / 'routed-skills.yaml', manifest('.skills').replace('\ngenerated:', '\nrouting:\n  always: quality-standard\n\ngenerated:'))
+
+
 def duplicate_signal(root: Path) -> None:
     """Duplicate a strong signal across unrelated modules."""
     signal = 'user asks for the same routing signal'
     write(root / 'modules' / 'module-creation' / 'skill.yaml', module_metadata('module-creation', strong=signal))
     write(root / 'modules' / 'quality-standard' / 'skill.yaml', module_metadata('quality-standard', strong=signal))
+
+
+def active_empty_signals(root: Path) -> None:
+    """Make an active routed module unreachable through routing evidence."""
+    write(root / 'modules' / 'module-creation' / 'skill.yaml', module_metadata('module-creation'))
+
+
+def legacy_declared_resource(root: Path) -> None:
+    """Declare a legacy-only resource as active guidance."""
+    write(root / 'modules' / 'module-creation' / 'references' / 'legacy-extracted-patterns.md', '# Legacy\n')
+    write(root / 'modules' / 'module-creation' / 'skill.yaml', module_metadata('module-creation', strong='user asks to create a module', resource='legacy-extracted-patterns.md'))
+
+
+def template_instruction_prose(root: Path) -> None:
+    """Reintroduce template prose into active module instructions."""
+    text = (root / 'modules' / 'module-creation' / 'instructions.md').read_text(encoding='utf-8')
+    text = text.replace('2. Apply focused module-creation guidance.', '2. Apply the module-specific rules: create modules.')
+    write(root / 'modules' / 'module-creation' / 'instructions.md', text)
+
+
+def duplicated_instruction_bullets(root: Path) -> None:
+    """Add a third active module that repeats existing instruction bullets."""
+    write(root / 'modules' / 'final-check' / 'skill.yaml', module_metadata('final-check', strong='user asks for final check'))
+    write(root / 'modules' / 'final-check' / 'instructions.md', instructions('Final Check', name='final-check'))
+
+
+def missing_required_instruction_section(root: Path) -> None:
+    """Remove a required active module instruction section."""
+    text = (root / 'modules' / 'module-creation' / 'instructions.md').read_text(encoding='utf-8')
+    text = text.replace('## Quality Gates', '## Gates')
+    write(root / 'modules' / 'module-creation' / 'instructions.md', text)
 
 
 def missing_resource(root: Path) -> None:
@@ -413,6 +601,11 @@ def main() -> int:
     expect_success('valid workspace in skills', root_name='skills')
     expect_success('valid workspace at repository root', root_name='.')
     expect_success('command skill validates', add_explicit_command)
+    expect_success('always-loaded module validates', enable_always_loaded_module)
+    generated_always_loaded_module_is_rendered()
+    setup_templates_empty_workspace_validates()
+    setup_templates_active_modules_validate()
+    setup_template_active_empty_signals_fail()
     expect_failure('missing entry fails', remove_entry, 'expected exactly one entry skill')
     expect_failure('multiple entries fail', add_second_entry, 'expected exactly one entry skill')
     expect_failure('missing entry SKILL.md fails', remove_entry_skill, 'missing SKILL.md')
@@ -434,8 +627,17 @@ def main() -> int:
     expect_failure('broken relation fails', add_broken_relation, 'before target does not exist: missing-module', rebuild_after=True)
     expect_failure('before cycle fails', add_cycle, 'before cycle', rebuild_after=True)
     expect_failure('before depth cap fails', add_depth_violation, 'exceeds cap 1', rebuild_after=True)
+    expect_failure('always-loaded missing target fails', always_loaded_missing_target, 'routing.always target does not exist: missing-module', rebuild_after=True)
+    expect_failure('always-loaded command target fails', always_loaded_command_target, 'routing.always target must be a routed module: setup-ci', rebuild_after=True)
+    expect_failure('always-loaded inactive target fails', always_loaded_inactive_target, 'routing.always target must be active: quality-standard', rebuild_after=True)
+    expect_failure('always-loaded scalar target fails', always_loaded_scalar_target, 'routing.always: expected list')
     expect_failure('stale generated artifact fails', stale_generated, 'stale generated artifact')
     expect_failure('duplicate strong signal fails', duplicate_signal, 'duplicate strong signal', rebuild_after=True)
+    expect_failure('active empty signals fail', active_empty_signals, 'active routed module has no routing signals', rebuild_after=True)
+    expect_failure('legacy declared resource fails', legacy_declared_resource, 'legacy-only references resource declared', rebuild_after=True)
+    expect_failure('template instruction prose fails', template_instruction_prose, 'template prose remains')
+    expect_failure('duplicated instruction bullets fail', duplicated_instruction_bullets, 'duplicated instruction bullet', rebuild_after=True)
+    expect_failure('missing required instruction section fails', missing_required_instruction_section, 'missing required instruction section')
     expect_failure('missing resource fails', missing_resource, 'missing references resource', rebuild_after=True)
     expect_failure('orphan resource fails', orphan_resource, 'orphaned references resource')
     return 0
