@@ -25,13 +25,14 @@ Use routed workspace metadata as the source of truth:
 
 ## Workflow
 
-1. Inspect the request and relevant files for direct routing evidence.
-2. Select routed modules using `../../generated/module-cascade.md`.
-3. Expand required `before` relations from `../../generated/module-graph.md` up to the configured depth cap.
-4. Add `with` modules only when they have independent evidence.
-5. Defer `after` modules until the later phase is relevant.
-6. Reject excluded module combinations.
-7. Use local or shared resources only when a selected module declares them.
+1. Load always-loaded modules listed in `../../generated/module-cascade.md`.
+2. Inspect the request and relevant files for direct routing evidence.
+3. Select additional routed modules using `../../generated/module-cascade.md`.
+4. Expand required `before` relations from `../../generated/module-graph.md` up to the configured depth cap.
+5. Add `with` modules only when they have independent evidence.
+6. Defer `after` modules until the later phase is relevant.
+7. Reject excluded module combinations.
+8. Use local or shared resources only when a selected module declares them.
 
 ## Gates
 
@@ -43,7 +44,7 @@ Use routed workspace metadata as the source of truth:
 ## Hard Stops
 
 - Do not use this skill through implicit invocation.
-- Do not load hidden modules without direct evidence or required relations.
+- Do not load hidden modules unless they are always-loaded, directly evidenced, or required by relations.
 - Do not treat generated catalog, graph, or cascade files as source files.
 - Do not add hidden resource coupling; modules must declare resource ownership or use.
 
@@ -56,6 +57,7 @@ State the selected modules and any skipped tempting modules when routing is broa
 - Generated catalog was available.
 - Generated graph was available.
 - Generated cascade was available.
+- Always-loaded modules were loaded before evidence-selected modules.
 - Relations and exclusions were respected.
 
 ## Cross References

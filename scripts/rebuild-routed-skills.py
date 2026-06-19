@@ -62,6 +62,7 @@ class Workspace:
     entry: Artifact
     modules: list[Artifact]
     commands: list[Artifact]
+    always: list[str]
     metadata_name: str
     instructions_name: str
 
@@ -259,6 +260,8 @@ def load_workspace(raw_manifest: str | None = None) -> Workspace:
     root = manifest_path.parent
     paths = merge_defaults(manifest.get('paths'), DEFAULT_PATHS, 'paths')
     artifacts = merge_defaults(manifest.get('artifacts'), DEFAULT_ARTIFACTS, 'artifacts')
+    routing = as_mapping(manifest.get('routing'), 'routing')
+    always = as_list(routing.get('always'), 'routing.always')
     entry_config = as_mapping(manifest.get('entry'), 'entry')
     entry_path = entry_config.get('path')
     if not isinstance(entry_path, str) or not entry_path:
@@ -292,6 +295,7 @@ def load_workspace(raw_manifest: str | None = None) -> Workspace:
         entry=entry,
         modules=modules,
         commands=commands,
+        always=always,
         metadata_name=artifacts['metadata'],
         instructions_name=artifacts['instructions'],
     )
@@ -310,6 +314,13 @@ def text_cell(value: str) -> str:
 def list_text(values: list[str]) -> str:
     """Render signal text for a generated table cell."""
     return '<br>'.join(text_cell(value) for value in values) if values else 'None'
+
+
+def rows_for_values(values: list[str]) -> list[str]:
+    """Render a one-column generated table body."""
+    if not values:
+        return ['| None |']
+    return [f'| `{value}` |' for value in values]
 
 
 def generated_paths(workspace: Workspace) -> dict[str, Path]:
@@ -414,15 +425,24 @@ def render_cascade(workspace: Workspace) -> str:
         '',
         '## Routing Rules',
         '',
-        '1. Collect direct evidence from the user request.',
-        '2. Prefer strong signals over medium signals.',
-        '3. Prefer medium signals over weak signals.',
-        '4. Break ties using priority.',
-        '5. Load `before` modules recursively up to the manifest depth cap.',
-        '6. Load `with` modules only when they also have direct evidence.',
-        '7. Suggest `after` modules only when the later phase becomes relevant.',
-        '8. Reject combinations declared in `excludes`.',
-        '9. Prefer modules declared as replacements through `replaces`.',
+        '1. Load modules listed in `routing.always` for every routed request.',
+        '2. Collect direct evidence from the user request.',
+        '3. Prefer strong signals over medium signals.',
+        '4. Prefer medium signals over weak signals.',
+        '5. Break ties using priority.',
+        '6. Load `before` modules recursively up to the manifest depth cap.',
+        '7. Load `with` modules only when they also have direct evidence.',
+        '8. Suggest `after` modules only when the later phase becomes relevant.',
+        '9. Reject combinations declared in `excludes`.',
+        '10. Prefer modules declared as replacements through `replaces`.',
+        '',
+        '## Always Loaded Modules',
+        '',
+        'These modules load for every routed request before evidence-selected modules.',
+        '',
+        '| Module |',
+        '| --- |',
+        *rows_for_values(workspace.always),
         '',
         '## Routed Modules',
         '',
