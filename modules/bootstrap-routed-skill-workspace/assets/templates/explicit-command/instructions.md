@@ -1,3 +1,10 @@
+# Output Marker
+
+Display:
+using skill: {{command_name}}
+
+---
+
 # Purpose
 
 Run the explicit {{command_invocation}} command workflow.

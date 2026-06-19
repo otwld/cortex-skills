@@ -144,7 +144,21 @@ Explicit commands are public, direct-invocation only, and excluded from routing.
 
 Routed module and explicit command behavior belongs in `instructions.md`, not
 in generated files. Public entry behavior belongs in `entry/<entry-slug>/SKILL.md`.
-Use these sections unless the module has a narrower need:
+Each instruction artifact must start with an output marker so invocation is
+visible in supporting clients:
+
+```markdown
+# Output Marker
+
+Display:
+using module: <module-name>
+
+---
+```
+
+Use `using skill: <entry-name>` for the public entry skill and
+`using skill: <command-name>` for explicit commands. Use these sections after
+the marker unless the module has a narrower need:
 
 ```markdown
 # Purpose

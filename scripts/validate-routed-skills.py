@@ -156,6 +156,7 @@ def validate_agent_entry(root: Path, entry_dir: Path, expected_name: str, instru
     """Validate the public entry is also an invokable agent skill."""
     skill_path = entry_dir / AGENT_SKILL_NAME
     frontmatter = load_agent_skill_frontmatter(root, skill_path, errors)
+    validate_output_marker(root, skill_path, f'using skill: {expected_name}', errors)
     name = frontmatter.get('name')
     description = frontmatter.get('description')
     if not isinstance(name, str) or not name:
@@ -187,6 +188,15 @@ def validate_agent_entry(root: Path, entry_dir: Path, expected_name: str, instru
     entry_instructions = entry_dir / instructions_name
     if entry_instructions.exists():
         errors.append(f'{rel(root, entry_instructions)}: entry instructions belong in {AGENT_SKILL_NAME}')
+
+
+def validate_output_marker(root: Path, path: Path, expected_line: str, errors: list[str]) -> None:
+    """Validate an instruction artifact declares its client display marker."""
+    if not path.exists():
+        return
+    text = path.read_text(encoding='utf-8')
+    if '# Output Marker' not in text or 'Display:' not in text or expected_line not in text:
+        errors.append(f'{rel(root, path)}: missing output marker: {expected_line}')
 
 
 def validate_workspace(raw_manifest: str | None) -> list[str]:
@@ -264,6 +274,14 @@ def validate_workspace(raw_manifest: str | None) -> list[str]:
             errors.append(f'{artifact.name}: explicit command must be public')
         if artifact.activation != 'entry' and not (artifact.directory / instructions_name).exists():
             errors.append(f'{artifact.name}: missing {instructions_name}')
+        if artifact.activation in ('routed', 'explicit'):
+            marker_kind = 'module' if artifact.activation == 'routed' else 'skill'
+            validate_output_marker(
+                workspace.root,
+                artifact.directory / instructions_name,
+                f'using {marker_kind}: {artifact.name}',
+                errors,
+            )
 
     if workspace.entry.activation != 'entry':
         errors.append(f'{workspace.entry.name}: entry skill must use activation entry')

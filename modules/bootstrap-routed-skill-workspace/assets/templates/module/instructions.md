@@ -1,3 +1,10 @@
+# Output Marker
+
+Display:
+using module: {{module_name}}
+
+---
+
 # Purpose
 
 {{module_purpose}}

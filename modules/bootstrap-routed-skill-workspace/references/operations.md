@@ -41,7 +41,8 @@ generated output.
 2. Detect overlap through same names, duplicate strong signals, similar
    descriptions, shared relations, or duplicated resources.
 3. If overlap is low, create `modules/<module-name>/skill.yaml` and
-   `instructions.md` from templates.
+   `instructions.md` from templates, preserving the `using module:
+   <module-name>` output marker.
 4. If overlap is high, create a challenge report that recommends create, merge,
    update, or reject.
 5. Rebuild generated artifacts.
@@ -54,7 +55,8 @@ ambiguity, or routing risk is detected.
 
 Create a module-shaped folder with `activation: explicit` and
 `visibility: public`. Its instructions must say it runs only when directly
-invoked. Do not include explicit commands in routed cascade selection.
+invoked and preserve the `using skill: <command-name>` output marker. Do not
+include explicit commands in routed cascade selection.
 
 ## Rebuild Workspace
 

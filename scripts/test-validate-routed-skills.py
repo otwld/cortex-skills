@@ -142,9 +142,16 @@ resources:
 '''
 
 
-def instructions(title: str) -> str:
+def instructions(title: str, *, name: str = 'module-creation', marker: str = 'module') -> str:
     """Return fixture instructions."""
-    return f'''# Purpose
+    return f'''# Output Marker
+
+Display:
+using {marker}: {name}
+
+---
+
+# Purpose
 
 {title}
 
@@ -187,9 +194,9 @@ def create_workspace(temp_dir: Path, root_name: str = '.skills', *, max_depth: i
     write(root / 'entry' / 'ascend' / 'SKILL.md', entry_skill())
     write(root / 'entry' / 'ascend' / 'agents' / 'openai.yaml', agent_metadata())
     write(root / 'modules' / 'module-creation' / 'skill.yaml', module_metadata('module-creation', strong='user asks to create a module'))
-    write(root / 'modules' / 'module-creation' / 'instructions.md', instructions('Create modules.'))
+    write(root / 'modules' / 'module-creation' / 'instructions.md', instructions('Create modules.', name='module-creation'))
     write(root / 'modules' / 'quality-standard' / 'skill.yaml', module_metadata('quality-standard', strong='user asks for quality gates'))
-    write(root / 'modules' / 'quality-standard' / 'instructions.md', instructions('Apply quality standards.'))
+    write(root / 'modules' / 'quality-standard' / 'instructions.md', instructions('Apply quality standards.', name='quality-standard'))
     for folder in ('shared', 'generated', 'scripts', 'proposals'):
         (root / folder).mkdir(parents=True, exist_ok=True)
     result = run([sys.executable, str(REBUILD), str(root / 'routed-skills.yaml')], temp_dir)
@@ -231,7 +238,7 @@ def expect_failure(name: str, mutate, expected: str, *, rebuild_after: bool = Fa
 def add_explicit_command(root: Path) -> None:
     """Add a valid explicit command module."""
     write(root / 'modules' / 'setup-ci' / 'skill.yaml', module_metadata('setup-ci', activation='explicit', visibility='public'))
-    write(root / 'modules' / 'setup-ci' / 'instructions.md', instructions('Set up CI when directly invoked.'))
+    write(root / 'modules' / 'setup-ci' / 'instructions.md', instructions('Set up CI when directly invoked.', name='setup-ci', marker='skill'))
     run([sys.executable, str(REBUILD), str(root / 'routed-skills.yaml')], root.parent)
 
 
@@ -269,7 +276,7 @@ def allow_implicit_entry(root: Path) -> None:
 
 def add_legacy_entry_instructions(root: Path) -> None:
     """Add a legacy entry instructions file."""
-    write(root / 'entry' / 'ascend' / 'instructions.md', instructions('Legacy duplicate.'))
+    write(root / 'entry' / 'ascend' / 'instructions.md', instructions('Legacy duplicate.', name='ascend', marker='skill'))
 
 
 def add_legacy_entry_metadata(root: Path) -> None:
@@ -279,7 +286,7 @@ def add_legacy_entry_metadata(root: Path) -> None:
 
 def add_missing_metadata_module(root: Path) -> None:
     """Add a module without metadata."""
-    write(root / 'modules' / 'missing-metadata' / 'instructions.md', instructions('Missing metadata fixture.'))
+    write(root / 'modules' / 'missing-metadata' / 'instructions.md', instructions('Missing metadata fixture.', name='missing-metadata'))
 
 
 def add_missing_instructions_module(root: Path) -> None:
@@ -304,7 +311,24 @@ def add_depth_violation(root: Path) -> None:
     write(root / 'modules' / 'module-creation' / 'skill.yaml', module_metadata('module-creation', before='quality-standard'))
     write(root / 'modules' / 'quality-standard' / 'skill.yaml', module_metadata('quality-standard', before='final-check'))
     write(root / 'modules' / 'final-check' / 'skill.yaml', module_metadata('final-check'))
-    write(root / 'modules' / 'final-check' / 'instructions.md', instructions('Final check.'))
+    write(root / 'modules' / 'final-check' / 'instructions.md', instructions('Final check.', name='final-check'))
+
+
+def wrong_entry_output_marker(root: Path) -> None:
+    """Make the entry display marker disagree with entry metadata."""
+    write(root / 'entry' / 'ascend' / 'SKILL.md', entry_skill().replace('using skill: ascend', 'using skill: wrong'))
+
+
+def missing_module_output_marker(root: Path) -> None:
+    """Remove the module display marker from a routed module."""
+    write(root / 'modules' / 'module-creation' / 'instructions.md', instructions('Create modules.', name='module-creation').replace('using module: module-creation', ''))
+
+
+def wrong_explicit_output_marker(root: Path) -> None:
+    """Use a routed module display marker for an explicit command."""
+    write(root / 'modules' / 'setup-ci' / 'skill.yaml', module_metadata('setup-ci', activation='explicit', visibility='public'))
+    write(root / 'modules' / 'setup-ci' / 'instructions.md', instructions('Set up CI when directly invoked.', name='setup-ci', marker='module'))
+    run([sys.executable, str(REBUILD), str(root / 'routed-skills.yaml')], root.parent)
 
 
 def stale_generated(root: Path) -> None:
@@ -340,11 +364,14 @@ def main() -> int:
     expect_failure('missing entry SKILL.md fails', remove_entry_skill, 'missing SKILL.md')
     expect_failure('missing entry agents metadata fails', remove_entry_agent_metadata, 'missing agents/openai.yaml')
     expect_failure('entry SKILL.md name mismatch fails', mismatch_entry_skill_name, 'does not match entry metadata')
+    expect_failure('entry output marker mismatch fails', wrong_entry_output_marker, 'missing output marker: using skill: ascend')
     expect_failure('entry implicit invocation fails', allow_implicit_entry, 'allow_implicit_invocation must be false')
     expect_failure('legacy entry instructions fail', add_legacy_entry_instructions, 'entry instructions belong in SKILL.md')
     expect_failure('legacy entry openai metadata fails', add_legacy_entry_metadata, 'use agents/openai.yaml instead')
     expect_failure('missing metadata fails', add_missing_metadata_module, 'missing skill.yaml')
     expect_failure('missing instructions fails', add_missing_instructions_module, 'missing instructions.md')
+    expect_failure('missing module output marker fails', missing_module_output_marker, 'missing output marker: using module: module-creation')
+    expect_failure('explicit output marker mismatch fails', wrong_explicit_output_marker, 'missing output marker: using skill: setup-ci')
     expect_failure('broken relation fails', add_broken_relation, 'before target does not exist: missing-module', rebuild_after=True)
     expect_failure('before cycle fails', add_cycle, 'before cycle', rebuild_after=True)
     expect_failure('before depth cap fails', add_depth_violation, 'exceeds cap 1', rebuild_after=True)
