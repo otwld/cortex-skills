@@ -8,11 +8,11 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Architecture drift or deepening evidence for architecture-drift-detector: Broad churn, shallow modules, weak seams, poor locality, or low leverage"
+      - "Architecture drift detector evidence for architecture-drift-detector: repeated churn, ownership drift, broad change clusters, dependency direction erosion, or responsibility spread before a rewrite"
     medium:
-      - "Broad churn, shallow modules, weak seams, poor locality, or low leverage"
+      - "Repeated churn, ownership drift, broad change clusters, dependency direction erosion, or responsibility spread"
     weak:
-      - "Architecture drift or deepening"
+      - "Architecture drift detection"
 
 relations:
   before: []

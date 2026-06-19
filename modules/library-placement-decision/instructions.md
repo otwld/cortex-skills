@@ -17,16 +17,16 @@ of convenience.
 
 1. Inspect the current repository context and existing project memory before changing behavior or guidance.
 2. State the concrete responsibility, interface, artifact, or user-visible behavior this module governs.
-3. Apply the module-specific rules: Classify domain, integration, feature, UI, utility, or adapter responsibility; use existing owners; split mixed responsibilities.
+3. Classify domain, integration, feature, UI, utility, or adapter responsibility; use existing owners; split mixed responsibilities.
 4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
 5. Stop when the task needs a decision outside this module's scope and route to the appropriate governance module.
 
 ## Quality Gates
 
-- Guidance is grounded in current files or explicit user intent.
-- Output uses project vocabulary and the recruitment example universe when examples are needed.
-- Decisions are recorded in the right artifact instead of hidden in transient chat.
-- Validation or acceptance criteria are named when the module changes behavior or workflow.
+- Library Placement Decision guidance names the inspected source, request evidence, or declared resource that triggered it.
+- Library Placement Decision output uses this workspace's terms and the recruitment example universe only when examples are needed.
+- Library Placement Decision decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
+- Library Placement Decision validation names the command, artifact, review proof, or acceptance check that covers its risk.
 
 ## Example
 
@@ -35,18 +35,18 @@ a page-specific ranking panel stays in the feature.
 
 ## Hard Stops
 
-- Do not proceed on repo facts that can be inspected but have not been checked.
-- Do not broaden scope beyond the triggering signal.
-- Do not create placeholder guidance, examples, metadata, or documentation.
-- Do not claim completion without evidence that covers this module's checklist.
+- Do not use Library Placement Decision without direct routing evidence or a required relation.
+- Do not expand Library Placement Decision beyond its stated responsibility.
+- Do not add placeholder Library Placement Decision guidance, examples, metadata, resources, or validation.
+- Do not claim Library Placement Decision is satisfied without evidence for its checklist.
 
 ## Usage Checklist
 
-- Trigger signal is explicit.
-- Relevant existing convention or memory was checked.
-- Module-specific rules were applied.
-- Artifacts, docs, metadata, or tests affected by the work were updated together.
-- Remaining decisions, risks, or validation gaps are stated.
+- Library Placement Decision trigger evidence is explicit.
+- Library Placement Decision source files, project memory, or declared resources were checked.
+- Library Placement Decision workflow rules were applied at the relevant artifact boundary.
+- Library Placement Decision docs, metadata, tests, or generated artifacts affected by the change were updated together.
+- Library Placement Decision risks, rejected paths, and validation gaps are stated.
 
 ## Cross References
 

@@ -7,9 +7,12 @@ status: active
 routing:
   priority: 5
   signals:
-    strong: []
-    medium: []
-    weak: []
+    strong:
+      - "Extraction decision evidence for extraction-decision: repeated logic, duplicated DTO shape, shared contract candidate, reusable data-access pattern, repeated UI composition, or orchestration copied across owners"
+    medium:
+      - "Repeated logic, duplicated shape, shared contract candidate, reusable data access, repeated UI composition, or copied orchestration"
+    weak:
+      - "Extraction decision"
 
 relations:
   before:

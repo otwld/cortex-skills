@@ -16,16 +16,16 @@ Keep public surfaces explicit, small, stable, typed, and documented as contracts
 
 1. Inspect the current repository context and existing project memory before changing behavior or guidance.
 2. State the concrete responsibility, interface, artifact, or user-visible behavior this module governs.
-3. Apply the module-specific rules: Choose owner first; export supported symbols only; encode states with strong types; document invariants and migration impact.
+3. Choose owner first; export supported symbols only; encode states with strong types; document invariants and migration impact.
 4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
 5. Stop when the task needs a decision outside this module's scope and route to the appropriate governance module.
 
 ## Quality Gates
 
-- Guidance is grounded in current files or explicit user intent.
-- Output uses project vocabulary and the recruitment example universe when examples are needed.
-- Decisions are recorded in the right artifact instead of hidden in transient chat.
-- Validation or acceptance criteria are named when the module changes behavior or workflow.
+- Public API Design guidance names the inspected source, request evidence, or declared resource that triggered it.
+- Public API Design output uses this workspace's terms and the recruitment example universe only when examples are needed.
+- Public API Design decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
+- Public API Design validation names the command, artifact, review proof, or acceptance check that covers its risk.
 
 ## Example
 
@@ -34,18 +34,18 @@ rejectionReason on every result.
 
 ## Hard Stops
 
-- Do not proceed on repo facts that can be inspected but have not been checked.
-- Do not broaden scope beyond the triggering signal.
-- Do not create placeholder guidance, examples, metadata, or documentation.
-- Do not claim completion without evidence that covers this module's checklist.
+- Do not use Public API Design without direct routing evidence or a required relation.
+- Do not expand Public API Design beyond its stated responsibility.
+- Do not add placeholder Public API Design guidance, examples, metadata, resources, or validation.
+- Do not claim Public API Design is satisfied without evidence for its checklist.
 
 ## Usage Checklist
 
-- Trigger signal is explicit.
-- Relevant existing convention or memory was checked.
-- Module-specific rules were applied.
-- Artifacts, docs, metadata, or tests affected by the work were updated together.
-- Remaining decisions, risks, or validation gaps are stated.
+- Public API Design trigger evidence is explicit.
+- Public API Design source files, project memory, or declared resources were checked.
+- Public API Design workflow rules were applied at the relevant artifact boundary.
+- Public API Design docs, metadata, tests, or generated artifacts affected by the change were updated together.
+- Public API Design risks, rejected paths, and validation gaps are stated.
 
 ## Cross References
 

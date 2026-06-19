@@ -8,11 +8,11 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Test runner surface evidence for vitest-conventions: Jest, Vitest, or Playwright config, tests, setup, mocks, fixtures, locators, or assertions change"
+      - "Vitest evidence for vitest-conventions: vitest.config, Vite-integrated test setup, vi.fn, vi.mock, import.meta.vitest, or test file intended for Vitest"
     medium:
-      - "Jest, Vitest, or Playwright config, tests, setup, mocks, fixtures, locators, or assertions change"
+      - "Vitest config, Vite-integrated tests, vi mocks, environments, timers, fixtures, or assertions"
     weak:
-      - "Test runner surface"
+      - "Vitest surface"
 
 relations:
   before: []

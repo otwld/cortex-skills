@@ -27,6 +27,7 @@ Generated from routed module and command skill relation metadata. Do not edit by
 | `naming-consistency` | `routed` | None | `public-api-design`, `typescript-api-conventions`, `code-documentation` | None | None | None |
 | `nestjs-conventions` | `routed` | None | `rxjs-conventions`, `typescript-code-style`, `code-documentation` | `skill-evolution` | None | None |
 | `nestjs-mongoose-conventions` | `routed` | `nestjs-conventions` | `typescript-api-conventions`, `public-api-design`, `code-documentation` | `skill-evolution` | None | None |
+| `no-transitional-architecture` | `routed` | None | None | None | None | None |
 | `nx-conventions` | `routed` | None | `nx-module-boundaries`, `library-placement-decision` | None | None | None |
 | `nx-module-boundaries` | `routed` | `library-placement-decision` | `public-api-design` | None | None | None |
 | `plan-execution` | `routed` | `workspace-state-guard` | `agent-delegation`, `test-first-discipline`, `code-documentation`, `review-gate`, `completion-verification` | `branch-completion` | None | None |

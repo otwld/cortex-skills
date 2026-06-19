@@ -22,16 +22,16 @@ decisions.
 
 1. Inspect the current repository context and existing project memory before changing behavior or guidance.
 2. State the concrete responsibility, interface, artifact, or user-visible behavior this module governs.
-3. Apply the module-specific rules: Confirm non-goals; map modules and interfaces; order tasks; name validation; include docs, API, migration, and compatibility impact.
+3. Confirm non-goals; map modules and interfaces; order tasks; name validation; include docs, API, migration, and compatibility impact.
 4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
 5. Stop when the task needs a decision outside this module's scope and route to the appropriate governance module.
 
 ## Quality Gates
 
-- Guidance is grounded in current files or explicit user intent.
-- Output uses project vocabulary and the recruitment example universe when examples are needed.
-- Decisions are recorded in the right artifact instead of hidden in transient chat.
-- Validation or acceptance criteria are named when the module changes behavior or workflow.
+- Implementation Plan guidance names the inspected source, request evidence, or declared resource that triggered it.
+- Implementation Plan output uses this workspace's terms and the recruitment example universe only when examples are needed.
+- Implementation Plan decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
+- Implementation Plan validation names the command, artifact, review proof, or acceptance check that covers its risk.
 
 ## Example
 
@@ -40,18 +40,18 @@ coverage, and focused tests before edits.
 
 ## Hard Stops
 
-- Do not proceed on repo facts that can be inspected but have not been checked.
-- Do not broaden scope beyond the triggering signal.
-- Do not create placeholder guidance, examples, metadata, or documentation.
-- Do not claim completion without evidence that covers this module's checklist.
+- Do not use Implementation Plan without direct routing evidence or a required relation.
+- Do not expand Implementation Plan beyond its stated responsibility.
+- Do not add placeholder Implementation Plan guidance, examples, metadata, resources, or validation.
+- Do not claim Implementation Plan is satisfied without evidence for its checklist.
 
 ## Usage Checklist
 
-- Trigger signal is explicit.
-- Relevant existing convention or memory was checked.
-- Module-specific rules were applied.
-- Artifacts, docs, metadata, or tests affected by the work were updated together.
-- Remaining decisions, risks, or validation gaps are stated.
+- Implementation Plan trigger evidence is explicit.
+- Implementation Plan source files, project memory, or declared resources were checked.
+- Implementation Plan workflow rules were applied at the relevant artifact boundary.
+- Implementation Plan docs, metadata, tests, or generated artifacts affected by the change were updated together.
+- Implementation Plan risks, rejected paths, and validation gaps are stated.
 
 ## Cross References
 

@@ -16,16 +16,16 @@ Use Nx graph metadata and tags as executable architecture, not paperwork to bypa
 
 1. Inspect the current repository context and existing project memory before changing behavior or guidance.
 2. State the concrete responsibility, interface, artifact, or user-visible behavior this module governs.
-3. Apply the module-specific rules: Inspect tags and graph; keep dependency direction valid; fix ownership instead of weakening rules; update tags only when responsibility changes.
+3. Inspect tags and graph; keep dependency direction valid; fix ownership instead of weakening rules; update tags only when responsibility changes.
 4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
 5. Stop when the task needs a decision outside this module's scope and route to the appropriate governance module.
 
 ## Quality Gates
 
-- Guidance is grounded in current files or explicit user intent.
-- Output uses project vocabulary and the recruitment example universe when examples are needed.
-- Decisions are recorded in the right artifact instead of hidden in transient chat.
-- Validation or acceptance criteria are named when the module changes behavior or workflow.
+- Nx Module Boundaries guidance names the inspected source, request evidence, or declared resource that triggered it.
+- Nx Module Boundaries output uses this workspace's terms and the recruitment example universe only when examples are needed.
+- Nx Module Boundaries decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
+- Nx Module Boundaries validation names the command, artifact, review proof, or acceptance check that covers its risk.
 
 ## Example
 
@@ -34,18 +34,18 @@ point, not another feature project internals.
 
 ## Hard Stops
 
-- Do not proceed on repo facts that can be inspected but have not been checked.
-- Do not broaden scope beyond the triggering signal.
-- Do not create placeholder guidance, examples, metadata, or documentation.
-- Do not claim completion without evidence that covers this module's checklist.
+- Do not use Nx Module Boundaries without direct routing evidence or a required relation.
+- Do not expand Nx Module Boundaries beyond its stated responsibility.
+- Do not add placeholder Nx Module Boundaries guidance, examples, metadata, resources, or validation.
+- Do not claim Nx Module Boundaries is satisfied without evidence for its checklist.
 
 ## Usage Checklist
 
-- Trigger signal is explicit.
-- Relevant existing convention or memory was checked.
-- Module-specific rules were applied.
-- Artifacts, docs, metadata, or tests affected by the work were updated together.
-- Remaining decisions, risks, or validation gaps are stated.
+- Nx Module Boundaries trigger evidence is explicit.
+- Nx Module Boundaries source files, project memory, or declared resources were checked.
+- Nx Module Boundaries workflow rules were applied at the relevant artifact boundary.
+- Nx Module Boundaries docs, metadata, tests, or generated artifacts affected by the change were updated together.
+- Nx Module Boundaries risks, rejected paths, and validation gaps are stated.
 
 ## Cross References
 

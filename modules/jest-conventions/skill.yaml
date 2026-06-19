@@ -8,11 +8,11 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Test runner surface evidence for jest-conventions: Jest, Vitest, or Playwright config, tests, setup, mocks, fixtures, locators, or assertions change"
+      - "Jest evidence for jest-conventions: jest.config, Jest setup file, Jest mock, custom matcher, testEnvironment, __mocks__, or test file intended for Jest"
     medium:
-      - "Jest, Vitest, or Playwright config, tests, setup, mocks, fixtures, locators, or assertions change"
+      - "Jest config, setup, mocks, matchers, environments, fixtures, or assertions"
     weak:
-      - "Test runner surface"
+      - "Jest surface"
 
 relations:
   before: []

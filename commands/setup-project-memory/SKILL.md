@@ -36,10 +36,10 @@ tracker rules.
 
 ## Quality Gates
 
-- Guidance is grounded in current files or explicit user intent.
-- Output uses project vocabulary and the recruitment example universe when examples are needed.
-- Decisions are recorded in the right artifact instead of hidden in transient chat.
-- Validation or acceptance criteria are named when the command skill changes behavior or workflow.
+- Project-memory guidance names the inspected files or explicit user decision that justifies each memory artifact.
+- Glossary, ADR, out-of-scope, and tracker guidance uses this workspace's terms and the recruitment example universe only when examples are needed.
+- Durable decisions are written to the selected memory artifact instead of remaining only in chat.
+- Validation names the created or verified memory file and any unresolved user decision.
 
 ## Example
 
@@ -55,11 +55,11 @@ strings project-specific.
 
 ## Usage Checklist
 
-- Trigger signal is explicit.
-- Relevant existing convention or memory was checked.
-- Command-specific rules were applied.
+- Direct `$setup-project-memory` invocation is explicit.
+- Existing glossary, ADR, out-of-scope, tracker, and label memory was checked.
+- Project-memory setup rules were applied to the selected artifact shape.
 - Artifacts, docs, metadata, or tests affected by the work were updated together.
-- Remaining decisions, risks, or validation gaps are stated.
+- Remaining memory decisions, ownership questions, or validation gaps are stated.
 
 ## Cross References
 

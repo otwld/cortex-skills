@@ -28,8 +28,7 @@ relations:
 uses: []
 
 resources:
-  references:
-    - "legacy-extracted-patterns.md"
+  references: []
   scripts: []
   templates: []
   assets: []

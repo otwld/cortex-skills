@@ -8,11 +8,11 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Architecture drift or deepening evidence for architecture-deepening-review: Broad churn, shallow modules, weak seams, poor locality, or low leverage"
+      - "Architecture deepening evidence for architecture-deepening-review: shallow module, too-wide interface, weak seam, poor locality, missing test surface, or low leverage abstraction"
     medium:
-      - "Broad churn, shallow modules, weak seams, poor locality, or low leverage"
+      - "Shallow module, too-wide interface, weak seam, poor locality, missing test surface, or low leverage abstraction"
     weak:
-      - "Architecture drift or deepening"
+      - "Architecture deepening"
 
 relations:
   before: []

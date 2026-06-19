@@ -8,11 +8,11 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Completion or publishing evidence for review-gate: Success claim, commit, push, pull request, merge, release, or finish decision"
+      - "Review gate evidence for review-gate: independent review, completed diff audit, quality gate, requested changes, risk review before merge, or review this implementation"
     medium:
-      - "Success claim, commit, push, pull request, merge, release, or finish decision"
+      - "Independent review, completed change audit, quality gate, requested changes, risk review, or review before merge"
     weak:
-      - "Completion or publishing"
+      - "Review gate"
 
 relations:
   before: []

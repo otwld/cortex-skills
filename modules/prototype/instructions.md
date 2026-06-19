@@ -21,16 +21,16 @@ afterward.
 
 1. Inspect the current repository context and existing project memory before changing behavior or guidance.
 2. State the concrete responsibility, interface, artifact, or user-visible behavior this module governs.
-3. Apply the module-specific rules: State the question; choose logic or UI branch; isolate throwaway shell; use in-memory state; provide one command; capture the answer.
+3. State the question; choose logic or UI branch; isolate throwaway shell; use in-memory state; provide one command; capture the answer.
 4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
 5. Stop when the task needs a decision outside this module's scope and route to the appropriate governance module.
 
 ## Quality Gates
 
-- Guidance is grounded in current files or explicit user intent.
-- Output uses project vocabulary and the recruitment example universe when examples are needed.
-- Decisions are recorded in the right artifact instead of hidden in transient chat.
-- Validation or acceptance criteria are named when the module changes behavior or workflow.
+- Prototype guidance names the inspected source, request evidence, or declared resource that triggered it.
+- Prototype output uses this workspace's terms and the recruitment example universe only when examples are needed.
+- Prototype decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
+- Prototype validation names the command, artifact, review proof, or acceptance check that covers its risk.
 
 ## Example
 
@@ -39,18 +39,18 @@ before the real module design.
 
 ## Hard Stops
 
-- Do not proceed on repo facts that can be inspected but have not been checked.
-- Do not broaden scope beyond the triggering signal.
-- Do not create placeholder guidance, examples, metadata, or documentation.
-- Do not claim completion without evidence that covers this module's checklist.
+- Do not use Prototype without direct routing evidence or a required relation.
+- Do not expand Prototype beyond its stated responsibility.
+- Do not add placeholder Prototype guidance, examples, metadata, resources, or validation.
+- Do not claim Prototype is satisfied without evidence for its checklist.
 
 ## Usage Checklist
 
-- Trigger signal is explicit.
-- Relevant existing convention or memory was checked.
-- Module-specific rules were applied.
-- Artifacts, docs, metadata, or tests affected by the work were updated together.
-- Remaining decisions, risks, or validation gaps are stated.
+- Prototype trigger evidence is explicit.
+- Prototype source files, project memory, or declared resources were checked.
+- Prototype workflow rules were applied at the relevant artifact boundary.
+- Prototype docs, metadata, tests, or generated artifacts affected by the change were updated together.
+- Prototype risks, rejected paths, and validation gaps are stated.
 
 ## Cross References
 

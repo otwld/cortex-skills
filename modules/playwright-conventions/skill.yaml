@@ -8,11 +8,11 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Test runner surface evidence for playwright-conventions: Jest, Vitest, or Playwright config, tests, setup, mocks, fixtures, locators, or assertions change"
+      - "Playwright evidence for playwright-conventions: playwright.config, browser project, page fixture, locator assertion, setup project, trace, or end-to-end test"
     medium:
-      - "Jest, Vitest, or Playwright config, tests, setup, mocks, fixtures, locators, or assertions change"
+      - "Playwright config, browser project, fixtures, locators, assertions, setup project, or end-to-end test"
     weak:
-      - "Test runner surface"
+      - "Playwright surface"
 
 relations:
   before: []
