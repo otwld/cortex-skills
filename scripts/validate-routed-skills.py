@@ -41,8 +41,21 @@ PROHIBITED_PROSE_PHRASES = (
     'Module-specific rules were applied.',
     'Remaining decisions, risks, or validation gaps are stated.',
 )
+PROHIBITED_PROSE_PATTERNS = (
+    re.compile(r'^- .+ guidance names the inspected source, request evidence, or declared resource that triggered it\.$'),
+    re.compile(r"^- .+ output uses this workspace's terms and the recruitment example universe only when examples are needed\.$"),
+    re.compile(r'^- .+ decisions land in metadata, instructions, resources, tests, or docs when they change future behavior\.$'),
+    re.compile(r'^- .+ validation names the command, artifact, review proof, or acceptance check that covers its risk\.$'),
+    re.compile(r'^- .+ trigger evidence is explicit\.$'),
+    re.compile(r'^- .+ source files, project memory, or declared resources were checked\.$'),
+    re.compile(r'^- .+ workflow rules were applied at the relevant artifact boundary\.$'),
+    re.compile(r'^- .+ docs, metadata, tests, or generated artifacts affected by the change were updated together\.$'),
+    re.compile(r'^- .+ risks, rejected paths, and validation gaps are stated\.$'),
+)
 NON_CONTENT_BULLET_SECTIONS = {'Reference Routing', 'Cross References'}
 DUPLICATED_BULLET_LIMIT = 2
+AGENT_METADATA_INTERFACE_FIELDS = ('display_name', 'short_description', 'default_prompt')
+BROAD_STRONG_SIGNAL_TERMS = ('final response',)
 
 
 def load_rebuild_module() -> Any:
@@ -100,6 +113,19 @@ def before_chain(name: str, before_map: dict[str, list[str]], stack: list[str], 
 def connected(left: Any, right: Any) -> bool:
     """Return whether two artifacts are directly related."""
     return right.name in relation_targets(left) or left.name in relation_targets(right)
+
+
+def normalized_signal_text(value: str) -> str:
+    """Normalize a signal or artifact name for routing-quality comparisons."""
+    return re.sub(r'[^a-z0-9]+', ' ', value.lower()).strip()
+
+
+def signal_category(value: str) -> str | None:
+    """Return a strong-signal category prefix when the signal declares one."""
+    if ':' not in value:
+        return None
+    category = normalized_signal_text(value.split(':', 1)[0])
+    return category or None
 
 
 def resource_candidates(artifact: Any, workspace: Any, kind: str, value: str) -> list[Path]:
@@ -179,6 +205,19 @@ def validate_active_routed_module_content(
     for artifact in active_routed:
         if not any(artifact.signals[key] for key in rebuild.SIGNAL_KEYS):
             errors.append(f'{artifact.name}: active routed module has no routing signals')
+        for signal in artifact.signals['strong']:
+            normalized_signal = normalized_signal_text(signal)
+            normalized_name = normalized_signal_text(artifact.name)
+            if re.search(rf'\bevidence for {re.escape(artifact.name)}:', signal, re.IGNORECASE):
+                errors.append(f'{artifact.name}: strong signal uses mechanical evidence prefix: {signal}')
+            if normalized_signal == normalized_name:
+                errors.append(f'{artifact.name}: strong signal only restates module name: {signal}')
+            for term in BROAD_STRONG_SIGNAL_TERMS:
+                if term in signal.lower():
+                    errors.append(f'{artifact.name}: strong signal uses broad lifecycle wording: {signal}')
+        for signal in artifact.signals['weak']:
+            if normalized_signal_text(signal) == normalized_signal_text(artifact.name):
+                errors.append(f'{artifact.name}: weak signal only restates module name: {signal}')
 
         instruction_path = artifact.directory / instructions_name
         if not instruction_path.exists():
@@ -190,6 +229,9 @@ def validate_active_routed_module_content(
         for phrase in PROHIBITED_PROSE_PHRASES:
             if phrase in text:
                 errors.append(f'{rel(workspace.root, instruction_path)}: template prose remains: {phrase}')
+        for line_number, line in enumerate(text.splitlines(), 1):
+            if any(pattern.fullmatch(line) for pattern in PROHIBITED_PROSE_PATTERNS):
+                errors.append(f'{rel(workspace.root, instruction_path)}:{line_number}: title-swapped boilerplate remains')
 
         section = ''
         for line_number, line in enumerate(text.splitlines(), 1):
@@ -264,10 +306,15 @@ def validate_agent_skill_folder(root: Path, skill_dir: Path, expected_name: str,
         return
     try:
         metadata = rebuild.load_yaml(agent_metadata)
+        interface = rebuild.as_mapping(metadata.get('interface'), 'agents.openai.yaml.interface')
         policy = rebuild.as_mapping(metadata.get('policy'), 'agents.openai.yaml.policy')
     except Exception as error:
         errors.append(f'{rel(root, agent_metadata)}: {error}')
     else:
+        for field in AGENT_METADATA_INTERFACE_FIELDS:
+            value = interface.get(field)
+            if not isinstance(value, str) or not value.strip():
+                errors.append(f'{rel(root, agent_metadata)}: interface.{field} must be a non-empty string')
         if policy.get('allow_implicit_invocation') is not False:
             errors.append(f'{rel(root, agent_metadata)}: policy.allow_implicit_invocation must be false')
 
@@ -420,9 +467,13 @@ def validate_workspace(raw_manifest: str | None) -> list[str]:
     ]
     validate_active_routed_module_content(workspace, active_routed, instructions_name, errors)
     signals: dict[str, list[Any]] = {}
+    signal_categories: dict[str, list[Any]] = {}
     for artifact in active_routed:
         for signal in artifact.signals['strong']:
             signals.setdefault(signal.strip().lower(), []).append(artifact)
+            category = signal_category(signal)
+            if category is not None:
+                signal_categories.setdefault(category, []).append(artifact)
     for signal, artifacts_with_signal in signals.items():
         if len(artifacts_with_signal) < 2:
             continue
@@ -432,6 +483,15 @@ def validate_workspace(raw_manifest: str | None) -> list[str]:
         ]
         if unrelated:
             errors.append(f'duplicate strong signal across unrelated modules: {signal}')
+    for category, artifacts_with_category in signal_categories.items():
+        if len(artifacts_with_category) < 2:
+            continue
+        unrelated = [
+            artifact.name for artifact in artifacts_with_category
+            if any(not connected(artifact, other) for other in artifacts_with_category if other is not artifact)
+        ]
+        if unrelated:
+            errors.append(f'duplicate strong signal category across unrelated modules: {category}')
 
     shared_root = workspace.root / paths['shared']
     used_shared = {

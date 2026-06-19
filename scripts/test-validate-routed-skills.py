@@ -7,9 +7,11 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import json
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
+AUDIT = SCRIPT_DIR / 'audit-routed-history.py'
 REBUILD = SCRIPT_DIR / 'rebuild-routed-skills.py'
 VALIDATE = SCRIPT_DIR / 'validate-routed-skills.py'
 SETUP_TEMPLATE_ROOT = SCRIPT_DIR.parent / 'commands' / 'setup-routed-skill-workspace' / 'assets' / 'templates'
@@ -408,6 +410,14 @@ def allow_implicit_entry(root: Path) -> None:
     write(root / 'entry' / 'ascend' / 'agents' / 'openai.yaml', agent_metadata(True))
 
 
+def missing_agent_display_name(root: Path) -> None:
+    """Remove required public skill UI metadata."""
+    write(
+        root / 'entry' / 'ascend' / 'agents' / 'openai.yaml',
+        agent_metadata().replace('  display_name: "Ascend"\n', ''),
+    )
+
+
 def add_legacy_entry_instructions(root: Path) -> None:
     """Add a legacy entry instructions file."""
     write(root / 'entry' / 'ascend' / 'instructions.md', instructions('Legacy duplicate.', name='ascend', marker='skill'))
@@ -517,6 +527,8 @@ def generated_always_loaded_module_is_rendered() -> None:
         cascade = (root / 'generated' / 'module-cascade.md').read_text(encoding='utf-8')
         if '## Always Loaded Modules' not in cascade or '| `quality-standard` |' not in cascade:
             raise AssertionError('always-loaded module missing from generated cascade')
+        if 'intent-understanding gate' not in cascade:
+            raise AssertionError('intent-first routing phase missing from generated cascade')
         result = run([sys.executable, str(VALIDATE), str(root / 'routed-skills.yaml')], temp_dir)
         if result.returncode != 0:
             raise AssertionError(f'always-loaded generated output should validate\nstdout:\n{result.stdout}\nstderr:\n{result.stderr}')
@@ -559,6 +571,35 @@ def active_empty_signals(root: Path) -> None:
     write(root / 'modules' / 'module-creation' / 'skill.yaml', module_metadata('module-creation'))
 
 
+def mechanical_strong_signal(root: Path) -> None:
+    """Use a generated-looking strong signal instead of direct routing evidence."""
+    signal = 'Module creation evidence for module-creation: user asks to create a module'
+    write(root / 'modules' / 'module-creation' / 'skill.yaml', module_metadata('module-creation', strong=signal))
+
+
+def restated_strong_signal(root: Path) -> None:
+    """Use a module name as the whole strong signal."""
+    write(root / 'modules' / 'module-creation' / 'skill.yaml', module_metadata('module-creation', strong='module-creation'))
+
+
+def restated_weak_signal(root: Path) -> None:
+    """Use a module name as the whole weak signal."""
+    metadata = module_metadata('module-creation', strong='user asks to create a module')
+    write(root / 'modules' / 'module-creation' / 'skill.yaml', metadata.replace('    weak: []', '    weak:\n      - module-creation'))
+
+
+def duplicate_signal_category(root: Path) -> None:
+    """Reuse the same strong-signal category across unrelated modules."""
+    write(root / 'modules' / 'module-creation' / 'skill.yaml', module_metadata('module-creation', strong='Shared category: user asks to create a module'))
+    write(root / 'modules' / 'quality-standard' / 'skill.yaml', module_metadata('quality-standard', strong='Shared category: user asks for quality gates'))
+
+
+def broad_lifecycle_strong_signal(root: Path) -> None:
+    """Use broad lifecycle wording as direct routing evidence."""
+    signal = 'Completion evidence: final response or success claim exists'
+    write(root / 'modules' / 'module-creation' / 'skill.yaml', module_metadata('module-creation', strong=signal))
+
+
 def legacy_declared_resource(root: Path) -> None:
     """Declare a legacy-only resource as active guidance."""
     write(root / 'modules' / 'module-creation' / 'references' / 'legacy-extracted-patterns.md', '# Legacy\n')
@@ -569,6 +610,13 @@ def template_instruction_prose(root: Path) -> None:
     """Reintroduce template prose into active module instructions."""
     text = (root / 'modules' / 'module-creation' / 'instructions.md').read_text(encoding='utf-8')
     text = text.replace('2. Apply focused module-creation guidance.', '2. Apply the module-specific rules: create modules.')
+    write(root / 'modules' / 'module-creation' / 'instructions.md', text)
+
+
+def title_swapped_boilerplate(root: Path) -> None:
+    """Reintroduce title-swapped checklist prose."""
+    text = (root / 'modules' / 'module-creation' / 'instructions.md').read_text(encoding='utf-8')
+    text = text.replace('- Evidence is direct.', '- Module Creation guidance names the inspected source, request evidence, or declared resource that triggered it.')
     write(root / 'modules' / 'module-creation' / 'instructions.md', text)
 
 
@@ -595,6 +643,48 @@ def orphan_resource(root: Path) -> None:
     write(root / 'modules' / 'module-creation' / 'references' / 'extra.md', '# Extra\n')
 
 
+def audit_history_reports_under_signaled_terms() -> None:
+    """Validate the routing history audit reports missing signal language."""
+    with tempfile.TemporaryDirectory(prefix='routed-skills-') as raw:
+        temp_dir = Path(raw)
+        root = create_workspace(temp_dir)
+        write(
+            root / 'modules' / 'implementation-plan' / 'skill.yaml',
+            module_metadata('implementation-plan', strong='Multi-step work: cross-boundary change'),
+        )
+        write(root / 'modules' / 'implementation-plan' / 'instructions.md', instructions('Implementation Plan', name='implementation-plan'))
+        run([sys.executable, str(REBUILD), str(root / 'routed-skills.yaml')], temp_dir)
+        history = temp_dir / 'history.jsonl'
+        history.write_text(
+            json.dumps({
+                'session_id': 'fixture-session',
+                'ts': 1781890000,
+                'text': '$cortex draft a plan with phases',
+            }) + '\n',
+            encoding='utf-8',
+        )
+        result = run(
+            [
+                sys.executable,
+                str(AUDIT),
+                '--workspace',
+                str(root / 'routed-skills.yaml'),
+                '--history',
+                str(history),
+                '--logs',
+                str(temp_dir / 'missing.sqlite'),
+                '--recent',
+                '10',
+            ],
+            temp_dir,
+        )
+        if result.returncode != 0:
+            raise AssertionError(f'audit history should run\nstdout:\n{result.stdout}\nstderr:\n{result.stderr}')
+        if 'implementation-plan' not in result.stdout or 'draft a plan' not in result.stdout:
+            raise AssertionError(f'audit history missing under-signaled module\nstdout:\n{result.stdout}')
+        print('ok: audit history reports under-signaled terms')
+
+
 def main() -> int:
     """Run routed workspace validator fixtures."""
     expect_success('valid workspace in .skills')
@@ -613,6 +703,7 @@ def main() -> int:
     expect_failure('entry SKILL.md name mismatch fails', mismatch_entry_skill_name, 'does not match metadata')
     expect_failure('entry output marker mismatch fails', wrong_entry_output_marker, 'missing output marker: using skill: ascend')
     expect_failure('entry implicit invocation fails', allow_implicit_entry, 'allow_implicit_invocation must be false')
+    expect_failure('entry missing display name fails', missing_agent_display_name, 'interface.display_name must be a non-empty string')
     expect_failure('legacy entry instructions fail', add_legacy_entry_instructions, 'entry instructions belong in SKILL.md')
     expect_failure('legacy entry openai metadata fails', add_legacy_entry_metadata, 'use agents/openai.yaml instead')
     expect_failure('missing metadata fails', add_missing_metadata_module, 'missing skill.yaml')
@@ -634,12 +725,19 @@ def main() -> int:
     expect_failure('stale generated artifact fails', stale_generated, 'stale generated artifact')
     expect_failure('duplicate strong signal fails', duplicate_signal, 'duplicate strong signal', rebuild_after=True)
     expect_failure('active empty signals fail', active_empty_signals, 'active routed module has no routing signals', rebuild_after=True)
+    expect_failure('mechanical strong signal fails', mechanical_strong_signal, 'strong signal uses mechanical evidence prefix', rebuild_after=True)
+    expect_failure('restated strong signal fails', restated_strong_signal, 'strong signal only restates module name', rebuild_after=True)
+    expect_failure('restated weak signal fails', restated_weak_signal, 'weak signal only restates module name', rebuild_after=True)
+    expect_failure('duplicate strong signal category fails', duplicate_signal_category, 'duplicate strong signal category', rebuild_after=True)
+    expect_failure('broad lifecycle strong signal fails', broad_lifecycle_strong_signal, 'strong signal uses broad lifecycle wording', rebuild_after=True)
     expect_failure('legacy declared resource fails', legacy_declared_resource, 'legacy-only references resource declared', rebuild_after=True)
     expect_failure('template instruction prose fails', template_instruction_prose, 'template prose remains')
+    expect_failure('title-swapped instruction prose fails', title_swapped_boilerplate, 'title-swapped boilerplate remains')
     expect_failure('duplicated instruction bullets fail', duplicated_instruction_bullets, 'duplicated instruction bullet', rebuild_after=True)
     expect_failure('missing required instruction section fails', missing_required_instruction_section, 'missing required instruction section')
     expect_failure('missing resource fails', missing_resource, 'missing references resource', rebuild_after=True)
     expect_failure('orphan resource fails', orphan_resource, 'orphaned references resource')
+    audit_history_reports_under_signaled_terms()
     return 0
 
 
