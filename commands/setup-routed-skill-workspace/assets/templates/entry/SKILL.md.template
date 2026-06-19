@@ -27,13 +27,20 @@ Use the routed workspace metadata as the source of truth:
 ## Workflow
 
 1. Load always-loaded modules listed in the generated cascade.
-2. Inspect the request for direct routing evidence.
-3. Select additional routed modules using the generated cascade.
-4. Expand required `before` relations up to the configured depth cap.
-5. Add `with` modules only when they have independent evidence.
-6. Defer `after` modules until the later phase is relevant.
-7. Reject excluded module combinations.
-8. Use local resources only when a selected module references them.
+2. Run an intent-understanding gate: state the desired outcome, task type,
+   artifact target, known context, constraints, and requested mode.
+3. Inspect the request and relevant files for direct routing evidence; do not
+   ask questions the repository can answer.
+4. Select additional routed modules using the generated cascade, classifying
+   selected, candidate, deferred, and skipped modules when routing is broad or
+   ambiguous.
+5. Ask operator questions only for candidate modules where the answer changes
+   routing, planning, execution, review depth, validation, or durable artifacts.
+6. Expand required `before` relations up to the configured depth cap.
+7. Add `with` modules only when they have independent evidence.
+8. Defer `after` modules until the later phase is relevant.
+9. Reject excluded module combinations.
+10. Use local resources only when a selected module references them.
 
 ## Quality Gates
 
@@ -41,6 +48,8 @@ Use the routed workspace metadata as the source of truth:
 - Modules are hidden behind this entry point.
 - Generated artifacts are derived from module metadata.
 - Routing decisions remain inspectable.
+- Challenge, planning, implementation, and review modules are selected only
+  after the request intent can be stated.
 
 ## Hard Stops
 

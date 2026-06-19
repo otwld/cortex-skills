@@ -8,7 +8,7 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Throwaway design learning evidence for prototype: User wants to prototype, compare UI variants, or test a state model"
+      - "Throwaway design learning: User wants to prototype, compare UI variants, or test a state model"
     medium:
       - "User wants to prototype, compare UI variants, or test a state model"
     weak:

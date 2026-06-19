@@ -8,7 +8,7 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Mongoose persistence evidence for nestjs-mongoose-conventions: Schema, model, repository, aggregation, ObjectId, or persistence DTO changes"
+      - "Mongoose persistence: Schema, model, repository, aggregation, ObjectId, or persistence DTO changes"
     medium:
       - "Schema, model, repository, aggregation, ObjectId, or persistence DTO changes"
     weak:

@@ -8,11 +8,11 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Branch completion evidence for branch-completion: commit, push, pull request, merge, release, publish, close branch, discard branch, or finish branch request"
+      - "Branch completion: commit, push, pull request, merge, release, publish, close branch, discard branch, or finish branch request"
     medium:
       - "Commit, push, pull request, merge, release, publish, branch cleanup, or finish branch decision"
     weak:
-      - "Branch completion"
+      - "Branch finish request"
 
 relations:
   before:

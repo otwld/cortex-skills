@@ -8,9 +8,9 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Playwright evidence for playwright-conventions: playwright.config, browser project, page fixture, locator assertion, setup project, trace, or end-to-end test"
+      - "Playwright E2E: playwright.config, browser project, page fixture, locator assertion, setup project, trace, integration snapshot, or end-to-end test changes"
     medium:
-      - "Playwright config, browser project, fixtures, locators, assertions, setup project, or end-to-end test"
+      - "Playwright config, browser project, fixtures, locators, assertions, setup project, integration snapshot, e2e, or end-to-end test"
     weak:
       - "Playwright surface"
 

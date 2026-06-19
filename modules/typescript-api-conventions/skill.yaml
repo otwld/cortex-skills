@@ -8,9 +8,9 @@ routing:
   priority: 5
   signals:
     strong:
-      - "TypeScript public API evidence for typescript-api-conventions: Exported type, DTO, contract, generic, or reusable type surface changes"
+      - "TypeScript API surface: exported type, interface, abstract class, DTO, contract, generic, or reusable type surface changes"
     medium:
-      - "Exported type, DTO, contract, generic, or reusable type surface changes"
+      - "Exported type, interface, abstracts, DTO, contract, generic, or reusable type surface changes"
     weak:
       - "TypeScript public API"
 

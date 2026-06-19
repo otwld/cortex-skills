@@ -29,10 +29,9 @@ of guessing.
 
 ## Quality Gates
 
-- Systematic Debugging guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Systematic Debugging output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Systematic Debugging decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Systematic Debugging validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Investigation reproduces or localizes the failure before proposing a fix.
+- Hypotheses are ranked and probed one variable at a time with evidence preserved.
+- The final fix removes temporary instrumentation and adds a regression guard when behavior changed.
 
 ## Example
 
@@ -41,18 +40,15 @@ failure rate is debuggable before changing query code.
 
 ## Hard Stops
 
-- Do not use Systematic Debugging without direct routing evidence or a required relation.
-- Do not expand Systematic Debugging beyond its stated responsibility.
-- Do not add placeholder Systematic Debugging guidance, examples, metadata, resources, or validation.
-- Do not claim Systematic Debugging is satisfied without evidence for its checklist.
+- Do not patch symptoms before reproducing, reducing, or localizing the failure.
+- Do not change several suspected causes at once unless the evidence already isolates them together.
+- Do not leave temporary diagnostics in production code or tests without making them permanent observability.
 
 ## Usage Checklist
 
-- Systematic Debugging trigger evidence is explicit.
-- Systematic Debugging source files, project memory, or declared resources were checked.
-- Systematic Debugging workflow rules were applied at the relevant artifact boundary.
-- Systematic Debugging docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Systematic Debugging risks, rejected paths, and validation gaps are stated.
+- Failure evidence, reproduction path, and relevant logs or traces were collected.
+- Root-cause hypothesis was tested with the smallest useful probe.
+- Fix, regression guard, and cleanup of instrumentation were verified.
 
 ## Cross References
 

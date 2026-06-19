@@ -8,7 +8,7 @@ routing:
   priority: 5
   signals:
     strong:
-      - "TypeScript implementation evidence for typescript-code-style: TypeScript source, tests, imports, classes, functions, or strict typing are edited"
+      - "TypeScript implementation: TypeScript source, tests, imports, classes, functions, or strict typing are edited"
     medium:
       - "TypeScript source, tests, imports, classes, functions, or strict typing are edited"
     weak:

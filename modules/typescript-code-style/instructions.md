@@ -31,10 +31,9 @@ types, and useful comments.
 
 ## Quality Gates
 
-- TypeScript Code Style guidance names the inspected source, request evidence, or declared resource that triggered it.
-- TypeScript Code Style output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- TypeScript Code Style decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- TypeScript Code Style validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- TypeScript code follows local tooling, strict narrowing, public imports, and explicit module boundaries.
+- Casts, non-null assertions, and dynamic access are justified by framework or runtime constraints.
+- Comments explain intent, tool constraints, or non-obvious invariants rather than syntax.
 
 ## Example
 
@@ -43,18 +42,15 @@ casting form data.
 
 ## Hard Stops
 
-- Do not use TypeScript Code Style without direct routing evidence or a required relation.
-- Do not expand TypeScript Code Style beyond its stated responsibility.
-- Do not add placeholder TypeScript Code Style guidance, examples, metadata, resources, or validation.
-- Do not claim TypeScript Code Style is satisfied without evidence for its checklist.
+- Do not bypass strict typing with any, broad casts, or bracket access when a typed path exists.
+- Do not import through private files when a public entry point owns the symbol.
+- Do not add style-only churn unrelated to the touched TypeScript behavior.
 
 ## Usage Checklist
 
-- TypeScript Code Style trigger evidence is explicit.
-- TypeScript Code Style source files, project memory, or declared resources were checked.
-- TypeScript Code Style workflow rules were applied at the relevant artifact boundary.
-- TypeScript Code Style docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- TypeScript Code Style risks, rejected paths, and validation gaps are stated.
+- Local TypeScript, import, naming, and tooling conventions were inspected.
+- Narrowing, casts, comments, and public entry-point usage were checked.
+- Typecheck, lint, or focused test evidence was recorded.
 
 ## Cross References
 

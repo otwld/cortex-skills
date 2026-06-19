@@ -23,10 +23,9 @@ contracts.
 
 ## Quality Gates
 
-- Storybook Angular Conventions guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Storybook Angular Conventions output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Storybook Angular Conventions decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Storybook Angular Conventions validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Angular stories match standalone or module-based setup used by the component under test.
+- Args, providers, mocks, and decorators are typed and scoped to the story boundary.
+- Recruitment-domain story data covers meaningful Angular states without live services.
 
 ## Example
 
@@ -35,18 +34,15 @@ stable Candidate fixtures.
 
 ## Hard Stops
 
-- Do not use Storybook Angular Conventions without direct routing evidence or a required relation.
-- Do not expand Storybook Angular Conventions beyond its stated responsibility.
-- Do not add placeholder Storybook Angular Conventions guidance, examples, metadata, resources, or validation.
-- Do not claim Storybook Angular Conventions is satisfied without evidence for its checklist.
+- Do not use Storybook providers to hide missing component dependencies or incorrect Angular setup.
+- Do not make Angular stories depend on live APIs, random data, or shared mutable state.
+- Do not duplicate Storybook core guidance instead of addressing Angular-specific setup.
 
 ## Usage Checklist
 
-- Storybook Angular Conventions trigger evidence is explicit.
-- Storybook Angular Conventions source files, project memory, or declared resources were checked.
-- Storybook Angular Conventions workflow rules were applied at the relevant artifact boundary.
-- Storybook Angular Conventions docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Storybook Angular Conventions risks, rejected paths, and validation gaps are stated.
+- Component setup mode, providers, args, and dependency mocks were inspected.
+- Stories cover meaningful Angular states with deterministic recruitment data.
+- Storybook command, visual check, or validation gap was named.
 
 ## Cross References
 

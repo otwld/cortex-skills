@@ -8,7 +8,7 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Bricks workflow evidence for bricks: bricks init, source, install, merge, diff, status, doctor, contribute, installed brick, source worktree, or consumer edit propagation"
+      - "Bricks workflow: bricks init, source, install, merge, diff, status, doctor, contribute, installed brick, source worktree, or consumer edit propagation"
     medium:
       - "Bricks command, installed brick state, consumer workspace copy, source worktree, or contribute workflow"
     weak:

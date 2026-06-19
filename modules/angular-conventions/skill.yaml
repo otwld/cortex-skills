@@ -8,7 +8,7 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Angular surface evidence for angular-conventions: Angular component, directive, pipe, service, template, form, input, output, or DI changes"
+      - "Angular surface: Angular component, directive, pipe, service, template, form, input, output, or DI changes"
     medium:
       - "Angular component, directive, pipe, service, template, form, input, output, or DI changes"
     weak:

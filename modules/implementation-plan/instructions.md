@@ -28,10 +28,9 @@ decisions.
 
 ## Quality Gates
 
-- Implementation Plan guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Implementation Plan output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Implementation Plan decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Implementation Plan validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- The plan is decision-complete: scope, interfaces, order, validation, docs, migration, and compatibility impact are fixed.
+- Tasks are ordered so tests, public seams, generated artifacts, and docs move with the behavior they govern.
+- Assumptions and non-goals are explicit enough that an implementer does not need to choose later.
 
 ## Example
 
@@ -40,18 +39,15 @@ coverage, and focused tests before edits.
 
 ## Hard Stops
 
-- Do not use Implementation Plan without direct routing evidence or a required relation.
-- Do not expand Implementation Plan beyond its stated responsibility.
-- Do not add placeholder Implementation Plan guidance, examples, metadata, resources, or validation.
-- Do not claim Implementation Plan is satisfied without evidence for its checklist.
+- Do not publish a plan that still contains product, API, ownership, or validation decisions for the implementer.
+- Do not bury migration or compatibility risk under generic refactor language.
+- Do not skip tests and documentation planning when behavior or public surfaces change.
 
 ## Usage Checklist
 
-- Implementation Plan trigger evidence is explicit.
-- Implementation Plan source files, project memory, or declared resources were checked.
-- Implementation Plan workflow rules were applied at the relevant artifact boundary.
-- Implementation Plan docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Implementation Plan risks, rejected paths, and validation gaps are stated.
+- Requirements, non-goals, interfaces, and affected modules were mapped.
+- Implementation order includes tests, docs, generated outputs, and validation checkpoints.
+- Assumptions, accepted defaults, and residual risks are explicit.
 
 ## Cross References
 

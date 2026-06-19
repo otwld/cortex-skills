@@ -27,10 +27,9 @@ ownership, leverage, and locality.
 
 ## Quality Gates
 
-- Extraction Decision guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Extraction Decision output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Extraction Decision decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Extraction Decision validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Extraction candidates are based on stable shared behavior, not coincidental shape or two similar files.
+- Ownership, dependency direction, and public API surface are decided before moving code.
+- The extraction reduces duplication or responsibility spread without creating a shallow utility module.
 
 ## Example
 
@@ -39,18 +38,15 @@ mapper; similar Candidate cards may remain local if behavior differs.
 
 ## Hard Stops
 
-- Do not use Extraction Decision without direct routing evidence or a required relation.
-- Do not expand Extraction Decision beyond its stated responsibility.
-- Do not add placeholder Extraction Decision guidance, examples, metadata, resources, or validation.
-- Do not claim Extraction Decision is satisfied without evidence for its checklist.
+- Do not extract just because code is repeated once or names look similar.
+- Do not create shared/common/helper modules before identifying an owner and consumers.
+- Do not invert dependency direction to make extraction convenient.
 
 ## Usage Checklist
 
-- Extraction Decision trigger evidence is explicit.
-- Extraction Decision source files, project memory, or declared resources were checked.
-- Extraction Decision workflow rules were applied at the relevant artifact boundary.
-- Extraction Decision docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Extraction Decision risks, rejected paths, and validation gaps are stated.
+- Consumers, duplicated behavior, and variation points were inventoried.
+- Owner, API, and dependency direction were chosen before extraction.
+- Extraction recommendation names code to move, keep local, or delete.
 
 ## Cross References
 

@@ -27,10 +27,9 @@ guidance.
 
 ## Quality Gates
 
-- Skill Evolution guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Skill Evolution output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Skill Evolution decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Skill Evolution validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Skill changes respond to repeated agent failure, durable workflow need, or a concrete doctrine gap.
+- Existing modules, signals, relations, resources, and generated artifacts are compared before creating new surface area.
+- Metadata, instructions, templates, references, generated views, and validation stay synchronized.
 
 ## Example
 
@@ -39,18 +38,15 @@ reference, not scattered planning bullets.
 
 ## Hard Stops
 
-- Do not use Skill Evolution without direct routing evidence or a required relation.
-- Do not expand Skill Evolution beyond its stated responsibility.
-- Do not add placeholder Skill Evolution guidance, examples, metadata, resources, or validation.
-- Do not claim Skill Evolution is satisfied without evidence for its checklist.
+- Do not create a new module when updating or narrowing an existing one solves the gap.
+- Do not add guidance that only documents a one-off preference or current task detail.
+- Do not change skill behavior without updating routing metadata and validation expectations together.
 
 ## Usage Checklist
 
-- Skill Evolution trigger evidence is explicit.
-- Skill Evolution source files, project memory, or declared resources were checked.
-- Skill Evolution workflow rules were applied at the relevant artifact boundary.
-- Skill Evolution docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Skill Evolution risks, rejected paths, and validation gaps are stated.
+- Recurring pattern or failure mode was identified from concrete evidence.
+- Overlap with existing modules and resources was checked before editing.
+- Metadata, instructions, generated artifacts, tests, and docs were updated as one change.
 
 ## Cross References
 

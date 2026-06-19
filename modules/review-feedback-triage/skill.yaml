@@ -8,7 +8,7 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Review feedback evidence for review-feedback-triage: User, CI, reviewer, or agent gives technical feedback"
+      - "Review feedback: User, CI, reviewer, or agent gives technical feedback"
     medium:
       - "User, CI, reviewer, or agent gives technical feedback"
     weak:

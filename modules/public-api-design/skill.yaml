@@ -8,11 +8,11 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Library surface evidence for public-api-design: New library, shared code, public export, entry point, contract, or import path change"
+      - "Public API design: exports, entry points, SDK contracts, DTOs, reusable abstractions, package boundaries, or consumer import paths change"
     medium:
-      - "New library, shared code, public export, entry point, contract, or import path change"
+      - "Public API, export, entry point, SDK, abstracts, contract, DTO, reusable abstraction, package boundary, or import path changes"
     weak:
-      - "Library surface"
+      - "Public API change"
 
 relations:
   before:

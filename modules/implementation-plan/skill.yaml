@@ -1,5 +1,5 @@
 name: implementation-plan
-description: "Internal Cortex module applied when requirements are known and the work is multi-step, cross-boundary, migration-related, high-risk, or needs a written execution path before edits."
+description: "Internal Cortex module applied when requirements are known and the user asks to draft a plan, full plan, phases, roadmap, migration path, or written execution sequence before edits."
 activation: routed
 visibility: hidden
 status: active
@@ -8,11 +8,11 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Multi-step work evidence for implementation-plan: Cross-boundary change, migration, risky refactor, or substantial implementation"
+      - "Implementation planning: user asks to draft a plan, plan to change something, full plan, phases, roadmap, migration path, or execution sequence for known work"
     medium:
-      - "Cross-boundary change, migration, risky refactor, or substantial implementation"
+      - "Draft a plan, plan to, full plan, phases, roadmap, cross-boundary change, migration, risky refactor, or substantial implementation"
     weak:
-      - "Multi-step work"
+      - "Plan drafting"
 
 relations:
   before: []

@@ -50,6 +50,24 @@ $cortex finish this branch: verify, review, and prepare the PR
 Good `$cortex` requests usually say what kind of work is happening and what risk
 you care about. The router uses that evidence to select modules.
 
+## The Problem It Solves
+
+Coding agents fail most often when they load the wrong context, preserve old
+architecture to avoid hard changes, skip validation, or treat every task as a
+generic implementation prompt. Cortex turns those concerns into a governed
+workspace:
+
+- routing evidence lives in `skill.yaml`;
+- runtime behavior lives in `instructions.md` or public command `SKILL.md`
+  files;
+- generated catalog, graph, and cascade files make selection reviewable;
+- validation rejects stale generated output, hidden resource coupling, weak
+  public skill metadata, noisy routing signals, and boilerplate module gates.
+
+The result is a smaller active context with clearer obligations: choose the
+right module, follow its gates, update docs and tests with code, and prove the
+claim before saying the work is done.
+
 ## Use It When
 
 Reach for Cortex when the task has shape, risk, or ambiguity:
@@ -74,6 +92,7 @@ The public skill is only the front door. The work happens in hidden modules.
 your request
   -> $cortex entry
   -> always-loaded modules
+  -> intent-understanding gate
   -> routing signals
   -> required before modules
   -> evidence-backed with modules
@@ -85,13 +104,18 @@ Routing follows a few plain rules:
 
 - Cortex always loads `no-transitional-architecture` before evidence-selected
   modules so cleanup and implementation work do not preserve shims by default.
-- Strong signals beat medium signals; medium signals beat weak signals.
+- The entry states intent before challenge, planning, implementation, or review
+  modules are selected.
+- Strong signals describe direct request or repository evidence and beat medium
+  signals; medium signals beat weak signals.
 - `before` modules run first when another module depends on them.
 - `with` modules join only when they have their own evidence.
 - `after` modules wait until that phase is actually relevant.
 - `excludes` and `replaces` keep bad combinations out.
 - Command skills are public but direct-invocation only; they do not join
   normal `$cortex` routing.
+- Public entry and command skills keep `policy.allow_implicit_invocation: false`
+  and include complete `agents/openai.yaml` display metadata.
 
 The generated routing views are checked into the repo so you can inspect how the
 library thinks:
@@ -216,6 +240,15 @@ Cortex covers reusable engineering workflows across:
 
 See the generated [skill catalog](generated/SKILL_CATALOG.md) for every module
 and command skill.
+
+## Quality Bar
+
+Every active routed module must earn its place in the cascade. Strong signals
+must be readable evidence, not generated phrases like `evidence for
+<module-name>`, and instructions must contain module-specific gates, hard
+stops, and checklists. The validator also checks generated freshness, relation
+targets, resource declarations, public skill metadata, output markers, duplicate
+strong signals, and command-skill exclusion from routed selection.
 
 ## Command Skills
 

@@ -10,7 +10,7 @@ using module: code-documentation
 
 ## Overview
 
-Make documentation part of the code change rather than a cleanup pass.
+Make documentation impact part of planned code-touching work rather than a cleanup pass.
 
 ## Reference Routing
 
@@ -21,16 +21,16 @@ Make documentation part of the code change rather than a cleanup pass.
 
 1. Inspect the current repository context and existing project memory before changing behavior or guidance.
 2. State the concrete responsibility, interface, artifact, or user-visible behavior this module governs.
-3. Document touched public or reusable surfaces; move docs with code; update Storybook or MDX where that is the docs surface; avoid placeholder comments.
-4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
-5. Stop when the task needs a decision outside this module's scope and route to the appropriate governance module.
+3. For work that creates, edits, moves, deletes, splits, refactors, or materially reviews code, identify the documentation impact before implementation or review conclusions.
+4. Document touched public or reusable surfaces; move docs with code; update Storybook or MDX where that is the docs surface; avoid placeholder comments.
+5. Prefer durable artifacts, public seams, and validation evidence over local convenience.
+6. Stop when the task needs a decision outside this module's scope and route to the appropriate governance module.
 
 ## Quality Gates
 
-- Code Documentation guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Code Documentation output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Code Documentation decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Code Documentation validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Touched public, exported, reusable, or user-facing surfaces have current JSDoc, TSDoc, Storybook, MDX, or usage notes.
+- Documentation describes behavior, invariants, and consumer expectations instead of restating implementation lines.
+- Examples and fixtures use the recruitment universe unless the user explicitly provides another domain.
 
 ## Example
 
@@ -39,18 +39,16 @@ instead of commenting each template line.
 
 ## Hard Stops
 
-- Do not use Code Documentation without direct routing evidence or a required relation.
-- Do not expand Code Documentation beyond its stated responsibility.
-- Do not add placeholder Code Documentation guidance, examples, metadata, resources, or validation.
-- Do not claim Code Documentation is satisfied without evidence for its checklist.
+- Do not treat documentation as a final optional cleanup after code has changed.
+- Do not add placeholder comments, generic examples, or stale docs to satisfy a checkbox.
+- Do not move or split code without moving or updating its owning documentation surface.
+- Do not treat conceptual code discussion with no planned code touch as documentation work.
 
 ## Usage Checklist
 
-- Code Documentation trigger evidence is explicit.
-- Code Documentation source files, project memory, or declared resources were checked.
-- Code Documentation workflow rules were applied at the relevant artifact boundary.
-- Code Documentation docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Code Documentation risks, rejected paths, and validation gaps are stated.
+- Every touched public or reusable surface was checked for documentation impact.
+- Docs, stories, examples, and fixtures were updated alongside the behavior they explain.
+- Documentation validation or the remaining documentation gap was named.
 
 ## Cross References
 

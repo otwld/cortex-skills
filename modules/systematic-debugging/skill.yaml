@@ -8,7 +8,7 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Failure investigation evidence for systematic-debugging: Failing test, build failure, bug, performance problem, or unexpected behavior"
+      - "Failure investigation: Failing test, build failure, bug, performance problem, or unexpected behavior"
     medium:
       - "Failing test, build failure, bug, performance problem, or unexpected behavior"
     weak:

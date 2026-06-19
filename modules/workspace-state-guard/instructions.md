@@ -22,10 +22,9 @@ Protect user work and control generated-write scope before risky changes.
 
 ## Quality Gates
 
-- Workspace State Guard guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Workspace State Guard output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Workspace State Guard decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Workspace State Guard validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Dirty tree, ignored files, generated outputs, and user-owned changes are classified before edits or cleanup.
+- Commands avoid destructive git operations unless the user explicitly requested that exact action.
+- Baseline failures are separated from failures introduced by the current work.
 
 ## Example
 
@@ -34,18 +33,15 @@ them as task-relevant and leave unrelated README edits alone.
 
 ## Hard Stops
 
-- Do not use Workspace State Guard without direct routing evidence or a required relation.
-- Do not expand Workspace State Guard beyond its stated responsibility.
-- Do not add placeholder Workspace State Guard guidance, examples, metadata, resources, or validation.
-- Do not claim Workspace State Guard is satisfied without evidence for its checklist.
+- Do not revert, reset, overwrite, or clean files you did not create without explicit user permission.
+- Do not hide unrelated dirty files by staging or formatting them with task changes.
+- Do not report validation failures as new if the baseline already failed before edits.
 
 ## Usage Checklist
 
-- Workspace State Guard trigger evidence is explicit.
-- Workspace State Guard source files, project memory, or declared resources were checked.
-- Workspace State Guard workflow rules were applied at the relevant artifact boundary.
-- Workspace State Guard docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Workspace State Guard risks, rejected paths, and validation gaps are stated.
+- Git status and relevant generated or ignored paths were inspected.
+- User-owned changes were preserved and unrelated files left alone.
+- Baseline failures, current-work failures, and cleanup decisions were reported separately.
 
 ## Cross References
 

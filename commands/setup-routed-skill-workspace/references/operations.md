@@ -46,7 +46,8 @@ generated output.
    <module-name>` output marker.
 4. Keep new modules in `status: draft` until at least one concrete routing
    signal and module-specific instruction behavior are written; active modules
-   with empty signals fail validation.
+   with empty signals, generated-looking strong signals, or title-swapped
+   instruction gates fail validation.
 5. If overlap is high, create a challenge report that recommends create, merge,
    update, or reject.
 6. Rebuild generated artifacts.
@@ -84,8 +85,9 @@ python3 scripts/validate-routed-skills.py routed-skills.yaml
 
 Validation checks structure, metadata, relations, resources, routing
 constraints, active module reachability, instruction prose quality, generated
-freshness, command skill exclusion, duplicate strong signals, and public
-agent-skill shapes.
+freshness, command skill exclusion, duplicate strong signals, direct strong
+signal wording, public agent-skill shapes, and required public
+`agents/openai.yaml` interface metadata.
 
 ## Propose Merge
 

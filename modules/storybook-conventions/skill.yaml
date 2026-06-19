@@ -8,7 +8,7 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Storybook surface evidence for storybook-conventions: Story, MDX docs, preview setup, addon, mock, or story organization changes"
+      - "Storybook surface: Story, MDX docs, preview setup, addon, mock, or story organization changes"
     medium:
       - "Story, MDX docs, preview setup, addon, mock, or story organization changes"
     weak:

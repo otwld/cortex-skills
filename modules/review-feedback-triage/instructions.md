@@ -22,10 +22,9 @@ Classify feedback before applying it so correct principles do not become bad pat
 
 ## Quality Gates
 
-- Review Feedback Triage guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Review Feedback Triage output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Review Feedback Triage decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Review Feedback Triage validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Each review item is verified against code, tests, CI, or docs before action.
+- Feedback is classified as apply, adapt, defer, reject, or needs clarification with evidence.
+- Responses address the reviewer's technical concern without introducing unrelated cleanup.
 
 ## Example
 
@@ -34,18 +33,15 @@ before extraction.
 
 ## Hard Stops
 
-- Do not use Review Feedback Triage without direct routing evidence or a required relation.
-- Do not expand Review Feedback Triage beyond its stated responsibility.
-- Do not add placeholder Review Feedback Triage guidance, examples, metadata, resources, or validation.
-- Do not claim Review Feedback Triage is satisfied without evidence for its checklist.
+- Do not implement reviewer suggestions blindly when the claim is unverified or outdated.
+- Do not reject feedback without citing the code, test, or requirement that contradicts it.
+- Do not expand triage into unrelated refactors while addressing requested changes.
 
 ## Usage Checklist
 
-- Review Feedback Triage trigger evidence is explicit.
-- Review Feedback Triage source files, project memory, or declared resources were checked.
-- Review Feedback Triage workflow rules were applied at the relevant artifact boundary.
-- Review Feedback Triage docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Review Feedback Triage risks, rejected paths, and validation gaps are stated.
+- Review context, changed files, and relevant validation were inspected.
+- Each item received an evidence-backed disposition.
+- Applied fixes and reviewer responses were verified before completion.
 
 ## Cross References
 

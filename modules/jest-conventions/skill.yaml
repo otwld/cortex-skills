@@ -8,7 +8,7 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Jest evidence for jest-conventions: jest.config, Jest setup file, Jest mock, custom matcher, testEnvironment, __mocks__, or test file intended for Jest"
+      - "Jest: jest.config, Jest setup file, Jest mock, custom matcher, testEnvironment, __mocks__, or test file intended for Jest"
     medium:
       - "Jest config, setup, mocks, matchers, environments, fixtures, or assertions"
     weak:

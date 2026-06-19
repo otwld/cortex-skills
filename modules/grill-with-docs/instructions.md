@@ -23,16 +23,16 @@ memory.
 
 1. Inspect the current repository context and existing project memory before changing behavior or guidance.
 2. State the concrete responsibility, interface, artifact, or user-visible behavior this module governs.
-3. Read memory first; explore facts instead of asking; ask one decision-changing question at a time; update glossary terms inline; offer ADRs sparingly.
-4. Prefer durable artifacts, public seams, and validation evidence over local convenience.
-5. Stop when the task needs a decision outside this module's scope and route to the appropriate governance module.
+3. Confirm the intent, plan, artifact, vocabulary, or decision being challenged before asking challenge questions.
+4. Read memory first; explore facts instead of asking; ask one decision-changing question at a time; update glossary terms inline; offer ADRs sparingly.
+5. Prefer durable artifacts, public seams, and validation evidence over local convenience.
+6. Stop when the task needs a decision outside this module's scope and route to the appropriate governance module.
 
 ## Quality Gates
 
-- Grill With Docs guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Grill With Docs output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Grill With Docs decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Grill With Docs validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Questions are grounded in existing memory, glossary terms, ADRs, docs, or source facts.
+- Each question changes the decision, locks an assumption, or exposes a meaningful tradeoff.
+- Durable vocabulary or decision changes are routed to glossary, ADR, or memory artifacts.
 
 ## Example
 
@@ -41,18 +41,17 @@ rejected, then record the chosen term.
 
 ## Hard Stops
 
-- Do not use Grill With Docs without direct routing evidence or a required relation.
-- Do not expand Grill With Docs beyond its stated responsibility.
-- Do not add placeholder Grill With Docs guidance, examples, metadata, resources, or validation.
-- Do not claim Grill With Docs is satisfied without evidence for its checklist.
+- Do not grill the user on facts that source files or project memory can answer.
+- Do not challenge an undefined request; route design-intake first when intent is unclear.
+- Do not ask broad interview-style question lists when one decision blocks progress.
+- Do not create ADR or glossary churn for routine implementation choices.
 
 ## Usage Checklist
 
-- Grill With Docs trigger evidence is explicit.
-- Grill With Docs source files, project memory, or declared resources were checked.
-- Grill With Docs workflow rules were applied at the relevant artifact boundary.
-- Grill With Docs docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Grill With Docs risks, rejected paths, and validation gaps are stated.
+- Project memory and relevant docs were checked before questioning.
+- The thing being challenged was stated before questions began.
+- Questions were limited to decision-changing gaps.
+- New durable terms or decisions were assigned to the correct memory artifact.
 
 ## Cross References
 

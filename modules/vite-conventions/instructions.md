@@ -22,10 +22,9 @@ Treat Vite config as a build contract for dev speed and published output.
 
 ## Quality Gates
 
-- Vite Conventions guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Vite Conventions output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Vite Conventions decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Vite Conventions validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Vite aliases, plugins, library builds, source maps, and externals match the package's public entry points.
+- Plugin ordering and environment-specific config are documented when behavior depends on them.
+- Dependencies are bundled or externalized intentionally for apps versus libraries.
 
 ## Example
 
@@ -34,18 +33,15 @@ library output.
 
 ## Hard Stops
 
-- Do not use Vite Conventions without direct routing evidence or a required relation.
-- Do not expand Vite Conventions beyond its stated responsibility.
-- Do not add placeholder Vite Conventions guidance, examples, metadata, resources, or validation.
-- Do not claim Vite Conventions is satisfied without evidence for its checklist.
+- Do not add aliases that bypass library public APIs or Nx/module boundaries.
+- Do not bundle peer dependencies into library output without naming the consumer impact.
+- Do not change plugin order, sourcemaps, or dev-server behavior without a validation path.
 
 ## Usage Checklist
 
-- Vite Conventions trigger evidence is explicit.
-- Vite Conventions source files, project memory, or declared resources were checked.
-- Vite Conventions workflow rules were applied at the relevant artifact boundary.
-- Vite Conventions docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Vite Conventions risks, rejected paths, and validation gaps are stated.
+- Vite config, aliases, plugins, build output, and dependency mode were inspected.
+- Entry points, externals, source maps, and plugin order remain intentional.
+- Build, dev-server, or source-map validation was run or blocked explicitly.
 
 ## Cross References
 

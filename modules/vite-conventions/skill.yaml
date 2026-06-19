@@ -8,7 +8,7 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Vite surface evidence for vite-conventions: Vite config, library build, alias, plugin, source map, externalization, or dev server changes"
+      - "Vite surface: Vite config, library build, alias, plugin, source map, externalization, or dev server changes"
     medium:
       - "Vite config, library build, alias, plugin, source map, externalization, or dev server changes"
     weak:

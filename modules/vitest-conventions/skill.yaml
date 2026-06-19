@@ -8,7 +8,7 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Vitest evidence for vitest-conventions: vitest.config, Vite-integrated test setup, vi.fn, vi.mock, import.meta.vitest, or test file intended for Vitest"
+      - "Vitest: vitest.config, Vite-integrated test setup, vi.fn, vi.mock, import.meta.vitest, or test file intended for Vitest"
     medium:
       - "Vitest config, Vite-integrated tests, vi mocks, environments, timers, fixtures, or assertions"
     weak:

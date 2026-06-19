@@ -1,5 +1,5 @@
 name: completion-verification
-description: "Internal Cortex module applied before success claims, final responses, commits, pushes, pull requests, task completion, or publishing decisions."
+description: "Internal Cortex module applied before explicit success claims, done claims, acceptance evidence, task completion, commits, pushes, pull requests, or publishing decisions."
 activation: routed
 visibility: hidden
 status: active
@@ -8,11 +8,11 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Completion verification evidence for completion-verification: final response, success claim, acceptance criteria, validation proof, done claim, or task completion evidence"
+      - "Completion claim: user asks for done status, success claim, acceptance evidence, validation proof, task completion, or release readiness"
     medium:
-      - "Final response, success claim, validation proof, acceptance criteria, completion evidence, or done claim"
+      - "Done claim, success claim, validation proof, acceptance evidence, completion evidence, or release readiness"
     weak:
-      - "Completion verification"
+      - "Completion claim"
 
 relations:
   before: []

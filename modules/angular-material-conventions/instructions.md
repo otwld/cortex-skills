@@ -23,10 +23,9 @@ boundaries.
 
 ## Quality Gates
 
-- Angular Material And CDK Conventions guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Angular Material And CDK Conventions output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Angular Material And CDK Conventions decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Angular Material And CDK Conventions validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Material and CDK usage imports only the APIs needed for the visible interaction.
+- Focus, keyboard flow, labels, density, and overlay behavior are preserved or intentionally changed.
+- Theme and bundle effects are explicit when a shared UI surface gains Material dependencies.
 
 ## Example
 
@@ -35,18 +34,15 @@ instead of custom keyboard traps.
 
 ## Hard Stops
 
-- Do not use Angular Material And CDK Conventions without direct routing evidence or a required relation.
-- Do not expand Angular Material And CDK Conventions beyond its stated responsibility.
-- Do not add placeholder Angular Material And CDK Conventions guidance, examples, metadata, resources, or validation.
-- Do not claim Angular Material And CDK Conventions is satisfied without evidence for its checklist.
+- Do not add a Material component when a CDK primitive or existing local component is the real owner.
+- Do not ship dialogs, menus, overlays, or form controls without keyboard and focus checks.
+- Do not broaden shared UI dependencies without naming the bundle and theming impact.
 
 ## Usage Checklist
 
-- Angular Material And CDK Conventions trigger evidence is explicit.
-- Angular Material And CDK Conventions source files, project memory, or declared resources were checked.
-- Angular Material And CDK Conventions workflow rules were applied at the relevant artifact boundary.
-- Angular Material And CDK Conventions docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Angular Material And CDK Conventions risks, rejected paths, and validation gaps are stated.
+- Material or CDK trigger evidence was tied to a concrete component or interaction.
+- Accessibility, density, theming, and overlay implications were reviewed.
+- Bundle or dependency impact was recorded for shared surfaces.
 
 ## Cross References
 

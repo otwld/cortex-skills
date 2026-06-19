@@ -23,10 +23,9 @@ commits.
 
 ## Quality Gates
 
-- Diary guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Diary output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Diary decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Diary validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Diary entries capture decisions, validation, blockers, and handoff context without exposing secrets.
+- Logged facts point to durable artifacts or commands when future agents need to verify them.
+- The entry type matches the user request: summary, handoff, decision log, or validation record.
 
 ## Example
 
@@ -35,18 +34,15 @@ copying it.
 
 ## Hard Stops
 
-- Do not use Diary without direct routing evidence or a required relation.
-- Do not expand Diary beyond its stated responsibility.
-- Do not add placeholder Diary guidance, examples, metadata, resources, or validation.
-- Do not claim Diary is satisfied without evidence for its checklist.
+- Do not store sensitive credentials, private tokens, or unnecessary personal data in work history.
+- Do not write a diary entry when the user only asked for an immediate answer.
+- Do not record unverified assumptions as durable project truth.
 
 ## Usage Checklist
 
-- Diary trigger evidence is explicit.
-- Diary source files, project memory, or declared resources were checked.
-- Diary workflow rules were applied at the relevant artifact boundary.
-- Diary docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Diary risks, rejected paths, and validation gaps are stated.
+- Requested log type and destination were identified.
+- Scope, decisions, validation, blockers, and next steps were recorded where relevant.
+- Sensitive data and unverifiable claims were omitted or clearly qualified.
 
 ## Cross References
 

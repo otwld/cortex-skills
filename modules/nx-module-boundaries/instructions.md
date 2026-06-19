@@ -22,10 +22,9 @@ Use Nx graph metadata and tags as executable architecture, not paperwork to bypa
 
 ## Quality Gates
 
-- Nx Module Boundaries guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Nx Module Boundaries output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Nx Module Boundaries decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Nx Module Boundaries validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Tags, dependency constraints, and project relationships preserve intended ownership direction.
+- Boundary fixes change ownership or imports before weakening lint rules.
+- New projects or moves include matching tags, exports, and dependency validation.
 
 ## Example
 
@@ -34,18 +33,15 @@ point, not another feature project internals.
 
 ## Hard Stops
 
-- Do not use Nx Module Boundaries without direct routing evidence or a required relation.
-- Do not expand Nx Module Boundaries beyond its stated responsibility.
-- Do not add placeholder Nx Module Boundaries guidance, examples, metadata, resources, or validation.
-- Do not claim Nx Module Boundaries is satisfied without evidence for its checklist.
+- Do not silence module-boundary violations by relaxing rules before finding the ownership mismatch.
+- Do not add tags that describe desired access rather than actual project responsibility.
+- Do not introduce imports that bypass public entry points or project graph constraints.
 
 ## Usage Checklist
 
-- Nx Module Boundaries trigger evidence is explicit.
-- Nx Module Boundaries source files, project memory, or declared resources were checked.
-- Nx Module Boundaries workflow rules were applied at the relevant artifact boundary.
-- Nx Module Boundaries docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Nx Module Boundaries risks, rejected paths, and validation gaps are stated.
+- Existing tags, dependency constraints, and graph edges were inspected.
+- Boundary changes preserve or intentionally correct dependency direction.
+- Nx lint, graph, or affected validation was named.
 
 ## Cross References
 

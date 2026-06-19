@@ -8,7 +8,7 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Documentation or examples evidence for example-universe-enforcer: JSDoc, TSDoc, public docs, examples, stories, fixtures, payloads, or illustrative data change"
+      - "Documentation or examples: JSDoc, TSDoc, public docs, examples, stories, fixtures, payloads, or illustrative data change"
     medium:
       - "JSDoc, TSDoc, public docs, examples, stories, fixtures, payloads, or illustrative data change"
     weak:

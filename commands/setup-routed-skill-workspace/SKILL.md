@@ -59,10 +59,14 @@ treat generated catalogs, graphs, and cascades as disposable outputs.
   only, and generated artifacts are derived from metadata.
 - Routing remains reviewable through strong, medium, and weak signals plus
   priority and explicit relations.
-- Active routed modules have at least one routing signal; draft modules may
-  remain incomplete while trigger evidence is still being designed.
+- Active routed modules have at least one direct routing signal; draft modules
+  may remain incomplete while trigger evidence is still being designed.
+- Active module gates, hard stops, and checklists are concrete to the module
+  responsibility rather than title-swapped scaffold text.
 - Shared behavior is named through `uses` or resources; no implicit inheritance
   or hidden coupling is introduced.
+- Public entry and command skills include complete `agents/openai.yaml`
+  interface metadata and keep implicit invocation disabled.
 - Generic scaffolds start with the public entry and user-requested modules only;
   Cortex-specific always-loaded modules are not copied into new workspaces by default.
 - Validation evidence is current when claiming that a routed workspace is ready.

@@ -23,10 +23,9 @@ ownership.
 
 ## Quality Gates
 
-- NestJS Conventions guidance names the inspected source, request evidence, or declared resource that triggered it.
-- NestJS Conventions output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- NestJS Conventions decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- NestJS Conventions validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- NestJS controllers stay transport-focused while providers own application behavior.
+- Validation pipes, guards, interceptors, and tokens sit at explicit framework boundaries.
+- Runtime and bootstrap changes preserve module ownership and testable provider seams.
 
 ## Example
 
@@ -35,18 +34,15 @@ logic to an Application intake provider.
 
 ## Hard Stops
 
-- Do not use NestJS Conventions without direct routing evidence or a required relation.
-- Do not expand NestJS Conventions beyond its stated responsibility.
-- Do not add placeholder NestJS Conventions guidance, examples, metadata, resources, or validation.
-- Do not claim NestJS Conventions is satisfied without evidence for its checklist.
+- Do not place business behavior in controllers to avoid provider or service design.
+- Do not make implicit provider tokens when adapters or implementations can vary.
+- Do not bypass NestJS validation or lifecycle boundaries with ad hoc runtime wiring.
 
 ## Usage Checklist
 
-- NestJS Conventions trigger evidence is explicit.
-- NestJS Conventions source files, project memory, or declared resources were checked.
-- NestJS Conventions workflow rules were applied at the relevant artifact boundary.
-- NestJS Conventions docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- NestJS Conventions risks, rejected paths, and validation gaps are stated.
+- Module, controller, provider, bootstrap, and boundary responsibilities were inspected.
+- Transport, validation, guard, interceptor, and provider roles are separated.
+- NestJS tests, docs, or runtime validation were named for changed behavior.
 
 ## Cross References
 

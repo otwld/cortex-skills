@@ -23,10 +23,9 @@ of convenience.
 
 ## Quality Gates
 
-- Library Placement Decision guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Library Placement Decision output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Library Placement Decision decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Library Placement Decision validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- New or moved code has a named domain, integration, feature, UI, utility, or adapter owner.
+- Placement preserves existing dependency direction, tags, entry points, and package responsibilities.
+- Mixed responsibilities are split or kept local rather than hidden in a shared library.
 
 ## Example
 
@@ -35,18 +34,15 @@ a page-specific ranking panel stays in the feature.
 
 ## Hard Stops
 
-- Do not use Library Placement Decision without direct routing evidence or a required relation.
-- Do not expand Library Placement Decision beyond its stated responsibility.
-- Do not add placeholder Library Placement Decision guidance, examples, metadata, resources, or validation.
-- Do not claim Library Placement Decision is satisfied without evidence for its checklist.
+- Do not create a shared library before proving stable ownership and consumers.
+- Do not move code across a boundary to avoid updating imports or tests.
+- Do not weaken module boundaries when the real problem is misplaced ownership.
 
 ## Usage Checklist
 
-- Library Placement Decision trigger evidence is explicit.
-- Library Placement Decision source files, project memory, or declared resources were checked.
-- Library Placement Decision workflow rules were applied at the relevant artifact boundary.
-- Library Placement Decision docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Library Placement Decision risks, rejected paths, and validation gaps are stated.
+- Existing owners, project graph, tags, and public entry points were inspected.
+- Responsibility class and dependency direction were chosen before file moves.
+- Placement decision includes exports, tests, docs, and boundary validation impact.
 
 ## Cross References
 

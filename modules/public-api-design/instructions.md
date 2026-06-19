@@ -22,10 +22,9 @@ Keep public surfaces explicit, small, stable, typed, and documented as contracts
 
 ## Quality Gates
 
-- Public API Design guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Public API Design output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Public API Design decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Public API Design validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- The owning package or module is chosen before exports, DTOs, contracts, or import paths are added.
+- Public symbols encode supported states and invariants with explicit types and documentation.
+- Migration impact is named when changing exports, entry points, or shared contracts.
 
 ## Example
 
@@ -34,18 +33,15 @@ rejectionReason on every result.
 
 ## Hard Stops
 
-- Do not use Public API Design without direct routing evidence or a required relation.
-- Do not expand Public API Design beyond its stated responsibility.
-- Do not add placeholder Public API Design guidance, examples, metadata, resources, or validation.
-- Do not claim Public API Design is satisfied without evidence for its checklist.
+- Do not export implementation details because another file currently wants them.
+- Do not use optional-field state bags where a discriminated contract would describe valid states.
+- Do not change public import paths without naming consumers and migration validation.
 
 ## Usage Checklist
 
-- Public API Design trigger evidence is explicit.
-- Public API Design source files, project memory, or declared resources were checked.
-- Public API Design workflow rules were applied at the relevant artifact boundary.
-- Public API Design docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Public API Design risks, rejected paths, and validation gaps are stated.
+- Owner, consumers, exports, and entry points were inspected before API design.
+- States, invariants, naming, and documentation are explicit in the public surface.
+- Consumer updates, migration notes, and validation were included or ruled out.
 
 ## Cross References
 

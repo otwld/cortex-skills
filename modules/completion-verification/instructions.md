@@ -23,10 +23,9 @@ requirement.
 
 ## Quality Gates
 
-- Completion Verification guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Completion Verification output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Completion Verification decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Completion Verification validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Completion claims map each user requirement to fresh evidence, not memory of earlier commands.
+- Validation proof includes command results, inspected artifacts, or explicit blocked checks.
+- Residual risks and unverified areas are reported before saying the task is complete.
 
 ## Example
 
@@ -35,18 +34,15 @@ references, catalog, graph, and tests exist.
 
 ## Hard Stops
 
-- Do not use Completion Verification without direct routing evidence or a required relation.
-- Do not expand Completion Verification beyond its stated responsibility.
-- Do not add placeholder Completion Verification guidance, examples, metadata, resources, or validation.
-- Do not claim Completion Verification is satisfied without evidence for its checklist.
+- Do not claim success from stale output, assumptions, or partial validation.
+- Do not collapse multiple requirements into a single vague pass statement.
+- Do not hide skipped checks; name why they were skipped and what risk remains.
 
 ## Usage Checklist
 
-- Completion Verification trigger evidence is explicit.
-- Completion Verification source files, project memory, or declared resources were checked.
-- Completion Verification workflow rules were applied at the relevant artifact boundary.
-- Completion Verification docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Completion Verification risks, rejected paths, and validation gaps are stated.
+- Requirements were derived from the latest user request and inspected work.
+- Fresh proof was collected for each requirement or gap.
+- Final response distinguishes completed work from remaining risk.
 
 ## Cross References
 

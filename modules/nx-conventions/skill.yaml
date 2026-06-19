@@ -8,11 +8,11 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Monorepo structure evidence for nx-conventions: Workspace graph, metadata, tags, boundaries, generators, or inferred targets matter"
+      - "Nx workspace configuration: nx.json, project.json, workspace targets, generators, executors, inferred tasks, or project graph behavior changes"
     medium:
-      - "Workspace graph, metadata, tags, boundaries, generators, or inferred targets matter"
+      - "Nx config, workspace graph, project metadata, generate, generators, executors, inferred targets, or project targets change"
     weak:
-      - "Monorepo structure"
+      - "Nx workspace config"
 
 relations:
   before: []

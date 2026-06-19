@@ -22,10 +22,9 @@ Treat query integration as a cache identity and data-contract concern.
 
 ## Quality Gates
 
-- Angular TanStack Query Conventions guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Angular TanStack Query Conventions output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Angular TanStack Query Conventions decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Angular TanStack Query Conventions validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Query keys include every variable that changes the server result or cache partition.
+- Skippable inputs, pagination, mutation side effects, and invalidation rules are explicit.
+- Observable and Angular boundaries keep query state consumption predictable for components.
 
 ## Example
 
@@ -34,18 +33,15 @@ each changes results.
 
 ## Hard Stops
 
-- Do not use Angular TanStack Query Conventions without direct routing evidence or a required relation.
-- Do not expand Angular TanStack Query Conventions beyond its stated responsibility.
-- Do not add placeholder Angular TanStack Query Conventions guidance, examples, metadata, resources, or validation.
-- Do not claim Angular TanStack Query Conventions is satisfied without evidence for its checklist.
+- Do not reuse a query key across different inputs or authorization-sensitive result sets.
+- Do not hide disabled-query behavior inside nullable values without a clear skip condition.
+- Do not mutate cache state without naming the affected queries and UI states.
 
 ## Usage Checklist
 
-- Angular TanStack Query Conventions trigger evidence is explicit.
-- Angular TanStack Query Conventions source files, project memory, or declared resources were checked.
-- Angular TanStack Query Conventions workflow rules were applied at the relevant artifact boundary.
-- Angular TanStack Query Conventions docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Angular TanStack Query Conventions risks, rejected paths, and validation gaps are stated.
+- Query key shape was checked against all data-changing inputs.
+- Skip, pagination, mutation, and cache invalidation behavior were specified.
+- Component consumption and public API effects were reviewed together.
 
 ## Cross References
 

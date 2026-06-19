@@ -8,11 +8,11 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Written plan execution evidence for plan-execution: Plan exists and no design decision remains open"
+      - "Plan execution: user asks to implement this plan, implement the plan, execute a written plan, or continue a decision-complete plan"
     medium:
-      - "Plan exists and no design decision remains open"
+      - "/goal, implement this plan, implement the plan, execute the plan, or plan exists with no design decision remaining"
     weak:
-      - "Written plan execution"
+      - "Plan execution request"
 
 relations:
   before:

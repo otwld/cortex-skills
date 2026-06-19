@@ -8,7 +8,7 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Vue surface evidence for vue-conventions: Vue component, Composition API, script setup, prop, emit, slot, or component naming changes"
+      - "Vue surface: Vue component, Composition API, script setup, prop, emit, slot, or component naming changes"
     medium:
       - "Vue component, Composition API, script setup, prop, emit, slot, or component naming changes"
     weak:

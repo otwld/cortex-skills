@@ -22,10 +22,9 @@ Review major work before publishing, starting with requirement fit before code q
 
 ## Quality Gates
 
-- Review Gate guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Review Gate output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Review Gate decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Review Gate validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Review starts from requirements and diff scope before style or preference issues.
+- Findings identify correctness, test, API, docs, boundary, or regression risk with file evidence.
+- Resolved findings are rechecked after fixes rather than assumed closed.
 
 ## Example
 
@@ -34,18 +33,15 @@ not just Markdown formatting.
 
 ## Hard Stops
 
-- Do not use Review Gate without direct routing evidence or a required relation.
-- Do not expand Review Gate beyond its stated responsibility.
-- Do not add placeholder Review Gate guidance, examples, metadata, resources, or validation.
-- Do not claim Review Gate is satisfied without evidence for its checklist.
+- Do not approve major work without checking requirement fit and validation coverage.
+- Do not report vague concerns that cannot guide a fix.
+- Do not mix unrelated improvement ideas into blocking review findings.
 
 ## Usage Checklist
 
-- Review Gate trigger evidence is explicit.
-- Review Gate source files, project memory, or declared resources were checked.
-- Review Gate workflow rules were applied at the relevant artifact boundary.
-- Review Gate docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Review Gate risks, rejected paths, and validation gaps are stated.
+- Requirements, diff, tests, docs, APIs, and boundaries were reviewed in that order.
+- Findings are severity-ranked and tied to concrete evidence.
+- Fixes or accepted residual risks were revalidated before final review output.
 
 ## Cross References
 

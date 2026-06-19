@@ -8,7 +8,7 @@ routing:
   priority: 5
   signals:
     strong:
-      - "RxJS surface evidence for rxjs-conventions: Observable, operator, subject, subscription, multicasting, or cleanup changes"
+      - "RxJS surface: Observable, operator, subject, subscription, multicasting, or cleanup changes"
     medium:
       - "Observable, operator, subject, subscription, multicasting, or cleanup changes"
     weak:

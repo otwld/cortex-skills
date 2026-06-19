@@ -82,8 +82,9 @@ frontmatter (`name` and `description`) plus the runtime routing instructions
 for the entry. Do not create a separate `instructions.md` for the public entry;
 that duplicates the `SKILL.md` body and creates drift risk.
 
-`agents/openai.yaml` is UI metadata. Explicit-only routed workspace entries
-must set `policy.allow_implicit_invocation: false`.
+`agents/openai.yaml` is UI metadata. Public entry and command skills must set
+`interface.display_name`, `interface.short_description`,
+`interface.default_prompt`, and `policy.allow_implicit_invocation: false`.
 
 Entry metadata:
 
@@ -150,8 +151,11 @@ Command skills live under `commands/`, use `activation: explicit`, are public,
 direct-invocation only, and are excluded from routing.
 
 Active routed modules must have at least one strong, medium, or weak routing
-signal. Draft routed modules may keep empty signals while their trigger evidence
-is still being designed, but they should not be listed in `routing.always`.
+signal. Strong signals describe direct request or repository evidence; do not
+use generated wording such as `evidence for <module>` or a signal that only
+repeats the module name. Draft routed modules may keep empty signals while their
+trigger evidence is still being designed, but they should not be listed in
+`routing.always`.
 
 ## Command Skills
 
@@ -200,22 +204,30 @@ instructions must use these sections after the marker:
 ```
 
 Do not duplicate every routing signal in prose. Keep routing evidence in
-metadata and execution behavior in instructions.
+metadata and execution behavior in instructions. Active module quality gates,
+hard stops, and usage checklist bullets must be concrete to the module's real
+responsibility; title-swapped boilerplate should fail validation.
 
 ## Routing
 
 Routing is heuristic and reviewable:
 
 1. Load modules listed in manifest `routing.always` for every routed request.
-2. Collect direct evidence from the user request and relevant files.
-3. Prefer strong signals over medium signals.
-4. Prefer medium signals over weak signals.
-5. Break ties using `routing.priority`.
-6. Load `before` modules recursively up to `validation.max_before_depth`.
-7. Load `with` modules only when they also have direct evidence.
-8. Suggest `after` modules only when the later phase becomes relevant.
-9. Reject combinations declared in `excludes`.
-10. Prefer modules that declare a matched module in `replaces`.
+2. Run the entry skill intent-understanding gate before selecting challenge,
+   planning, implementation, or review modules.
+3. Collect direct evidence from the user request and relevant files.
+4. Prefer strong signals over medium signals.
+5. Prefer medium signals over weak signals.
+6. Break ties using `routing.priority`.
+7. Classify selected, candidate, deferred, and skipped modules when routing is
+   broad or ambiguous.
+8. Ask operator questions only for candidate modules where the answer changes
+   routing or execution.
+9. Load `before` modules recursively up to `validation.max_before_depth`.
+10. Load `with` modules only when they also have direct evidence.
+11. Suggest `after` modules only when the later phase becomes relevant.
+12. Reject combinations declared in `excludes`.
+13. Prefer modules that declare a matched module in `replaces`.
 
 Manifest `routing.always` is optional. When present, every target must name an
 active hidden routed module. Always-loaded modules may still declare `before`

@@ -22,10 +22,9 @@ Execute the agreed plan against current repository state without silently replan
 
 ## Quality Gates
 
-- Plan Execution guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Plan Execution output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Plan Execution decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Plan Execution validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Execution follows a decision-complete plan without opening new design choices silently.
+- Workspace state, tests, docs, generated artifacts, and review checkpoints are handled at the planned step.
+- Plan drift is reported immediately with the requirement or file that caused it.
 
 ## Example
 
@@ -34,18 +33,15 @@ references.
 
 ## Hard Stops
 
-- Do not use Plan Execution without direct routing evidence or a required relation.
-- Do not expand Plan Execution beyond its stated responsibility.
-- Do not add placeholder Plan Execution guidance, examples, metadata, resources, or validation.
-- Do not claim Plan Execution is satisfied without evidence for its checklist.
+- Do not execute a plan that leaves API, ownership, or validation decisions unresolved.
+- Do not skip planned validation because an earlier step appeared low risk.
+- Do not absorb unrelated dirty-tree changes into plan execution.
 
 ## Usage Checklist
 
-- Plan Execution trigger evidence is explicit.
-- Plan Execution source files, project memory, or declared resources were checked.
-- Plan Execution workflow rules were applied at the relevant artifact boundary.
-- Plan Execution docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Plan Execution risks, rejected paths, and validation gaps are stated.
+- Plan requirements and workspace state were rechecked before edits.
+- Tasks were completed in order with tests, docs, and generated outputs kept together.
+- Plan drift, blockers, and validation evidence were reported as they appeared.
 
 ## Cross References
 

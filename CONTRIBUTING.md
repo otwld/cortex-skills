@@ -10,6 +10,9 @@ documentation updates.
   ecosystem projects.
 - Preserve narrow scope. Prefer small focused artifacts over broad doctrine
   documents.
+- Write strong routing signals as direct request or repository evidence. Do not
+  use generated phrases such as `evidence for <module>` or signals that only
+  restate the module name.
 - Use `skill.yaml` as the source of truth for routing, relations, resources,
   activation, visibility, and generated catalog data.
 - Keep selected-module behavior in `instructions.md`.
@@ -81,8 +84,9 @@ python3 scripts/test-validate-routed-skills.py
 
 The validator checks entry shape, command skill shape, metadata, activation and
 visibility rules, relations, resources, active module reachability, instruction
-prose quality, duplicate strong signals, generated freshness, and routed
-cascade exclusion for command skills.
+prose quality, title-swapped boilerplate, public `agents/openai.yaml` display
+metadata, duplicate strong signals, generated freshness, and routed cascade
+exclusion for command skills.
 
 ## Pull Request Checklist
 
@@ -94,8 +98,10 @@ cascade exclusion for command skills.
 - New or moved resources are declared.
 - Active routed modules have routing signals and no legacy-only declared
   resources.
-- Instruction changes avoid copied template prose and repeated low-value
-  checklist bullets.
+- Instruction changes avoid copied template prose, title-swapped quality gates,
+  and repeated low-value checklist bullets.
+- Public entry and command skills keep complete `agents/openai.yaml` interface
+  metadata and `policy.allow_implicit_invocation: false`.
 - Generated artifacts were rebuilt or verified fresh.
 - New examples use `JobOffer`, `Candidate`, `Application`, `Recruiter`,
   `Company`, `Interview`, `Contract`, or `SkillTag` where examples need domain

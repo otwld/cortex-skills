@@ -8,14 +8,11 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Monorepo structure evidence for library-placement-decision: Workspace graph, metadata, tags, boundaries, generators, or inferred targets matter"
-      - "Library surface evidence for library-placement-decision: New library, shared code, public export, entry point, contract, or import path change"
+      - "Code placement decision: new library, libraries/ path, libs/ path, moved file, extracted logic, shared abstraction, package, app/lib path, or import location decision"
     medium:
-      - "Workspace graph, metadata, tags, boundaries, generators, or inferred targets matter"
-      - "New library, shared code, public export, entry point, contract, or import path change"
+      - "Where code belongs, new package, libraries path, libs path, shared code, moved file, extracted logic, or import location changes"
     weak:
-      - "Monorepo structure"
-      - "Library surface"
+      - "Code placement"
 
 relations:
   before: []

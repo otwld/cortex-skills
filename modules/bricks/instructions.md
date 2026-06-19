@@ -29,10 +29,9 @@ worktrees, and release flows.
 
 ## Quality Gates
 
-- Bricks guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Bricks output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Bricks decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Bricks validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Bricks workflow state is read from the consumer workspace before source or installed-copy decisions.
+- Consumer edits, source worktree changes, and contribution steps stay assigned to the correct side.
+- Bricks doctor, diff, status, merge, or contribution checks back the final recommendation.
 
 ## Example
 
@@ -41,18 +40,15 @@ upstream update.
 
 ## Hard Stops
 
-- Do not use Bricks without direct routing evidence or a required relation.
-- Do not expand Bricks beyond its stated responsibility.
-- Do not add placeholder Bricks guidance, examples, metadata, resources, or validation.
-- Do not claim Bricks is satisfied without evidence for its checklist.
+- Do not manually copy installed brick files when a Bricks command owns the workflow.
+- Do not treat Nx release, npm publish, or source-repo maintainer work as Bricks consumer work without direct evidence.
+- Do not overwrite consumer edits while updating an installed brick or source worktree.
 
 ## Usage Checklist
 
-- Bricks trigger evidence is explicit.
-- Bricks source files, project memory, or declared resources were checked.
-- Bricks workflow rules were applied at the relevant artifact boundary.
-- Bricks docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Bricks risks, rejected paths, and validation gaps are stated.
+- Installed brick state, source worktree, and consumer changes were classified.
+- The selected Bricks workflow command was named before edits or guidance.
+- Doctor, status, diff, merge, or contribution validation was run or blocked explicitly.
 
 ## Cross References
 

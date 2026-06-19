@@ -23,10 +23,9 @@ obvious.
 
 ## Quality Gates
 
-- TypeScript API Conventions guidance names the inspected source, request evidence, or declared resource that triggered it.
-- TypeScript API Conventions output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- TypeScript API Conventions decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- TypeScript API Conventions validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Exported TypeScript types model valid states, invariants, and consumer usage explicitly.
+- Generics, DTOs, contracts, and unions are constrained enough to prevent invalid combinations.
+- Type-only exports, runtime exports, and public entry points remain intentional.
 
 ## Example
 
@@ -35,18 +34,15 @@ safer than one loose object.
 
 ## Hard Stops
 
-- Do not use TypeScript API Conventions without direct routing evidence or a required relation.
-- Do not expand TypeScript API Conventions beyond its stated responsibility.
-- Do not add placeholder TypeScript API Conventions guidance, examples, metadata, resources, or validation.
-- Do not claim TypeScript API Conventions is satisfied without evidence for its checklist.
+- Do not expose broad generics or optional bags that shift invariants to consumers.
+- Do not export private helper types as a workaround for local imports.
+- Do not erase type errors with casts instead of fixing the API contract.
 
 ## Usage Checklist
 
-- TypeScript API Conventions trigger evidence is explicit.
-- TypeScript API Conventions source files, project memory, or declared resources were checked.
-- TypeScript API Conventions workflow rules were applied at the relevant artifact boundary.
-- TypeScript API Conventions docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- TypeScript API Conventions risks, rejected paths, and validation gaps are stated.
+- Consumers, exported symbols, DTOs, generics, and entry points were inspected.
+- States, invariants, and naming are encoded in the type surface.
+- Type checking, docs, and migration impact were validated or named as gaps.
 
 ## Cross References
 

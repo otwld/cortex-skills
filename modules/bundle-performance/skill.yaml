@@ -8,11 +8,11 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Bundle performance evidence for bundle-performance: bundle size, tree-shaking, side effects, optional dependency isolation, entry point broadening, or runtime dependency added to shared UI"
+      - "Bundle performance: bundle size, tree-shaking, side effects, optional dependency isolation, entry point broadening, or runtime dependency added to shared UI"
     medium:
       - "Bundle size, tree-shaking, side effects, optional integration, entry point, or broadly consumed runtime dependency"
     weak:
-      - "Bundle performance"
+      - "Bundle risk"
 
 relations:
   before: []

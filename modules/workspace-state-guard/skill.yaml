@@ -8,9 +8,9 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Workspace collision risk evidence for workspace-state-guard: Substantial edits, cleanup, publish step, or dirty tree risk"
+      - "Workspace collision risk: Substantial edits, cleanup, publish step, or dirty tree risk"
     medium:
-      - "Substantial edits, cleanup, publish step, or dirty tree risk"
+      - "Substantial edits, current changes, cleanup, publish step, or dirty tree risk"
     weak:
       - "Workspace collision risk"
 

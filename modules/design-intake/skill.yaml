@@ -1,5 +1,5 @@
 name: design-intake
-description: "Internal Cortex module applied before ambiguous, creative, behavioral, user-facing, or architecture-affecting work where intent, constraints, or success criteria are not already clear."
+description: "Internal Cortex module applied before ambiguous, creative, behavioral, user-facing, or architecture-affecting work where desired outcome, task type, scope, constraints, or success criteria are not already clear."
 activation: routed
 visibility: hidden
 status: active
@@ -8,11 +8,11 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Ambiguous or creative work evidence for design-intake: Goal, behavior, architecture, or user experience is not clear"
+      - "Intent clarification: desired outcome, what the user wants to do, task type, scope, constraints, audience, or success criteria are not clear before planning or challenge"
     medium:
-      - "Goal, behavior, architecture, or user experience is not clear"
+      - "Goal, understand what I want, what I want to do, behavior, architecture, user experience, audience, scope, or success criteria need clarification"
     weak:
-      - "Ambiguous or creative work"
+      - "Intent clarification"
 
 relations:
   before: []

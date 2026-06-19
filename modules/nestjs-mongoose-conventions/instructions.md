@@ -22,10 +22,9 @@ Keep persistence shape behind a seam so Mongoose details do not leak upward.
 
 ## Quality Gates
 
-- NestJS Mongoose Conventions guidance names the inspected source, request evidence, or declared resource that triggered it.
-- NestJS Mongoose Conventions output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- NestJS Mongoose Conventions decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- NestJS Mongoose Conventions validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Schema, domain model, persistence DTO, and transport contract remain separate where they differ.
+- ObjectId conversion, aggregation typing, and lean/plain return shapes are explicit at persistence boundaries.
+- Repositories expose behavior-oriented methods instead of leaking model internals to callers.
 
 ## Example
 
@@ -34,18 +33,15 @@ hydrated documents.
 
 ## Hard Stops
 
-- Do not use NestJS Mongoose Conventions without direct routing evidence or a required relation.
-- Do not expand NestJS Mongoose Conventions beyond its stated responsibility.
-- Do not add placeholder NestJS Mongoose Conventions guidance, examples, metadata, resources, or validation.
-- Do not claim NestJS Mongoose Conventions is satisfied without evidence for its checklist.
+- Do not pass raw ObjectId or document instances across transport or public API boundaries without a contract.
+- Do not use Mongoose schemas as domain or DTO definitions by default.
+- Do not hide aggregation result shape behind untyped any values.
 
 ## Usage Checklist
 
-- NestJS Mongoose Conventions trigger evidence is explicit.
-- NestJS Mongoose Conventions source files, project memory, or declared resources were checked.
-- NestJS Mongoose Conventions workflow rules were applied at the relevant artifact boundary.
-- NestJS Mongoose Conventions docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- NestJS Mongoose Conventions risks, rejected paths, and validation gaps are stated.
+- Schema, model, repository, ObjectId, and DTO responsibilities were classified.
+- Conversion, aggregation, and return contract typing were checked.
+- Persistence-facing tests or validation were named for changed queries or schemas.
 
 ## Cross References
 

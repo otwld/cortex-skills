@@ -8,7 +8,7 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Architecture deepening evidence for architecture-deepening-review: shallow module, too-wide interface, weak seam, poor locality, missing test surface, or low leverage abstraction"
+      - "Architecture deepening: shallow module, too-wide interface, weak seam, poor locality, missing test surface, or low leverage abstraction"
     medium:
       - "Shallow module, too-wide interface, weak seam, poor locality, missing test surface, or low leverage abstraction"
     weak:

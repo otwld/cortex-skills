@@ -1,5 +1,5 @@
 name: code-documentation
-description: "Internal Cortex module applied whenever code is generated, edited, moved, split, refactored, or materially reviewed, and when public, reusable, or user-facing documentation, Storybook docs, examples, stories, MDX docs, or API usage notes change."
+description: "Internal Cortex module applied whenever a request asks for, accepts, generates, edits, moves, deletes, splits, refactors, or materially reviews code, and when public, reusable, or user-facing documentation, Storybook docs, examples, stories, MDX docs, or API usage notes change."
 activation: routed
 visibility: hidden
 status: active
@@ -8,13 +8,13 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Code edit evidence for code-documentation: Code is generated, edited, moved, split, refactored, or materially reviewed"
-      - "Documentation or examples evidence for code-documentation: JSDoc, TSDoc, public docs, examples, stories, fixtures, payloads, or illustrative data change"
+      - "Planned code touch: User asks for or accepts work that will implement, create, edit, move, delete, split, refactor, or materially review code"
+      - "Documentation or examples: JSDoc, TSDoc, public docs, examples, stories, fixtures, payloads, or illustrative data change"
     medium:
-      - "Code is generated, edited, moved, split, refactored, or materially reviewed"
+      - "Code will be implemented, created, edited, moved, deleted, split, refactored, or materially reviewed"
       - "JSDoc, TSDoc, public docs, examples, stories, fixtures, payloads, or illustrative data change"
     weak:
-      - "Code edit"
+      - "Planned code touch"
       - "Documentation or examples"
 
 relations:

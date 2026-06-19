@@ -8,7 +8,7 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Angular TanStack Query evidence for angular-tanstack-query-conventions: Query key, options, mutation, pagination, or skippable input changes"
+      - "Angular TanStack Query: Query key, options, mutation, pagination, or skippable input changes"
     medium:
       - "Query key, options, mutation, pagination, or skippable input changes"
     weak:

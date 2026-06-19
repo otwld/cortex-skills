@@ -23,10 +23,9 @@ barrels, or heavy optional dependencies.
 
 ## Quality Gates
 
-- Bundle Performance guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Bundle Performance output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Bundle Performance decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Bundle Performance validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Shared entry points stay narrow and preserve tree-shaking for unaffected consumers.
+- Optional integrations remain isolated from core runtime paths unless product behavior requires them.
+- Bundle, dependency, side-effect, and public API tradeoffs are documented when they change.
 
 ## Example
 
@@ -35,18 +34,15 @@ charting dependencies.
 
 ## Hard Stops
 
-- Do not use Bundle Performance without direct routing evidence or a required relation.
-- Do not expand Bundle Performance beyond its stated responsibility.
-- Do not add placeholder Bundle Performance guidance, examples, metadata, resources, or validation.
-- Do not claim Bundle Performance is satisfied without evidence for its checklist.
+- Do not add broad runtime dependencies to shared UI or library roots without naming consumers.
+- Do not hide side effects in barrels, setup files, or default imports.
+- Do not optimize bundle shape by breaking public import paths without an API plan.
 
 ## Usage Checklist
 
-- Bundle Performance trigger evidence is explicit.
-- Bundle Performance source files, project memory, or declared resources were checked.
-- Bundle Performance workflow rules were applied at the relevant artifact boundary.
-- Bundle Performance docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Bundle Performance risks, rejected paths, and validation gaps are stated.
+- Entry point, dependency, side-effect, and optional-integration changes were inspected.
+- Tree-shaking and public import behavior were preserved or intentionally changed.
+- Bundle validation or accepted measurement gap was recorded.
 
 ## Cross References
 

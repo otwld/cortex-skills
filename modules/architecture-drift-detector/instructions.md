@@ -27,10 +27,9 @@ becomes a rewrite.
 
 ## Quality Gates
 
-- Architecture Drift Detector guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Architecture Drift Detector output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Architecture Drift Detector decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Architecture Drift Detector validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Drift claims are tied to concrete churn, ownership spread, dependency direction, or responsibility movement.
+- Risk is scoped to a named module, seam, package, workflow, or project area.
+- The recommendation is a focused review or constraint, not an unbounded rewrite.
 
 ## Example
 
@@ -39,18 +38,15 @@ recommend reviewing the search seam before adding another filter.
 
 ## Hard Stops
 
-- Do not use Architecture Drift Detector without direct routing evidence or a required relation.
-- Do not expand Architecture Drift Detector beyond its stated responsibility.
-- Do not add placeholder Architecture Drift Detector guidance, examples, metadata, resources, or validation.
-- Do not claim Architecture Drift Detector is satisfied without evidence for its checklist.
+- Do not infer architecture drift from file count or personal preference alone.
+- Do not escalate drift without naming the area where ownership or dependency direction is eroding.
+- Do not propose new architecture layers before checking existing owners and boundaries.
 
 ## Usage Checklist
 
-- Architecture Drift Detector trigger evidence is explicit.
-- Architecture Drift Detector source files, project memory, or declared resources were checked.
-- Architecture Drift Detector workflow rules were applied at the relevant artifact boundary.
-- Architecture Drift Detector docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Architecture Drift Detector risks, rejected paths, and validation gaps are stated.
+- Recent changes, current files, or request evidence were inspected for drift signals.
+- Ownership, dependency direction, and repeated-change risk were localized.
+- The next action is a bounded review, constraint, or module-specific fix.
 
 ## Cross References
 

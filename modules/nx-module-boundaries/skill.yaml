@@ -8,11 +8,11 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Monorepo structure evidence for nx-module-boundaries: Workspace graph, metadata, tags, boundaries, generators, or inferred targets matter"
+      - "Nx boundary decision: apps/, libs/, apps, libs, tags, project dependencies, node library, browser runtime boundaries, or module-boundary rules change"
     medium:
-      - "Workspace graph, metadata, tags, boundaries, generators, or inferred targets matter"
+      - "Apps/, libs/, apps, libs, node library, project tags, dependency direction, runtime boundary, or module-boundary rule changes"
     weak:
-      - "Monorepo structure"
+      - "Nx boundary decision"
 
 relations:
   before:

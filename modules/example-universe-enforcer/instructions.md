@@ -26,10 +26,9 @@ Keep examples coherent by using one recruitment agency job board universe.
 
 ## Quality Gates
 
-- Example Universe Enforcer guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Example Universe Enforcer output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Example Universe Enforcer decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Example Universe Enforcer validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Illustrative data uses Candidate, JobOffer, Application, Recruiter, Company, Interview, Contract, or SkillTag coherently.
+- Examples preserve real user-provided domains when they are part of the task context.
+- Fixtures remain small, realistic, and aligned with the behavior being demonstrated.
 
 ## Example
 
@@ -38,18 +37,15 @@ SkillTag consistently.
 
 ## Hard Stops
 
-- Do not use Example Universe Enforcer without direct routing evidence or a required relation.
-- Do not expand Example Universe Enforcer beyond its stated responsibility.
-- Do not add placeholder Example Universe Enforcer guidance, examples, metadata, resources, or validation.
-- Do not claim Example Universe Enforcer is satisfied without evidence for its checklist.
+- Do not introduce Foo, Bar, User, Product, Item, or unrelated sample domains for convenience.
+- Do not replace real project data with recruitment examples when the user supplied concrete data.
+- Do not make examples larger than needed to show the contract or state transition.
 
 ## Usage Checklist
 
-- Example Universe Enforcer trigger evidence is explicit.
-- Example Universe Enforcer source files, project memory, or declared resources were checked.
-- Example Universe Enforcer workflow rules were applied at the relevant artifact boundary.
-- Example Universe Enforcer docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Example Universe Enforcer risks, rejected paths, and validation gaps are stated.
+- Example entities and relationships were checked against the recruitment universe.
+- User-provided domain data was preserved when it was material.
+- Sample payloads, stories, docs, or fixtures remain minimal and behavior-focused.
 
 ## Cross References
 

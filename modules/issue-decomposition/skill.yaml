@@ -8,11 +8,11 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Issue breakdown evidence for issue-decomposition: Plan, PRD, or large request must become vertical slices or briefs"
+      - "Issue decomposition: huge plan, multiple detailed phases, PRD, or large request must become vertical slices, briefs, or implementation units"
     medium:
-      - "Plan, PRD, or large request must become vertical slices or briefs"
+      - "Huge plan, multiple detailed phases, PRD, plan, or large request must become vertical slices or briefs"
     weak:
-      - "Issue breakdown"
+      - "Work decomposition"
 
 relations:
   before: []

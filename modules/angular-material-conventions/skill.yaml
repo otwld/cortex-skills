@@ -8,7 +8,7 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Angular Material or CDK evidence for angular-material-conventions: Material component, CDK utility, overlay, theme, accessibility, or density changes"
+      - "Angular Material or CDK: Material component, CDK utility, overlay, theme, accessibility, or density changes"
     medium:
       - "Material component, CDK utility, overlay, theme, accessibility, or density changes"
     weak:

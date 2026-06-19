@@ -8,11 +8,11 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Delegation evidence for agent-delegation: independent investigations, parallel review passes, isolated implementation briefs, or sub-agent handoff with no shared mutable state"
+      - "Delegation: independent investigations, parallel review passes, isolated implementation briefs, or sub-agent handoff with no shared mutable state"
     medium:
       - "Independent task, parallel investigation, review pass, implementation handoff, or sub-agent coordination"
     weak:
-      - "Agent delegation"
+      - "Delegation request"
 
 relations:
   before: []

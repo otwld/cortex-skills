@@ -29,10 +29,9 @@ contracts.
 
 ## Quality Gates
 
-- Agent Delegation guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Agent Delegation output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Agent Delegation decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Agent Delegation validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Delegated work is independent enough that no worker needs mutable local state from another worker.
+- Each delegation brief names scope, allowed evidence sources, expected output, and integration criteria.
+- Returned findings are inspected before they change the main recommendation or implementation.
 
 ## Example
 
@@ -41,18 +40,15 @@ do not edit the same file.
 
 ## Hard Stops
 
-- Do not use Agent Delegation without direct routing evidence or a required relation.
-- Do not expand Agent Delegation beyond its stated responsibility.
-- Do not add placeholder Agent Delegation guidance, examples, metadata, resources, or validation.
-- Do not claim Agent Delegation is satisfied without evidence for its checklist.
+- Do not delegate work that depends on an unresolved design decision in the main thread.
+- Do not ask parallel workers to edit the same files or rely on each other's uncommitted output.
+- Do not integrate delegated conclusions without checking the cited evidence yourself.
 
 ## Usage Checklist
 
-- Agent Delegation trigger evidence is explicit.
-- Agent Delegation source files, project memory, or declared resources were checked.
-- Agent Delegation workflow rules were applied at the relevant artifact boundary.
-- Agent Delegation docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Agent Delegation risks, rejected paths, and validation gaps are stated.
+- Independence and sequencing constraints were checked before delegation.
+- Each worker received a bounded brief with evidence and output requirements.
+- Delegated results were reconciled against the primary task before use.
 
 ## Cross References
 

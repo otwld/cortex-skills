@@ -27,10 +27,9 @@ responsibilities.
 
 ## Quality Gates
 
-- Naming Consistency guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Naming Consistency output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Naming Consistency decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Naming Consistency validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Names describe domain role, lifecycle, and ownership without vague shared/common/helper language.
+- Public names align with project glossary, existing suffixes, DTO contracts, and file naming conventions.
+- Renames include affected exports, imports, docs, stories, fixtures, and generated references.
 
 ## Example
 
@@ -39,18 +38,15 @@ recruiting pipeline movement.
 
 ## Hard Stops
 
-- Do not use Naming Consistency without direct routing evidence or a required relation.
-- Do not expand Naming Consistency beyond its stated responsibility.
-- Do not add placeholder Naming Consistency guidance, examples, metadata, resources, or validation.
-- Do not claim Naming Consistency is satisfied without evidence for its checklist.
+- Do not introduce generic names that force consumers to inspect implementation for meaning.
+- Do not add role suffixes such as service, manager, helper, or util unless the role is real locally.
+- Do not rename public symbols without updating consumers and documentation in the same change.
 
 ## Usage Checklist
 
-- Naming Consistency trigger evidence is explicit.
-- Naming Consistency source files, project memory, or declared resources were checked.
-- Naming Consistency workflow rules were applied at the relevant artifact boundary.
-- Naming Consistency docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Naming Consistency risks, rejected paths, and validation gaps are stated.
+- Project vocabulary and neighboring names were inspected.
+- New or changed names encode role, owner, and stable meaning.
+- Consumers, docs, examples, and generated references were updated or listed as unaffected.
 
 ## Cross References
 

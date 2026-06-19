@@ -22,10 +22,9 @@ Use Jest to prove behavior through stable seams with minimal boundary mocks.
 
 ## Quality Gates
 
-- Jest Conventions guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Jest Conventions output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Jest Conventions decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Jest Conventions validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Jest tests exercise the highest meaningful public seam with deterministic fixtures and assertions.
+- Mocks replace real boundaries, not internal implementation details that should be tested directly.
+- Config, setup files, custom matchers, and environments stay small and justified by repeated need.
 
 ## Example
 
@@ -34,18 +33,15 @@ of asserting a repository call.
 
 ## Hard Stops
 
-- Do not use Jest Conventions without direct routing evidence or a required relation.
-- Do not expand Jest Conventions beyond its stated responsibility.
-- Do not add placeholder Jest Conventions guidance, examples, metadata, resources, or validation.
-- Do not claim Jest Conventions is satisfied without evidence for its checklist.
+- Do not add Jest mocks that freeze private implementation structure.
+- Do not put one-test convenience into global setup or custom matchers.
+- Do not mix Jest assumptions into Vitest or Playwright files without direct evidence.
 
 ## Usage Checklist
 
-- Jest Conventions trigger evidence is explicit.
-- Jest Conventions source files, project memory, or declared resources were checked.
-- Jest Conventions workflow rules were applied at the relevant artifact boundary.
-- Jest Conventions docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Jest Conventions risks, rejected paths, and validation gaps are stated.
+- Jest config, setup, environment, and existing test style were inspected.
+- Public seam, fixture determinism, and boundary mocks were chosen deliberately.
+- Focused Jest command or validation gap was recorded.
 
 ## Cross References
 

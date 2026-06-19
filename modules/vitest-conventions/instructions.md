@@ -22,10 +22,9 @@ Keep Vitest aligned with Vite while testing behavior through stable seams.
 
 ## Quality Gates
 
-- Vitest Conventions guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Vitest Conventions output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Vitest Conventions decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Vitest Conventions validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Vitest tests use the project's configured environment, setup files, timers, and mock boundaries deliberately.
+- Mocks preserve module contracts and avoid freezing private implementation details.
+- Assertions are deterministic and aligned with Vite-integrated module behavior.
 
 ## Example
 
@@ -34,18 +33,15 @@ APIs uses the configured DOM environment.
 
 ## Hard Stops
 
-- Do not use Vitest Conventions without direct routing evidence or a required relation.
-- Do not expand Vitest Conventions beyond its stated responsibility.
-- Do not add placeholder Vitest Conventions guidance, examples, metadata, resources, or validation.
-- Do not claim Vitest Conventions is satisfied without evidence for its checklist.
+- Do not copy Jest-specific setup or globals into Vitest without checking config support.
+- Do not mock modules that should be exercised through their public contract.
+- Do not leave fake timers, module mocks, or global state dirty across tests.
 
 ## Usage Checklist
 
-- Vitest Conventions trigger evidence is explicit.
-- Vitest Conventions source files, project memory, or declared resources were checked.
-- Vitest Conventions workflow rules were applied at the relevant artifact boundary.
-- Vitest Conventions docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Vitest Conventions risks, rejected paths, and validation gaps are stated.
+- Vitest config, environment, setup, mocks, and timer usage were inspected.
+- Public seam, fixture determinism, and mock boundaries were chosen deliberately.
+- Focused Vitest command or validation gap was recorded.
 
 ## Cross References
 

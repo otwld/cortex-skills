@@ -8,7 +8,7 @@ routing:
   priority: 5
   signals:
     strong:
-      - "NestJS surface evidence for nestjs-conventions: Module, provider, controller, guard, pipe, interceptor, bootstrap, or runtime changes"
+      - "NestJS surface: Module, provider, controller, guard, pipe, interceptor, bootstrap, or runtime changes"
     medium:
       - "Module, provider, controller, guard, pipe, interceptor, bootstrap, or runtime changes"
     weak:

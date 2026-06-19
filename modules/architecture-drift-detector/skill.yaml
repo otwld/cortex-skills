@@ -8,7 +8,7 @@ routing:
   priority: 5
   signals:
     strong:
-      - "Architecture drift detector evidence for architecture-drift-detector: repeated churn, ownership drift, broad change clusters, dependency direction erosion, or responsibility spread before a rewrite"
+      - "Architecture drift detector: repeated churn, ownership drift, broad change clusters, dependency direction erosion, or responsibility spread before a rewrite"
     medium:
       - "Repeated churn, ownership drift, broad change clusters, dependency direction erosion, or responsibility spread"
     weak:

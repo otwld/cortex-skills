@@ -22,10 +22,9 @@ Test user-observable browser behavior with stable locators and condition-based w
 
 ## Quality Gates
 
-- Playwright Conventions guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Playwright Conventions output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Playwright Conventions decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Playwright Conventions validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Playwright tests use user-visible locators, deterministic data, and isolated browser state.
+- Setup projects, fixtures, traces, and retries solve real environment needs rather than masking flake.
+- Assertions cover observable behavior and accessibility-relevant state instead of implementation timing.
 
 ## Example
 
@@ -34,18 +33,15 @@ accessible name.
 
 ## Hard Stops
 
-- Do not use Playwright Conventions without direct routing evidence or a required relation.
-- Do not expand Playwright Conventions beyond its stated responsibility.
-- Do not add placeholder Playwright Conventions guidance, examples, metadata, resources, or validation.
-- Do not claim Playwright Conventions is satisfied without evidence for its checklist.
+- Do not use arbitrary sleeps when a locator, event, or condition can express readiness.
+- Do not share mutable test data across independent browser projects or specs.
+- Do not replace a failing end-to-end path with private implementation checks.
 
 ## Usage Checklist
 
-- Playwright Conventions trigger evidence is explicit.
-- Playwright Conventions source files, project memory, or declared resources were checked.
-- Playwright Conventions workflow rules were applied at the relevant artifact boundary.
-- Playwright Conventions docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Playwright Conventions risks, rejected paths, and validation gaps are stated.
+- Playwright config, projects, fixtures, and existing locator style were inspected.
+- Data setup, isolation, waiting, and assertions match user-visible behavior.
+- Trace, focused test command, or validation gap was recorded.
 
 ## Cross References
 

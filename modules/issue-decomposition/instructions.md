@@ -29,10 +29,9 @@ briefs.
 
 ## Quality Gates
 
-- Issue Decomposition guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Issue Decomposition output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Issue Decomposition decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Issue Decomposition validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Slices describe end-to-end behavior with independently verifiable acceptance criteria.
+- AFK-ready briefs have no open design decisions, hidden dependencies, or vague ownership.
+- Tracker publishing follows configured GitHub, GitLab, or local markdown rules.
 
 ## Example
 
@@ -41,18 +40,15 @@ delete behavior slices.
 
 ## Hard Stops
 
-- Do not use Issue Decomposition without direct routing evidence or a required relation.
-- Do not expand Issue Decomposition beyond its stated responsibility.
-- Do not add placeholder Issue Decomposition guidance, examples, metadata, resources, or validation.
-- Do not claim Issue Decomposition is satisfied without evidence for its checklist.
+- Do not split work into database-only, API-only, UI-only, or tests-later tasks when a vertical slice is possible.
+- Do not mark a slice AFK-ready while product, API, or validation decisions remain open.
+- Do not publish issues to an unconfigured tracker or with labels invented in chat.
 
 ## Usage Checklist
 
-- Issue Decomposition trigger evidence is explicit.
-- Issue Decomposition source files, project memory, or declared resources were checked.
-- Issue Decomposition workflow rules were applied at the relevant artifact boundary.
-- Issue Decomposition docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Issue Decomposition risks, rejected paths, and validation gaps are stated.
+- Source context and tracker memory were inspected before slicing.
+- Each slice has behavior, interfaces, acceptance checks, blockers, and out-of-scope notes.
+- Publishing mode, labels, and human-in-loop steps were followed or blocked explicitly.
 
 ## Cross References
 

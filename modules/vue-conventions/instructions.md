@@ -22,10 +22,9 @@ Keep Vue component public surfaces small, typed, and aligned with reactive owner
 
 ## Quality Gates
 
-- Vue Conventions guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Vue Conventions output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Vue Conventions decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Vue Conventions validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Vue components follow local SFC, Composition API, script setup, prop, emit, slot, and naming style.
+- Derived state uses computed values or composables only when reuse or locality justifies extraction.
+- Public props, emits, slots, and component states are typed and documented for consumers.
 
 ## Example
 
@@ -34,18 +33,15 @@ disabled-stage behavior.
 
 ## Hard Stops
 
-- Do not use Vue Conventions without direct routing evidence or a required relation.
-- Do not expand Vue Conventions beyond its stated responsibility.
-- Do not add placeholder Vue Conventions guidance, examples, metadata, resources, or validation.
-- Do not claim Vue Conventions is satisfied without evidence for its checklist.
+- Do not extract a composable for one component just to make the file look smaller.
+- Do not make template-facing state untyped or rely on casts to satisfy props and emits.
+- Do not mix Vue style patterns when the local component tree already establishes one.
 
 ## Usage Checklist
 
-- Vue Conventions trigger evidence is explicit.
-- Vue Conventions source files, project memory, or declared resources were checked.
-- Vue Conventions workflow rules were applied at the relevant artifact boundary.
-- Vue Conventions docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Vue Conventions risks, rejected paths, and validation gaps are stated.
+- Neighboring Vue components and local SFC conventions were inspected.
+- Props, emits, slots, computed state, and composable boundaries were checked.
+- Vue tests, stories, or docs were named for public behavior changes.
 
 ## Cross References
 

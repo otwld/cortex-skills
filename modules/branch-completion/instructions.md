@@ -23,10 +23,9 @@ files into release steps.
 
 ## Quality Gates
 
-- Branch Completion guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Branch Completion output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Branch Completion decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Branch Completion validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Branch completion starts from the actual dirty tree and only includes changes in scope.
+- Verification, review, commit, push, PR, release, or cleanup steps follow explicit user direction.
+- Remaining risk is reported before any publish or irreversible branch action.
 
 ## Example
 
@@ -35,18 +34,15 @@ leaving unrelated README edits uncommitted.
 
 ## Hard Stops
 
-- Do not use Branch Completion without direct routing evidence or a required relation.
-- Do not expand Branch Completion beyond its stated responsibility.
-- Do not add placeholder Branch Completion guidance, examples, metadata, resources, or validation.
-- Do not claim Branch Completion is satisfied without evidence for its checklist.
+- Do not commit, push, merge, publish, or discard changes without explicit user direction.
+- Do not include unrelated dirty files in branch-completion output or commits.
+- Do not claim a branch is ready without fresh verification or a clearly named validation gap.
 
 ## Usage Checklist
 
-- Branch Completion trigger evidence is explicit.
-- Branch Completion source files, project memory, or declared resources were checked.
-- Branch Completion workflow rules were applied at the relevant artifact boundary.
-- Branch Completion docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Branch Completion risks, rejected paths, and validation gaps are stated.
+- Git status and scoped diff were inspected before completion steps.
+- Validation and review evidence were collected or the blocker was named.
+- User-directed branch action and remaining risks were stated plainly.
 
 ## Cross References
 

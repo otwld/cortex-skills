@@ -16,6 +16,9 @@
 - Added validator checks for active module reachability, legacy-only declared
   resources, required instruction sections, copied template prose, and repeated
   instruction bullets.
+- Added validator checks for direct strong signal wording, title-swapped module
+  instruction boilerplate, and required public `agents/openai.yaml` interface
+  metadata.
 - Added setup workspace template fixture coverage for empty generic workspaces,
   active modules with concrete signals, and active modules missing signals.
 
@@ -36,8 +39,8 @@
 - Narrowed broad routing signals for architecture drift, architecture
   deepening, test runners, verification, review, and branch completion.
 - Removed legacy-only extracted pattern resources from active routed modules.
-- Replaced repeated routed-module instruction boilerplate with module-named
-  quality gates, hard stops, and usage checklist items.
+- Replaced repeated routed-module instruction boilerplate with concrete
+  module-specific quality gates, hard stops, and usage checklist items.
 - Aligned `$setup-routed-skill-workspace` templates and contract references with
   stricter active-module signal and instruction-quality validation.
 

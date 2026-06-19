@@ -27,10 +27,9 @@ afterward.
 
 ## Quality Gates
 
-- Prototype guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Prototype output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Prototype decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Prototype validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- The prototype answers one named design or state-model question and stays isolated from production paths.
+- UI and logic prototypes use the smallest shell that can prove the decision.
+- The captured answer says whether to delete, absorb, or discard the prototype work.
 
 ## Example
 
@@ -39,18 +38,15 @@ before the real module design.
 
 ## Hard Stops
 
-- Do not use Prototype without direct routing evidence or a required relation.
-- Do not expand Prototype beyond its stated responsibility.
-- Do not add placeholder Prototype guidance, examples, metadata, resources, or validation.
-- Do not claim Prototype is satisfied without evidence for its checklist.
+- Do not let prototype code become a hidden production dependency.
+- Do not prototype multiple unrelated questions in one throwaway shell.
+- Do not add persistence, backend wiring, or design-system expansion unless the question requires it.
 
 ## Usage Checklist
 
-- Prototype trigger evidence is explicit.
-- Prototype source files, project memory, or declared resources were checked.
-- Prototype workflow rules were applied at the relevant artifact boundary.
-- Prototype docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Prototype risks, rejected paths, and validation gaps are stated.
+- Prototype question, branch type, and disposal path were stated first.
+- Implementation stayed isolated with in-memory or minimal state by default.
+- Result, command, and delete-or-absorb recommendation were captured.
 
 ## Cross References
 

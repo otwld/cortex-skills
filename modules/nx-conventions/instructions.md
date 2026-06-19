@@ -23,10 +23,9 @@ and cache behavior.
 
 ## Quality Gates
 
-- Nx Conventions guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Nx Conventions output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Nx Conventions decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Nx Conventions validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- Nx project metadata, inferred tasks, targets, inputs, and outputs remain aligned with actual build behavior.
+- Workspace graph effects are understood before changing root config, generators, or project files.
+- Moves or new projects coordinate with module-boundary and placement decisions.
 
 ## Example
 
@@ -35,18 +34,15 @@ shared-search label.
 
 ## Hard Stops
 
-- Do not use Nx Conventions without direct routing evidence or a required relation.
-- Do not expand Nx Conventions beyond its stated responsibility.
-- Do not add placeholder Nx Conventions guidance, examples, metadata, resources, or validation.
-- Do not claim Nx Conventions is satisfied without evidence for its checklist.
+- Do not change root Nx config to solve one project problem without checking local project metadata.
+- Do not add targets, generators, or inferred-task overrides that duplicate existing behavior.
+- Do not move projects without checking graph and boundary consequences.
 
 ## Usage Checklist
 
-- Nx Conventions trigger evidence is explicit.
-- Nx Conventions source files, project memory, or declared resources were checked.
-- Nx Conventions workflow rules were applied at the relevant artifact boundary.
-- Nx Conventions docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Nx Conventions risks, rejected paths, and validation gaps are stated.
+- Nx workspace files, project metadata, targets, and graph implications were inspected.
+- Inputs, outputs, cache behavior, and inferred tasks remain intentional.
+- Nx validation command or graph-inspection gap was recorded.
 
 ## Cross References
 

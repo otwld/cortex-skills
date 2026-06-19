@@ -28,10 +28,9 @@ seams that increase leverage and locality.
 
 ## Quality Gates
 
-- Architecture Deepening Review guidance names the inspected source, request evidence, or declared resource that triggered it.
-- Architecture Deepening Review output uses this workspace's terms and the recruitment example universe only when examples are needed.
-- Architecture Deepening Review decisions land in metadata, instructions, resources, tests, or docs when they change future behavior.
-- Architecture Deepening Review validation names the command, artifact, review proof, or acceptance check that covers its risk.
+- The candidate module fails or passes the deletion test with a named interface and implementation boundary.
+- Dependency classifications distinguish in-process, local-substitutable, remote-owned, and true external collaborators.
+- The proposed seam increases locality or leverage and names the public test surface.
 
 ## Example
 
@@ -40,18 +39,15 @@ deep Matching module tested through Application outcomes.
 
 ## Hard Stops
 
-- Do not use Architecture Deepening Review without direct routing evidence or a required relation.
-- Do not expand Architecture Deepening Review beyond its stated responsibility.
-- Do not add placeholder Architecture Deepening Review guidance, examples, metadata, resources, or validation.
-- Do not claim Architecture Deepening Review is satisfied without evidence for its checklist.
+- Do not recommend a deeper module without identifying the behavior hidden behind its interface.
+- Do not create a seam for one hypothetical adapter unless the current design already pays for it.
+- Do not turn a focused deepening review into a broad architecture rewrite.
 
 ## Usage Checklist
 
-- Architecture Deepening Review trigger evidence is explicit.
-- Architecture Deepening Review source files, project memory, or declared resources were checked.
-- Architecture Deepening Review workflow rules were applied at the relevant artifact boundary.
-- Architecture Deepening Review docs, metadata, tests, or generated artifacts affected by the change were updated together.
-- Architecture Deepening Review risks, rejected paths, and validation gaps are stated.
+- Deletion test, dependency class, and interface depth were evaluated.
+- The test surface crosses the proposed interface instead of private helpers.
+- Deepening recommendation names what to move, delete, or keep shallow.
 
 ## Cross References
 

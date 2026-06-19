@@ -1,5 +1,5 @@
 name: no-transitional-architecture
-description: "Internal Cortex module always loaded to prevent compatibility shims, legacy adapters, temporary wrappers, migration leftovers, parallel implementations, placeholder code, and dead-code preservation unless explicit compatibility constraints require them."
+description: "Internal Cortex module always loaded to prevent compatibility shims, legacy adapters, temporary wrappers, useless implementation layers, migration leftovers, parallel implementations, placeholder code, stubs, and dead-code preservation unless explicit compatibility constraints require them."
 activation: routed
 visibility: hidden
 status: active
@@ -8,9 +8,9 @@ routing:
   priority: 10
   signals:
     strong:
-      - "Transitional architecture evidence for no-transitional-architecture: compatibility layer, legacy adapter, migration shim, temporary wrapper, parallel implementation, fallback preserving old behavior, placeholder implementation, or dead-code preservation"
+      - "Transitional architecture: compatibility layer, legacy adapter, migration shim, temporary wrapper, useless implementation layer, parallel implementation, fallback preserving old behavior, placeholder implementation, stub, or dead-code preservation"
     medium:
-      - "Compatibility layer, legacy adapter, migration shim, temporary wrapper, parallel implementation, placeholder implementation, or obsolete code"
+      - "Compatibility layer, legacy adapter, migration shim, temporary wrapper, implementation layer, parallel implementation, placeholder implementation, stub, or obsolete code"
     weak:
       - "Transitional architecture"
 
