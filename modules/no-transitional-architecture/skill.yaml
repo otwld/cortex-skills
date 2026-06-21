@@ -1,5 +1,5 @@
 name: no-transitional-architecture
-description: "Internal Cortex module always loaded to prevent compatibility shims, legacy adapters, temporary wrappers, useless implementation layers, migration leftovers, parallel implementations, placeholder code, stubs, and dead-code preservation unless explicit compatibility constraints require them."
+description: "Internal Cortex module always loaded to force direct replacement instead of transitional architecture: compatibility aliases, legacy adapters, migration shims, temporary wrappers, parallel old/new implementations, staged migrations, placeholder code, stubs, fallback preservation, previous-behavior preservation, and dead-code retention are blocked unless a named external compatibility contract is proven."
 activation: routed
 visibility: hidden
 status: active
@@ -8,11 +8,14 @@ routing:
   priority: 10
   signals:
     strong:
-      - "Transitional architecture: compatibility layer, legacy adapter, migration shim, temporary wrapper, useless implementation layer, parallel implementation, fallback preserving old behavior, placeholder implementation, stub, or dead-code preservation"
+      - "Transitional architecture: compatibility alias, legacy adapter, migration shim, temporary wrapper, side-by-side old/new implementation, staged migration, fallback preserving previous behavior, old executor, old event name, old option name, placeholder implementation, stub, or dead-code preservation"
+      - "Replacement required: breaking change, rename, extraction, moved source of truth, obsolete public API, old export removal, caller migration, or duplicate implementation removal"
     medium:
-      - "Compatibility layer, legacy adapter, migration shim, temporary wrapper, implementation layer, parallel implementation, placeholder implementation, stub, or obsolete code"
+      - "Compatibility layer, alias, legacy adapter, migration shim, temporary wrapper, implementation layer, parallel implementation, preserve current behavior, preserve previous behavior, placeholder implementation, stub, obsolete code, or old API retention"
+      - "Delete or replace old files, callers, tests, exports, events, option names, executor names, DTOs, routes, services, adapters, factories, or registries"
     weak:
       - "Transitional architecture"
+      - "Replacement gate"
 
 relations:
   before: []
@@ -24,7 +27,8 @@ relations:
 uses: []
 
 resources:
-  references: []
+  references:
+    - "replacement-contract.md"
   scripts: []
   templates: []
   assets: []
