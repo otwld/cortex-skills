@@ -64,6 +64,16 @@ body must say it runs only when directly invoked and preserve the
 `using skill: <command-name>` output marker. Do not include command skills in
 routed cascade selection.
 
+When the command owns setup, discovery, intake, or normalization phases that may
+produce a router-ready follow-up request, document that command-specific
+handoff in `SKILL.md`. The shared trigger is a `Router handoff:` block that
+contains a literal entry invocation such as `$routed-skills ...`; all additional
+fields and context are command-defined. Include any command-owned context the
+entry router needs in the block; the entry router should otherwise inspect
+resources through normal routing rules. Do not add handoff metadata to
+`skill.yaml`, and do not switch silently into entry routing without the handoff
+block.
+
 ## Rebuild Workspace
 
 Run the rebuild script from the workspace root or pass the manifest path:

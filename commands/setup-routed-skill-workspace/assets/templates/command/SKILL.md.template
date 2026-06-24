@@ -21,15 +21,37 @@ Run the explicit {{command_invocation}} command workflow.
 1. Confirm the command was directly invoked.
 2. Inspect the workspace state relevant to the command.
 3. Apply the command workflow.
-4. Validate command output before completion.
+4. If the command intentionally delegates remaining work to the entry router,
+   emit a `Router handoff:` block containing one literal entry invocation.
+5. Validate command output before completion.
+
+## Router Handoff
+
+Use a handoff only when this command has completed its command-owned phases and
+the remaining request should be routed through the public entry skill. The
+shared trigger is the heading plus a literal entry request:
+
+```text
+Router handoff:
+<entry-invocation> <router-ready request>
+```
+
+Additional phase summaries, constraints, or command-specific context may be
+included in the block. Include any command-owned context the entry router needs;
+do not assume it inherits command references, templates, assets, or scripts. Do
+not switch silently into entry routing without this block.
 
 ## Quality Gates
 
 - This command is public but excluded from routed module selection.
+- Router handoff output is explicit when the command delegates remaining work
+  to the entry router.
 
 ## Hard Stops
 
 - Do not select this command through heuristic routing.
+- Do not treat ordinary prose or examples that mention the entry invocation as
+  a router handoff.
 
 ## Output Format
 
@@ -39,6 +61,7 @@ Report the command result and validation evidence.
 
 - Direct invocation was present.
 - Routed cascade did not select this command.
+- Router handoff was explicit, or the command completed without delegating.
 - Validation evidence was stated.
 
 ## Cross References

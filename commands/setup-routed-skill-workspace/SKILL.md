@@ -19,7 +19,9 @@ This command skill runs only when directly invoked as `$setup-routed-skill-works
 
 Create and maintain routed skill workspaces without preserving Cortex-specific
 structure. Treat module folders and their metadata as the source of truth, and
-treat generated catalogs, graphs, and cascades as disposable outputs.
+treat generated catalogs, graphs, and cascades as disposable outputs. When
+realigning command-enabled workspaces, keep command-to-entry handoff as an
+explicit instruction boundary rather than routing metadata.
 
 ## Reference Routing
 
@@ -38,14 +40,18 @@ treat generated catalogs, graphs, and cascades as disposable outputs.
 2. Identify the target root from user intent or the manifest; default to
    `.skills` only when no stronger evidence exists.
 3. Apply the generic contract: exactly one public entry skill, hidden routed
-   modules, command skills outside routing, explicit relations, and explicit
-   resource ownership.
+   modules, command skills outside routing, explicit relations, explicit
+   resource ownership, and optional command handoff through a visible
+   `Router handoff:` block.
 4. Use templates from `assets/templates/` for scaffolded files, then adapt names,
    descriptions, signals, and instructions to the user's requested workspace.
-5. Rebuild generated artifacts from metadata with the bundled rebuild script.
-6. Validate structure, metadata, relations, resources, routing constraints, and
+5. When creating or realigning command skills, define any command-owned entry
+   handoff in `SKILL.md` using a `Router handoff:` block that contains the
+   target entry invocation; do not add handoff metadata to `skill.yaml`.
+6. Rebuild generated artifacts from metadata with the bundled rebuild script.
+7. Validate structure, metadata, relations, resources, routing constraints, and
    generated freshness with the bundled validator before reporting completion.
-7. When overlap, ambiguity, or risk is detected, create a challenge or merge
+8. When overlap, ambiguity, or risk is detected, create a challenge or merge
    proposal instead of adding another module silently.
 
 ## Quality Gates
@@ -57,6 +63,10 @@ treat generated catalogs, graphs, and cascades as disposable outputs.
   `instructions.md`.
 - Routed modules are hidden, command skills are public and direct-invocation
   only, and generated artifacts are derived from metadata.
+- Command-to-entry handoff, when present, is expressed in command and entry
+  instructions with a `Router handoff:` block and literal entry invocation.
+- Handoff instructions preserve resource ownership: entry routers receive the
+  handoff block and then inspect resources through normal routed-workspace rules.
 - Routing remains reviewable through strong, medium, and weak signals plus
   priority and explicit relations.
 - Active routed modules have at least one direct routing signal; draft modules
@@ -85,6 +95,8 @@ and cascade, then validate the workspace.
 - Do not require `MODULE.md`, Cortex naming, taxonomy folders, TypeScript
   assumptions, package registries, or domain starter packs in target workspaces.
 - Do not hand-edit generated target artifacts as if they were source files.
+- Do not add command handoff metadata, infer handoff from ordinary entry-token
+  prose, or switch silently from a command into the entry router.
 - Do not add embeddings, classifiers, scoring engines, vector databases,
   inheritance, shims, compatibility layers, or hidden resource sharing.
 - Do not create a new module when existing modules have high-overlap strong
@@ -98,6 +110,8 @@ and cascade, then validate the workspace.
 - Root, entry slug, and manifest path are explicit.
 - Entry, routed modules, command skills, resources, and generated artifacts
   follow the generic contract.
+- Command handoff behavior was preserved, added, or ruled out at the command
+  instruction boundary.
 - Overlap, relation conflicts, and missing active-module signals were checked
   before creating modules.
 - Catalog, graph, and cascade were rebuilt from metadata.

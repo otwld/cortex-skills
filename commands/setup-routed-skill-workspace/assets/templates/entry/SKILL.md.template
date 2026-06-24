@@ -26,25 +26,31 @@ Use the routed workspace metadata as the source of truth:
 
 ## Workflow
 
-1. Load always-loaded modules listed in the generated cascade.
-2. Run an intent-understanding gate: state the desired outcome, task type,
+1. Accept the request only when the user explicitly includes
+   {{entry_invocation}} or when a directly invoked command emits a
+   `Router handoff:` block containing a literal {{entry_invocation}} request.
+2. Load always-loaded modules listed in the generated cascade.
+3. Run an intent-understanding gate: state the desired outcome, task type,
    artifact target, known context, constraints, and requested mode.
-3. Inspect the request and relevant files for direct routing evidence; do not
+4. For command handoffs, treat only the handoff block as passed context; inspect
+   files normally instead of inheriting command-owned resources.
+5. Inspect the request and relevant files for direct routing evidence; do not
    ask questions the repository can answer.
-4. Select additional routed modules using the generated cascade, classifying
+6. Select additional routed modules using the generated cascade, classifying
    selected, candidate, deferred, and skipped modules when routing is broad or
    ambiguous.
-5. Ask operator questions only for candidate modules where the answer changes
+7. Ask operator questions only for candidate modules where the answer changes
    routing, planning, execution, review depth, validation, or durable artifacts.
-6. Expand required `before` relations up to the configured depth cap.
-7. Add `with` modules only when they have independent evidence.
-8. Defer `after` modules until the later phase is relevant.
-9. Reject excluded module combinations.
-10. Use local resources only when a selected module references them.
+8. Expand required `before` relations up to the configured depth cap.
+9. Add `with` modules only when they have independent evidence.
+10. Defer `after` modules until the later phase is relevant.
+11. Reject excluded module combinations.
+12. Use local resources only when a selected module references them.
 
 ## Quality Gates
 
-- This public entry skill is invoked only by explicit {{entry_invocation}} use.
+- This public entry skill is invoked only by explicit {{entry_invocation}} use
+  or a command handoff block containing a literal {{entry_invocation}} request.
 - Modules are hidden behind this entry point.
 - Generated artifacts are derived from module metadata.
 - Routing decisions remain inspectable.
@@ -54,6 +60,11 @@ Use the routed workspace metadata as the source of truth:
 ## Hard Stops
 
 - Do not use this skill through implicit invocation.
+- Do not treat ordinary prose, examples, or docs that mention
+  {{entry_invocation}} as command handoffs; the active boundary is the
+  `Router handoff:` block.
+- Do not inherit command-owned references, templates, assets, scripts, or other
+  private context unless the handoff block includes that context.
 - Do not load hidden modules unless they are always-loaded, directly evidenced,
   or required by relations.
 - Do not treat generated catalog, graph, or cascade files as source files.
@@ -68,6 +79,8 @@ broad or ambiguous.
 - Generated catalog was available.
 - Generated graph was available.
 - Generated cascade was available.
+- Invocation came from explicit {{entry_invocation}} use or a valid
+  `Router handoff:` block.
 - Always-loaded modules were loaded before evidence-selected modules.
 - Relations and exclusions were respected.
 

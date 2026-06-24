@@ -104,6 +104,12 @@ modules, reference the generated catalog, graph, and cascade, explain that
 modules are hidden, and explain that generated artifacts are derived from
 metadata.
 
+An entry skill may also accept a same-turn command handoff when the command
+output contains a `Router handoff:` block with a literal entry invocation
+request such as `$routed-skills ...`. The handoff block is the active boundary;
+ordinary prose, examples, or docs that mention the entry token do not invoke
+the router.
+
 ## Modules
 
 Modules are folders and are the source of truth. Required files are `skill.yaml`
@@ -166,6 +172,18 @@ Command skills are full public agent skills. Required files are `SKILL.md`,
 Command metadata uses the shared artifact shape with `activation: explicit`,
 `visibility: public`, empty routing signals by default, and explicit `uses` and
 `resources` declarations.
+
+Command skills may define command-specific handoff behavior in `SKILL.md`. A
+handoff is an instruction boundary, not routing metadata: it does not change the
+command's activation, visibility, routing signals, generated graph, or cascade
+selection. When a command intentionally delegates remaining work to the entry
+router, it emits a `Router handoff:` block that contains exactly one
+router-ready request beginning with the literal entry token. Any additional
+context, phase summary, constraints, or instructions inside that block are owned
+by the command. The entry router does not automatically inherit command-owned
+references, templates, assets, scripts, or other private context; any context it
+needs must appear in the handoff block or be discovered again through normal
+entry routing.
 
 ## Instructions
 
