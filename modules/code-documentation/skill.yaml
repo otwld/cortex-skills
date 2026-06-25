@@ -1,5 +1,5 @@
 name: code-documentation
-description: "Internal Cortex module applied whenever a request asks for, accepts, generates, edits, moves, deletes, splits, refactors, or materially reviews code, and when public, reusable, or user-facing documentation, Storybook docs, examples, stories, MDX docs, or API usage notes change."
+description: "Internal Cortex module applied whenever a request asks for, accepts, generates, edits, moves, deletes, splits, refactors, or materially reviews code; when public, reusable, or user-facing documentation, Storybook docs, examples, stories, MDX docs, or API usage notes change; and when dense implementation blocks need explanatory line comments."
 activation: routed
 visibility: hidden
 status: active
@@ -10,12 +10,18 @@ routing:
     strong:
       - "Planned code touch: User asks for or accepts work that will implement, create, edit, move, delete, split, refactor, or materially review code"
       - "Documentation or examples: JSDoc, TSDoc, public docs, examples, stories, fixtures, payloads, or illustrative data change"
+      - "Public documentation coverage: exported symbol, public member, component input or output, route, command, config option, DTO, schema, reusable helper, generated docs, README, Storybook, MDX, usage note, or user-facing behavior needs coverage"
+      - "Dense implementation comments: long function, dense function, complex block, phase comment, invariant comment, ordering-sensitive logic, lifecycle constraint, concurrency, caching, retry, pagination, or error recovery needs explanatory line comments"
     medium:
       - "Code will be implemented, created, edited, moved, deleted, split, refactored, or materially reviewed"
       - "JSDoc, TSDoc, public docs, examples, stories, fixtures, payloads, or illustrative data change"
+      - "Exported, public, reusable, framework-bound, or user-facing surface needs documentation coverage"
+      - "Long or dense logic needs block-level line comments explaining phases, invariants, constraints, or non-obvious decisions"
     weak:
       - "Planned code touch"
       - "Documentation or examples"
+      - "Public documentation coverage"
+      - "Dense function comments"
 
 relations:
   before: []
@@ -31,6 +37,7 @@ uses: []
 
 resources:
   references:
+    - "references/coverage-and-comments.md"
     - "shared/recruitment-universe.md"
     - "shared/skill-quality-standard.md"
   scripts: []
