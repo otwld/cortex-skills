@@ -16,8 +16,6 @@ VALID_ACTIVATIONS = {'entry', 'routed', 'explicit'}
 VALID_VISIBILITIES = {'public', 'hidden'}
 RELATION_KEYS = ('before', 'with', 'after', 'excludes', 'replaces')
 RESOURCE_KEYS = ('references', 'scripts', 'templates', 'assets')
-DEFAULT_MODULE_PATH_MIN_DEPTH = 1
-DEFAULT_MODULE_PATH_MAX_DEPTH = 4
 AGENT_SKILL_NAME = 'SKILL.md'
 AGENT_METADATA_PATH = Path('agents') / 'openai.yaml'
 AGENT_SKILL_NAME_RE = re.compile(r'^[a-z0-9]+(?:-[a-z0-9]+)*$')
@@ -191,46 +189,6 @@ def validate_modules_tree(root: Path, modules_root: Path, metadata_name: str, in
             errors.append(f'{rel(root, directory)}: missing {metadata_name}')
         elif not has_descendant_artifact(directory, artifact_dirs):
             errors.append(f'{rel(root, directory)}: category folder has no descendant module artifact')
-
-
-def validation_integer(value: Any, label: str, default: int, errors: list[str]) -> int:
-    """Return an integer validation setting or record an error and use a default."""
-    if value is None:
-        return default
-    if not isinstance(value, int):
-        errors.append(f'{label}: expected integer')
-        return default
-    return value
-
-
-def validate_module_path_depths(workspace: Any, validation: dict[str, Any], errors: list[str]) -> None:
-    """Validate module artifact path depth relative to the modules root."""
-    min_depth = validation_integer(
-        validation.get('module_path_min_depth'),
-        'validation.module_path_min_depth',
-        DEFAULT_MODULE_PATH_MIN_DEPTH,
-        errors,
-    )
-    max_depth = validation_integer(
-        validation.get('module_path_max_depth'),
-        'validation.module_path_max_depth',
-        DEFAULT_MODULE_PATH_MAX_DEPTH,
-        errors,
-    )
-    if min_depth > max_depth:
-        errors.append('validation.module_path_min_depth must be less than or equal to validation.module_path_max_depth')
-        return
-
-    modules_root = workspace.root / manifest_value(workspace, 'paths', rebuild.DEFAULT_PATHS)['modules']
-    for artifact in workspace.modules:
-        try:
-            depth = len(artifact.directory.relative_to(modules_root).parts)
-        except ValueError:
-            continue
-        if depth < min_depth:
-            errors.append(f'{artifact.relative_path}: module path depth {depth} is below minimum {min_depth}')
-        if depth > max_depth:
-            errors.append(f'{artifact.relative_path}: module path depth {depth} exceeds maximum {max_depth}')
 
 
 def validate_resources(workspace: Any, artifact: Any, names: set[str], errors: list[str]) -> None:
@@ -432,8 +390,11 @@ def validate_workspace(raw_manifest: str | None) -> list[str]:
         return [str(error)]
 
     root = manifest_path.parent
-    paths = rebuild.merge_defaults(manifest.get('paths'), rebuild.DEFAULT_PATHS, 'paths')
-    artifacts = rebuild.merge_defaults(manifest.get('artifacts'), rebuild.DEFAULT_ARTIFACTS, 'artifacts')
+    try:
+        paths = rebuild.merge_defaults(manifest.get('paths'), rebuild.DEFAULT_PATHS, 'paths')
+        artifacts = rebuild.merge_defaults(manifest.get('artifacts'), rebuild.DEFAULT_ARTIFACTS, 'artifacts')
+    except Exception as error:
+        return [str(error)]
     entry_config = rebuild.as_mapping(manifest.get('entry'), 'entry')
     entry_path_value = entry_config.get('path')
     if not isinstance(entry_path_value, str) or not entry_path_value:
@@ -535,7 +496,6 @@ def validate_workspace(raw_manifest: str | None) -> list[str]:
     if not isinstance(max_depth, int):
         errors.append('validation.max_before_depth: expected integer')
         max_depth = 3
-    validate_module_path_depths(workspace, validation, errors)
     for name in before_map:
         before_chain(name, before_map, [], errors, max_depth)
 

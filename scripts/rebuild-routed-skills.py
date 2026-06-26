@@ -15,7 +15,6 @@ DEFAULT_PATHS = {
     'commands': 'commands',
     'shared': 'shared',
     'generated': 'generated',
-    'proposals': 'proposals',
 }
 DEFAULT_ARTIFACTS = {
     'metadata': 'skill.yaml',
@@ -193,10 +192,12 @@ def as_list(value: Any, label: str) -> list[str]:
 
 
 def merge_defaults(value: Any, defaults: dict[str, str], label: str) -> dict[str, str]:
-    """Merge a manifest mapping with string defaults."""
+    """Merge a manifest mapping with string defaults and reject unknown keys."""
     raw = as_mapping(value, label)
     merged = dict(defaults)
     for key, item in raw.items():
+        if key not in defaults:
+            raise RoutedSkillError(f'{label}.{key}: unknown key')
         if not isinstance(item, str):
             raise RoutedSkillError(f'{label}.{key}: expected string')
         merged[key] = item

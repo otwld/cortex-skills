@@ -43,8 +43,6 @@ def manifest(
     *,
     max_depth: int = 3,
     always: str = '',
-    module_min_depth: object | None = None,
-    module_max_depth: object | None = None,
 ) -> str:
     """Return fixture manifest text."""
     routing_block = f'''
@@ -52,11 +50,6 @@ routing:
   always:
     - {always}
 ''' if always else ''
-    module_depth_block = ''
-    if module_min_depth is not None:
-        module_depth_block += f'  module_path_min_depth: {module_min_depth}\n'
-    if module_max_depth is not None:
-        module_depth_block += f'  module_path_max_depth: {module_max_depth}\n'
     return f'''name: ascend
 root: {root_name}
 
@@ -66,7 +59,6 @@ paths:
   commands: commands
   shared: shared
   generated: generated
-  proposals: proposals
 
 artifacts:
   metadata: skill.yaml
@@ -84,7 +76,7 @@ generated:
 
 validation:
   max_before_depth: {max_depth}
-{module_depth_block}'''.rstrip() + '\n'
+'''.rstrip() + '\n'
 
 
 def entry_metadata(name: str = 'ascend') -> str:
@@ -179,7 +171,7 @@ def create_workspace_from_setup_templates(temp_dir: Path) -> Path:
     write(root / 'entry' / 'ascend' / 'SKILL.md', render_setup_template('entry/SKILL.md.template', values))
     write(root / 'entry' / 'ascend' / 'agents' / 'openai.yaml', render_setup_template('entry/agents/openai.yaml.template', values))
     write(root / 'entry' / 'ascend' / 'skill.yaml', render_setup_template('entry/skill.yaml', values))
-    for folder in ('modules', 'commands', 'shared', 'generated', 'scripts', 'proposals'):
+    for folder in ('modules', 'commands', 'shared', 'generated', 'scripts'):
         (root / folder).mkdir(parents=True, exist_ok=True)
     result = run([sys.executable, str(REBUILD), str(root / 'routed-skills.yaml')], temp_dir)
     if result.returncode != 0:
@@ -344,7 +336,7 @@ def create_workspace(temp_dir: Path, root_name: str = '.skills', *, max_depth: i
     write(root / 'modules' / 'module-creation' / 'instructions.md', instructions('Create modules.', name='module-creation'))
     write(root / 'modules' / 'quality-standard' / 'skill.yaml', module_metadata('quality-standard', strong='user asks for quality gates'))
     write(root / 'modules' / 'quality-standard' / 'instructions.md', instructions('Apply quality standards.', name='quality-standard'))
-    for folder in ('commands', 'shared', 'generated', 'scripts', 'proposals'):
+    for folder in ('commands', 'shared', 'generated', 'scripts'):
         (root / folder).mkdir(parents=True, exist_ok=True)
     result = run([sys.executable, str(REBUILD), str(root / 'routed-skills.yaml')], temp_dir)
     if result.returncode != 0:
@@ -395,13 +387,13 @@ def nested_modules_validate() -> None:
     with tempfile.TemporaryDirectory(prefix='routed-skills-') as raw:
         temp_dir = Path(raw)
         root = create_workspace(temp_dir)
-        move_module(root, 'module-creation', 'workflow', 'planning')
+        move_module(root, 'module-creation', 'workflow', 'planning', 'agent', 'routing')
         move_module(root, 'quality-standard', 'quality', 'documentation')
         result = run([sys.executable, str(REBUILD), str(root / 'routed-skills.yaml')], temp_dir)
         if result.returncode != 0:
             raise AssertionError(f'nested module rebuild should pass\nstdout:\n{result.stdout}\nstderr:\n{result.stderr}')
         catalog = (root / 'generated' / 'SKILL_CATALOG.md').read_text(encoding='utf-8')
-        if 'modules/workflow/planning/module-creation/' not in catalog:
+        if 'modules/workflow/planning/agent/routing/module-creation/' not in catalog:
             raise AssertionError('nested module path missing from generated catalog')
         result = run([sys.executable, str(VALIDATE), str(root / 'routed-skills.yaml')], temp_dir)
         if result.returncode != 0:
@@ -620,30 +612,9 @@ def always_loaded_scalar_target(root: Path) -> None:
     write(root / 'routed-skills.yaml', manifest('.skills').replace('\ngenerated:', '\nrouting:\n  always: quality-standard\n\ngenerated:'))
 
 
-def non_integer_module_min_depth(root: Path) -> None:
-    """Configure module path minimum depth as a non-integer."""
-    write(root / 'routed-skills.yaml', manifest('.skills', module_min_depth='deep'))
-
-
-def non_integer_module_max_depth(root: Path) -> None:
-    """Configure module path maximum depth as a non-integer."""
-    write(root / 'routed-skills.yaml', manifest('.skills', module_max_depth='deep'))
-
-
-def module_min_depth_greater_than_max(root: Path) -> None:
-    """Configure inconsistent module path depth bounds."""
-    write(root / 'routed-skills.yaml', manifest('.skills', module_min_depth=4, module_max_depth=3))
-
-
-def shallow_module_path_depth(root: Path) -> None:
-    """Require nested module paths while fixtures are still flat."""
-    write(root / 'routed-skills.yaml', manifest('.skills', module_min_depth=2))
-
-
-def deep_module_path_depth(root: Path) -> None:
-    """Move a module deeper than the configured maximum module path depth."""
-    move_module(root, 'module-creation', 'workflow', 'planning')
-    write(root / 'routed-skills.yaml', manifest('.skills', module_max_depth=2))
+def unknown_manifest_path(root: Path) -> None:
+    """Add an unsupported manifest path key."""
+    write(root / 'routed-skills.yaml', manifest('.skills').replace('  generated: generated\n', '  generated: generated\n  archives: archives\n'))
 
 
 def duplicate_signal(root: Path) -> None:
@@ -814,11 +785,7 @@ def main() -> int:
     expect_failure('always-loaded command target fails', always_loaded_command_target, 'routing.always target must be a routed module: setup-ci', rebuild_after=True)
     expect_failure('always-loaded inactive target fails', always_loaded_inactive_target, 'routing.always target must be active: quality-standard', rebuild_after=True)
     expect_failure('always-loaded scalar target fails', always_loaded_scalar_target, 'routing.always: expected list')
-    expect_failure('non-integer module min depth fails', non_integer_module_min_depth, 'validation.module_path_min_depth: expected integer')
-    expect_failure('non-integer module max depth fails', non_integer_module_max_depth, 'validation.module_path_max_depth: expected integer')
-    expect_failure('module min depth greater than max fails', module_min_depth_greater_than_max, 'module_path_min_depth must be less than or equal')
-    expect_failure('shallow module path depth fails', shallow_module_path_depth, 'modules/module-creation: module path depth 1 is below minimum 2')
-    expect_failure('deep module path depth fails', deep_module_path_depth, 'modules/workflow/planning/module-creation: module path depth 3 exceeds maximum 2', rebuild_after=True)
+    expect_failure('unknown manifest path fails', unknown_manifest_path, 'paths.archives: unknown key')
     expect_failure('stale generated artifact fails', stale_generated, 'stale generated artifact')
     expect_failure('duplicate strong signal fails', duplicate_signal, 'duplicate strong signal', rebuild_after=True)
     expect_failure('active empty signals fail', active_empty_signals, 'active routed module has no routing signals', rebuild_after=True)
