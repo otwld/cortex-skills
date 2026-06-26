@@ -1,32 +1,41 @@
-name: library-placement-decision
+name: "library-placement-decision"
 description: "Internal Cortex module applied when deciding where new code, shared abstractions, moved files, extracted logic, or public entry points belong inside a modular TypeScript workspace."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Code placement decision: new library, libraries/ path, libs/ path, moved file, extracted logic, shared abstraction, package, app/lib path, or import location decision"
-    medium:
-      - "Where code belongs, new package, libraries path, libs path, shared code, moved file, extracted logic, or import location changes"
-    weak:
-      - "Code placement"
-
-relations:
-  before: []
-  with:
-    - "nx-module-boundaries"
-    - "public-api-design"
-    - "naming-consistency"
-  after:
-    - "skill-evolution"
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "decide durable ownership for new, moved, or extracted code"
+      - "choose whether code stays local or becomes a library or package surface"
+    surfaces:
+      - "project and package layout"
+      - "library, feature, domain, integration, adapter, utility, and UI ownership"
+      - "import paths and public entry points"
+    risks:
+      - "shared library created for convenience rather than stable ownership"
+      - "dependency direction changes because code moved"
+      - "mixed responsibilities hidden behind a broad common package"
+    artifacts:
+      - "new library or package"
+      - "moved source file or folder"
+      - "extracted abstraction"
+      - "public export"
+      - "ownership decision"
+    repo:
+      - "TypeScript monorepo"
+      - "modular workspace"
+      - "library-oriented source tree"
+    request:
+      - "asks where new code should live"
+      - "adds, moves, or extracts reusable logic, DTOs, adapters, UI, or utilities"
+      - "changes import location, package ownership, or library boundaries"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  plan: "lifecycle/plan.md"
+  review: "lifecycle/review.md"
 uses: []
-
 resources:
   references: []
   scripts: []

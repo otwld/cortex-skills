@@ -1,32 +1,41 @@
-name: vue-conventions
-description: "Internal Cortex module applied when creating, modifying, or reviewing Vue 3 Single-File Components, Composition API code, `<script setup>`, props, emits, slots, or component naming."
-activation: routed
-visibility: hidden
-status: active
-
+name: "vue-conventions"
+description: "Internal Cortex module applied when creating, modifying, or reviewing Vue 3 Single-File Components, Composition API code, script setup macros, typed props, emits, slots, reactive state, composables, or component naming."
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Vue surface: Vue component, Composition API, script setup, prop, emit, slot, or component naming changes"
-    medium:
-      - "Vue component, Composition API, script setup, prop, emit, slot, or component naming changes"
-    weak:
-      - "Vue surface"
-
-relations:
-  before: []
-  with:
-    - "typescript-code-style"
-    - "rxjs-conventions"
-    - "code-documentation"
-  after:
-    - "skill-evolution"
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "Design or review a Vue component surface"
+      - "Keep Vue reactive ownership, public props, events, and slots explicit"
+    surfaces:
+      - "Vue 3 Single-File Components, templates, script setup, Composition API, and composables"
+      - "Props, emits, slots, defineExpose, defineModel, component names, refs, computed state, and watchers"
+      - "Component tests, stories, examples, and docs that describe public component behavior"
+    risks:
+      - "Template-facing state, prop, emit, or slot contract is untyped or cast around"
+      - "Component mutates props or exposes more instance state than consumers need"
+      - "Watcher duplicates derived state that should be computed"
+      - "Composable extraction hides single-component behavior instead of capturing shared lifecycle"
+      - "Vue macro or v-model pattern is used without checking the project Vue version and local style"
+    artifacts:
+      - "*.vue files and TypeScript files importing from vue"
+      - "Composable files, component tests, stories, fixture components, and component docs"
+      - "Router, store, or service integration code that passes reactive values into components"
+    repo:
+      - "Neighboring SFC structure, naming, prop, emit, slot, and composable conventions"
+      - "Vue version, compiler macro support, lint rules, and typecheck command"
+      - "Tests or stories that exercise public component behavior"
+    request:
+      - "Create, modify, or review a Vue SFC, Composition API function, script setup block, prop, emit, slot, or composable"
+      - "Type a Vue component public API or reactive state path"
+      - "Review Vue naming, local SFC structure, derived state, watcher usage, or component extraction"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
 uses: []
-
 resources:
   references: []
   scripts: []

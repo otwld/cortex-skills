@@ -3,13 +3,6 @@ name: {{command_name}}
 description: {{command_description}}
 ---
 
-# Output Marker
-
-Display:
-using skill: {{command_name}}
-
----
-
 # {{command_name}}
 
 ## Overview
@@ -18,18 +11,16 @@ Run the explicit {{command_invocation}} command workflow.
 
 ## Workflow
 
-1. Confirm the command was directly invoked.
+1. Confirm the command was directly invoked or invoked by the entry router as an orchestration atom.
 2. Inspect the workspace state relevant to the command.
 3. Apply the command workflow.
-4. If the command intentionally delegates remaining work to the entry router,
-   emit a `Router handoff:` block containing one literal entry invocation.
+4. If the command delegates remaining work to the entry router, emit a `Router handoff:` block containing one literal entry invocation.
 5. Validate command output before completion.
 
 ## Router Handoff
 
-Use a handoff only when this command has completed its command-owned phases and
-the remaining request should be routed through the public entry skill. The
-shared trigger is the heading plus a literal entry request:
+Use a handoff only when this command has completed its command-owned work and
+the remaining request should be routed through the public entry skill.
 
 ```text
 Router handoff:
@@ -37,33 +28,24 @@ Router handoff:
 ```
 
 Additional phase summaries, constraints, or command-specific context may be
-included in the block. Include any command-owned context the entry router needs;
-do not assume it inherits command references, templates, assets, or scripts. Do
-not switch silently into entry routing without this block.
+included in the block. Include any command-owned context the entry router needs.
 
 ## Quality Gates
 
-- This command is public but excluded from routed module selection.
-- Router handoff output is explicit when the command delegates remaining work
-  to the entry router.
+- This command is public and may be invoked directly or by the entry router.
+- Router handoff output is explicit when the command delegates remaining work.
 
 ## Hard Stops
 
-- Do not select this command through heuristic routing.
-- Do not treat ordinary prose or examples that mention the entry invocation as
-  a router handoff.
+- Do not treat ordinary prose or examples that mention the entry invocation as a router handoff.
+- Do not add routed module lifecycle files from this command unless that is the command's explicit responsibility.
 
 ## Output Format
 
 Report the command result and validation evidence.
 
-## Usage Checklist
+## Completion Checklist
 
-- Direct invocation was present.
-- Routed cascade did not select this command.
+- Invocation path was clear.
 - Router handoff was explicit, or the command completed without delegating.
 - Validation evidence was stated.
-
-## Cross References
-
-- None

@@ -1,32 +1,45 @@
-name: angular-conventions
-description: "Internal Cortex module applied when creating, modifying, or reviewing Angular components, directives, pipes, services, templates, styles, forms, inputs, outputs, or dependency injection."
-activation: routed
-visibility: hidden
-status: active
-
+name: "angular-conventions"
+description: "Internal Cortex module applied when Angular components, directives, pipes, services, templates, styles, forms, inputs, outputs, or dependency-injection boundaries are created, modified, or reviewed."
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Angular surface: Angular component, directive, pipe, service, template, form, input, output, or DI changes"
-    medium:
-      - "Angular component, directive, pipe, service, template, form, input, output, or DI changes"
-    weak:
-      - "Angular surface"
-
-relations:
-  before: []
-  with:
-    - "rxjs-conventions"
-    - "typescript-code-style"
-    - "code-documentation"
-  after:
-    - "skill-evolution"
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "Apply Angular implementation conventions to UI classes, templates, forms, and services"
+      - "Review Angular public component and service surfaces for typed contracts"
+    surfaces:
+      - "@angular/core components directives pipes and services"
+      - "@angular/forms reactive and template-driven forms"
+      - "Angular templates bindings control flow and component styles"
+      - "Angular dependency injection providers and inject() usage"
+    risks:
+      - "Untyped inputs outputs forms or template-facing members"
+      - "Template logic hidden behind casts non-null assertions or broad public members"
+      - "Standalone import provider or NgModule style drift from local project conventions"
+      - "Public component behavior changed without consumer-facing evidence"
+    artifacts:
+      - "*.component.ts"
+      - "*.component.html"
+      - "*.component.scss"
+      - "*.directive.ts"
+      - "*.pipe.ts"
+      - "*.service.ts"
+      - "*.spec.ts"
+    repo:
+      - "package.json @angular/* versions"
+      - "angular.json or project.json Angular targets"
+      - "tsconfig* angularCompilerOptions"
+      - "Existing same-feature Angular files"
+    request:
+      - "Create or modify Angular component directive pipe service template style form input output or DI code"
+      - "Review Angular code for typing standalone imports provider scope template behavior or public API"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
 uses: []
-
 resources:
   references: []
   scripts: []

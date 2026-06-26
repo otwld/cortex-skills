@@ -1,0 +1,11 @@
+name: "setup-cortex-config"
+description: "Use when Cortex needs to create or repair the operator-local .codex/config.json phase configuration."
+activation: "explicit"
+visibility: "public"
+status: "active"
+uses: []
+resources:
+  references: []
+  scripts: []
+  templates: []
+  assets: []

@@ -64,8 +64,8 @@ EXPECTED_TERMS = {
     'skill-evolution': (
         'routing',
         'router',
-        'signals',
-        'module signals',
+        'facets',
+        'module facets',
         'repeated agent failure',
         'workspace conventions',
     ),
@@ -242,21 +242,21 @@ def cortex_prompts(prompts: list[Prompt], since: int | None, recent: int) -> lis
     return filtered
 
 
-def module_signal_text(workspace: Any) -> dict[str, str]:
-    """Return searchable signal text by active routed module name."""
+def module_facet_text(workspace: Any) -> dict[str, str]:
+    """Return searchable facet text by active routed module name."""
     result: dict[str, str] = {}
     for artifact in workspace.modules:
         if artifact.activation != 'routed' or artifact.status != 'active':
             continue
         values: list[str] = []
-        for key in ('strong', 'medium', 'weak'):
-            values.extend(artifact.signals[key])
+        for key in workspace.facet_keys:
+            values.extend(artifact.facets.get(key, []))
         result[artifact.name] = normalize_text(' '.join(values)).lower()
     return result
 
 
 def matched_terms(prompts: list[Prompt], modules: dict[str, str]) -> dict[str, dict[str, Any]]:
-    """Compare recent prompt language with current routing signal language."""
+    """Compare recent prompt language with current routing facet language."""
     report: dict[str, dict[str, Any]] = {}
     prompt_text = '\n'.join(prompt.text.lower() for prompt in prompts)
     for module, terms in EXPECTED_TERMS.items():
@@ -268,58 +268,30 @@ def matched_terms(prompts: list[Prompt], modules: dict[str, str]) -> dict[str, d
         missing = sorted(term for term in found if term not in modules[module])
         report[module] = {
             'matched_terms': found,
-            'missing_from_signals': missing,
+            'missing_from_facets': missing,
             'matched_prompt_count': sum(1 for prompt in prompts if any(term in prompt.text.lower() for term in found)),
         }
     return report
 
 
-def signal_category(signal: str) -> str | None:
-    """Return the category prefix before a strong-signal colon."""
-    if ':' not in signal:
-        return None
-    category = signal.split(':', 1)[0].strip().lower()
-    return category or None
-
-
-def connected(left: Any, right: Any) -> bool:
-    """Return whether two artifacts are directly related."""
-    relation_keys = ('before', 'with', 'after', 'excludes', 'replaces')
-    left_targets = {target for key in relation_keys for target in left.relations[key]}
-    right_targets = {target for key in relation_keys for target in right.relations[key]}
-    return right.name in left_targets or left.name in right_targets
-
-
-def static_signal_risks(workspace: Any) -> list[dict[str, Any]]:
-    """Identify metadata patterns that commonly weaken routing quality."""
+def static_facet_risks(workspace: Any) -> list[dict[str, Any]]:
+    """Identify metadata patterns that commonly weaken facet routing quality."""
     risks: list[dict[str, Any]] = []
     active = [
         artifact for artifact in workspace.modules
         if artifact.activation == 'routed' and artifact.status == 'active'
     ]
-    categories: dict[str, list[Any]] = {}
     for artifact in active:
         normalized_name = artifact.name.replace('-', ' ')
-        for signal in artifact.signals['weak']:
-            normalized_signal = signal.strip().lower().replace('-', ' ')
-            if normalized_signal == normalized_name:
-                risks.append({'module': artifact.name, 'risk': 'weak signal only restates module name', 'signal': signal})
-        for signal in artifact.signals['strong']:
-            lower_signal = signal.lower()
-            if 'final response' in lower_signal:
-                risks.append({'module': artifact.name, 'risk': 'strong signal uses broad lifecycle wording', 'signal': signal})
-            category = signal_category(signal)
-            if category:
-                categories.setdefault(category, []).append(artifact)
-    for category, artifacts in categories.items():
-        if len(artifacts) < 2:
-            continue
-        unrelated = sorted({
-            artifact.name for artifact in artifacts
-            if any(not connected(artifact, other) for other in artifacts if other is not artifact)
-        })
-        if unrelated:
-            risks.append({'module': ', '.join(unrelated), 'risk': 'duplicate strong-signal category', 'signal': category})
+        if not artifact.lifecycle:
+            risks.append({'module': artifact.name, 'risk': 'active module has no lifecycle files', 'detail': 'lifecycle'})
+        for key, values in artifact.facets.items():
+            for value in values:
+                normalized_value = value.strip().lower().replace('-', ' ')
+                if normalized_value == normalized_name:
+                    risks.append({'module': artifact.name, 'risk': 'facet only restates module name', 'detail': f'{key}: {value}'})
+                if 'evidence for ' in value.lower():
+                    risks.append({'module': artifact.name, 'risk': 'facet uses mechanical evidence wording', 'detail': f'{key}: {value}'})
     return risks
 
 
@@ -347,19 +319,19 @@ def render_text(report: dict[str, Any]) -> str:
         f"Cortex prompts analyzed: {report['cortex_prompt_count']}",
         f"Optional log DB available: {report['logs']['available']} ({report['logs']['marker_rows']} marker rows)",
         '',
-        '## Likely Under-Signaled Modules',
+        '## Likely Under-Faceted Modules',
     ]
     if report['term_matches']:
         for module, data in sorted(report['term_matches'].items()):
-            missing = ', '.join(data['missing_from_signals']) or 'none'
+            missing = ', '.join(data['missing_from_facets']) or 'none'
             matched = ', '.join(data['matched_terms'])
-            lines.append(f"- {module}: matched {data['matched_prompt_count']} prompts; missing signal terms: {missing}; matched terms: {matched}")
+            lines.append(f"- {module}: matched {data['matched_prompt_count']} prompts; missing facet terms: {missing}; matched terms: {matched}")
     else:
         lines.append('- none')
-    lines.extend(['', '## Static Signal Risks'])
+    lines.extend(['', '## Static Facet Risks'])
     if report['static_risks']:
         for risk in report['static_risks']:
-            lines.append(f"- {risk['module']}: {risk['risk']} ({risk['signal']})")
+            lines.append(f"- {risk['module']}: {risk['risk']} ({risk['detail']})")
     else:
         lines.append('- none')
     return '\n'.join(lines)
@@ -387,8 +359,8 @@ def main(argv: list[str] | None = None) -> int:
     report = {
         'history_prompt_count': len(history),
         'cortex_prompt_count': len(prompts),
-        'term_matches': matched_terms(prompts, module_signal_text(workspace)),
-        'static_risks': static_signal_risks(workspace),
+        'term_matches': matched_terms(prompts, module_facet_text(workspace)),
+        'static_risks': static_facet_risks(workspace),
         'logs': logs_summary(args.logs),
     }
     if args.format == 'json':

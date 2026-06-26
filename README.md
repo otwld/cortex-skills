@@ -8,24 +8,14 @@
 Give your coding agent a routing brain.
 
 Cortex Skills is a governed skill library for TypeScript ecosystem work. You
-invoke one public entry, `$cortex`, and it pulls in the smallest useful set of
-hidden operating guides for the job: planning, debugging, architecture,
-framework conventions, testing, documentation, review, and release completion.
+invoke one public entry, `$cortex`, and it orchestrates hidden atoms through
+structured facets, lifecycle phases, command atoms, and local run traces.
 
-It is not a package manager. It is not a prompt dump. It is a set of routing
-rules and engineering habits that help an agent stop guessing and start working
-with the right constraints.
-
-- One public entry: [`$cortex`](entry/cortex/SKILL.md).
-- 40+ hidden modules for real engineering situations.
-- Generated routing maps you can inspect, review, and validate.
-- Direct setup command skills for project memory, agent instructions, and routed
-  skill workspaces.
+It is not a package manager. It is not a prompt dump. It is a routed workspace
+with inspectable metadata, generated views, validation, and phase-specific
+runtime guidance.
 
 ## Copy These Prompts
-
-Use `$cortex` when you want the agent to choose the right workflow instead of
-forcing you to name every skill.
 
 ```text
 $cortex plan this migration before editing
@@ -40,260 +30,103 @@ $cortex debug this failing Vitest test from reproduction to regression guard
 ```
 
 ```text
-$cortex help me decide whether this DTO belongs in a shared library
-```
-
-```text
 $cortex finish this branch: verify, review, and prepare the PR
 ```
 
-Good `$cortex` requests usually say what kind of work is happening and what risk
-you care about. The router uses that evidence to select modules.
-
-## The Problem It Solves
-
-Coding agents fail most often when they load the wrong context, preserve old
-architecture to avoid hard changes, skip validation, or treat every task as a
-generic implementation prompt. Cortex turns those concerns into a governed
-workspace:
-
-- routing evidence lives in `skill.yaml`;
-- runtime behavior lives in `instructions.md` or public command `SKILL.md`
-  files;
-- generated catalog, graph, and cascade files make selection reviewable;
-- validation rejects stale generated output, hidden resource coupling, weak
-  public skill metadata, noisy routing signals, and boilerplate module gates.
-
-The result is a smaller active context with clearer obligations: choose the
-right module, follow its gates, update docs and tests with code, and prove the
-claim before saying the work is done.
-
-## Use It When
-
-Reach for Cortex when the task has shape, risk, or ambiguity:
-
-| You are doing this | Cortex brings in |
-| --- | --- |
-| Turning a vague idea into a real change | intake, planning, scope control |
-| Moving code across packages | placement, boundaries, public API design |
-| Touching Angular, NestJS, Nx, Vue, Vite, RxJS, Storybook, or TypeScript | framework and language conventions |
-| Changing behavior or fixing a bug | test-first discipline and debugging flow |
-| Creating examples, docs, stories, or fixtures | documentation and example consistency |
-| Finishing a branch | workspace safety, verification, review, branch completion |
-
-The point is not to load everything. The point is to load enough judgment to
-keep the agent on rails.
-
 ## How Routing Works
 
-The public skill is only the front door. The work happens in hidden modules.
+The public skill is the front door. Hidden modules are atoms selected by
+structured facets and lifecycle phase coverage.
 
 ```text
 your request
   -> $cortex entry
-  -> always-loaded modules
-  -> intent-understanding gate
-  -> routing signals
-  -> required before modules
-  -> evidence-backed with modules
-  -> deferred after modules
-  -> focused agent workflow
+  -> .codex/config.json bootstrap
+  -> .cortex/runs/{date-slug}/ trace
+  -> activate
+  -> plan
+  -> run
+  -> review
+  -> verify
+  -> finalize
 ```
 
 Routing follows a few plain rules:
 
-- Cortex always loads `no-transitional-architecture` before evidence-selected
-  modules so cleanup and implementation work do not preserve shims by default.
-- The entry states intent before challenge, planning, implementation, or review
-  modules are selected.
-- Strong signals describe direct request or repository evidence and beat medium
-  signals; medium signals beat weak signals.
-- `before` modules run first when another module depends on them.
-- `with` modules join only when they have their own evidence.
-- `after` modules wait until that phase is actually relevant.
-- `excludes` and `replaces` keep bad combinations out.
-- Command skills are public but direct-invocation only; they do not join
-  normal `$cortex` routing.
-- Public entry and command skills keep `policy.allow_implicit_invocation: false`
-  and include complete `agents/openai.yaml` display metadata.
+- `$cortex` reads `.codex/config.json` first and scaffolds it when missing.
+- Each run writes local trace files under `.cortex/runs/`.
+- Modules expose structured facets in `skill.yaml`.
+- Runtime behavior lives in `lifecycle/<phase>.md` files.
+- A phase can be delegated to one subagent that owns that whole phase.
+- Phase traces carry selected modules, matched facets, lifecycle files used,
+  unresolved questions, and next-phase inputs.
+- Modules do not name peer modules or declare relations.
+- Command skills are public atoms and may be invoked by `$cortex` when
+  orchestration requires it.
 
-The generated routing views are checked into the repo so you can inspect how the
-library thinks:
-
-- [Skill catalog](generated/SKILL_CATALOG.md)
-- [Routing cascade](generated/module-cascade.md)
-- [Relation graph](generated/module-graph.md)
-
-## Real Scenarios
-
-### The Messy Migration
-
-Prompt:
+## Workspace Shape
 
 ```text
-$cortex plan moving candidate matching logic out of the API app into a shared library
-```
-
-Likely routing:
-
-- `implementation-plan`
-- `workspace-state-guard`
-- `library-placement-decision`
-- `nx-module-boundaries`
-- `public-api-design`
-- `test-first-discipline`
-- `code-documentation`
-
-What changes: the agent should inspect the workspace, write a decision-complete
-plan, respect package boundaries, define the public API, and name validation
-before touching files.
-
-### The Failing Test
-
-Prompt:
-
-```text
-$cortex debug this flaky Playwright test; do not rewrite it until we know the cause
-```
-
-Likely routing:
-
-- `systematic-debugging`
-- `test-first-discipline`
-- `playwright-conventions`
-- `completion-verification`
-
-What changes: the agent should reproduce, localize, reduce, fix, and add a
-regression guard instead of trying random waits.
-
-### The UI Change
-
-Prompt:
-
-```text
-$cortex review this Angular Material dialog for keyboard flow, density, and bundle impact
-```
-
-Likely routing:
-
-- `angular-conventions`
-- `angular-material-conventions`
-- `bundle-performance`
-- `typescript-code-style`
-- `code-documentation`
-
-What changes: the agent should check template structure, accessibility, theming,
-dependencies, public component surface, and docs or stories touched by the UI.
-
-### The Public API Question
-
-Prompt:
-
-```text
-$cortex should ApplicationReviewResult be exported from the shared contract package?
-```
-
-Likely routing:
-
-- `library-placement-decision`
-- `public-api-design`
-- `naming-consistency`
-- `typescript-api-conventions`
-
-What changes: the agent should decide ownership first, keep exports minimal,
-encode states clearly, and avoid creating a contract just because two files look
-similar.
-
-### The Ready-To-Ship Branch
-
-Prompt:
-
-```text
-$cortex finish this branch and tell me what is still risky
-```
-
-Likely routing:
-
-- `workspace-state-guard`
-- `completion-verification`
-- `review-gate`
-- `branch-completion`
-
-What changes: the agent should check dirty state, run relevant validation,
-review the change against requirements, and report remaining risk before any
-publish step.
-
-## What Is Inside
-
-Cortex covers reusable engineering workflows across:
-
-- Architecture: placement, extraction, public APIs, naming, boundaries, bundle
-  impact, and drift detection.
-- Frameworks: Angular, Angular Material, Angular TanStack Query, NestJS,
-  NestJS Mongoose, Nx, RxJS, Storybook, Vite, and Vue.
-- Governance: intake, planning, execution, delegation, workspace safety,
-  debugging, verification, review, and branch completion.
-- Testing: Jest, Playwright, and Vitest.
-- TypeScript: source style and public API conventions.
-- Tools and maintenance: Bricks workflows, diary entries, example consistency,
-  and skill evolution.
-
-See the generated [skill catalog](generated/SKILL_CATALOG.md) for every module
-and command skill.
-
-## Quality Bar
-
-Every active routed module must earn its place in the cascade. Strong signals
-must be readable evidence, not generated phrases like `evidence for
-<module-name>`, and instructions must contain module-specific gates, hard
-stops, and checklists. The validator also checks generated freshness, relation
-targets, resource declarations, public skill metadata, output markers, duplicate
-strong signals, and command-skill exclusion from routed selection.
-
-## Command Skills
-
-Some workflows are public direct-invocation skills, but they are not selected by
-`$cortex` routing. Invoke them directly when you want that setup job:
-
-| Command | Use when |
-| --- | --- |
-| `$setup-agent-instructions` | Creating or auditing durable agent instruction files such as `AGENTS.md`. |
-| `$setup-routed-skill-workspace` | Creating, validating, or evolving another routed skill workspace. |
-| `$setup-project-memory` | Setting up project glossary, ADR, out-of-scope, or tracker memory. |
-
-## Install Or Point Your Agent
-
-The public routed Codex-facing surface is:
-
-```text
+routed-skills.yaml
 entry/cortex/
 |-- SKILL.md
 |-- agents/openai.yaml
 `-- skill.yaml
+modules/<area>/<cluster>/<artifact-name>/
+|-- lifecycle/
+|   |-- activate.md
+|   |-- plan.md
+|   |-- run.md
+|   |-- review.md
+|   |-- verify.md
+|   `-- finalize.md
+`-- skill.yaml
+commands/<command-name>/
+|-- SKILL.md
+|-- agents/openai.yaml
+`-- skill.yaml
+shared/
+generated/
+scripts/
 ```
 
-Compatible agent tooling should point at `entry/cortex/` for the `$cortex`
-entry. Routed modules stay hidden under nested category folders in `modules/`,
-while direct command skills live under `commands/`.
+Lifecycle files are optional per phase, but every active routed module must
+declare at least one lifecycle file.
 
-Clone the repository if you want the full workspace locally:
+## Generated Views
 
-```bash
-git clone git@github.com:otwld/cortex-skills.git
-cd cortex-skills
-```
+Generated views are checked in for review and validation:
 
-Then inspect the generated map:
+- [Skill catalog](generated/SKILL_CATALOG.md)
+- [Facet and lifecycle graph](generated/module-graph.md)
+- [Routing cascade](generated/module-cascade.md)
 
-```bash
-less generated/SKILL_CATALOG.md
-less generated/module-cascade.md
-less generated/module-graph.md
-```
+`module-graph.md` is a bipartite module-to-facet and module-to-phase graph. It
+does not contain module-to-module dependency edges.
+
+## Command Skills
+
+Invoke setup commands directly when you want that operation:
+
+| Command | Use when |
+| --- | --- |
+| `$setup-agent-instructions` | Creating or auditing durable agent instruction files such as `AGENTS.md`. |
+| `$setup-cortex-config` | Creating or repairing operator-local `.codex/config.json`. |
+| `$setup-routed-skill-workspace` | Creating, validating, or evolving another routed skill workspace. |
+| `$setup-project-memory` | Setting up project glossary, ADR, out-of-scope, or tracker memory. |
+
+## Quality Bar
+
+Every active routed module must earn its place:
+
+- facets use direct request or repository evidence;
+- lifecycle files are phase-specific and concrete;
+- modules do not route other modules;
+- resources are explicitly declared;
+- generated artifacts are fresh;
+- local run traces are ignored.
 
 ## Maintainer Commands
-
-`skill.yaml` files are the source of truth. Generated files are rebuilt outputs.
 
 Check generated freshness without writing:
 
@@ -321,14 +154,3 @@ python3 scripts/test-validate-routed-skills.py
 
 Workspace rules live in [AGENTS.md](AGENTS.md). Contribution rules live in
 [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## Release Status
-
-Current public seed: `v0.1.0`.
-
-This release is practical and usable. The public contract is the routed
-workspace shape, the `$cortex` entry, and the validation scripts.
-
-## License
-
-MIT. See [LICENSE](LICENSE).

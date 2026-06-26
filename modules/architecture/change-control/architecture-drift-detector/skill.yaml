@@ -1,31 +1,43 @@
-name: architecture-drift-detector
+name: "architecture-drift-detector"
 description: "Internal Cortex module applied when starting significant work, reviewing recent changes, planning refactors, or seeing commit bursts that may indicate structural drift."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Architecture drift detector: repeated churn, ownership drift, broad change clusters, dependency direction erosion, or responsibility spread before a rewrite"
-    medium:
-      - "Repeated churn, ownership drift, broad change clusters, dependency direction erosion, or responsibility spread"
-    weak:
-      - "Architecture drift detection"
-
-relations:
-  before: []
-  with:
-    - "architecture-deepening-review"
-    - "library-placement-decision"
-    - "nx-module-boundaries"
-  after: []
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "detect structural drift from concrete change evidence"
+      - "scope architecture risk before it becomes a broad rewrite"
+    surfaces:
+      - "recent diffs or commit clusters"
+      - "ownership boundaries"
+      - "dependency direction"
+      - "repeated fixes across files"
+      - "responsibility spread"
+    risks:
+      - "architecture concern inferred from file count alone"
+      - "same behavior changes across multiple owners"
+      - "dependency direction erodes over repeated edits"
+      - "drift response becomes an unbounded rewrite"
+    artifacts:
+      - "diff or commit range"
+      - "changed file cluster"
+      - "dependency edge"
+      - "drift finding"
+      - "bounded follow-up constraint"
+    repo:
+      - "repository with recent code churn"
+      - "modular workspace"
+    request:
+      - "reviews recent changes for churn, ownership spread, dependency erosion, or structural risk"
+      - "plans a refactor and needs drift evidence scoped to a named area"
+      - "mentions repeated fixes, broad change clusters, or responsibility moving across owners"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  plan: "lifecycle/plan.md"
+  review: "lifecycle/review.md"
 uses: []
-
 resources:
   references:
     - "shared/architecture-deepening.md"

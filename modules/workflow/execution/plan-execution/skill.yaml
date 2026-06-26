@@ -1,35 +1,36 @@
-name: plan-execution
+name: "plan-execution"
 description: "Internal Cortex module applied when executing a written implementation plan task-by-task with validation checkpoints and no remaining design decisions."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Plan execution: user asks to implement this plan, implement the plan, execute a written plan, or continue a decision-complete plan"
-    medium:
-      - "/goal, implement this plan, implement the plan, execute the plan, or plan exists with no design decision remaining"
-    weak:
-      - "Plan execution request"
-
-relations:
-  before:
-    - "workspace-state-guard"
-  with:
-    - "agent-delegation"
-    - "test-first-discipline"
-    - "code-documentation"
-    - "review-gate"
-    - "completion-verification"
-  after:
-    - "branch-completion"
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "execute-existing-plan"
+      - "continue-decision-complete-work"
+    surfaces:
+      - "workflow-execution"
+      - "implementation-sequencing"
+      - "validation-checkpoints"
+    risks:
+      - "silent-replanning"
+      - "stale-plan-vs-current-repo"
+      - "unrelated-dirty-worktree-changes"
+    artifacts:
+      - "implementation-plan"
+      - "task-checklist"
+      - "validation-report"
+    repo:
+      - "written-plan-or-goal-is-available"
+      - "planned-files-and-tests-can-be-identified"
+    request:
+      - "asks to implement, execute, continue, or finish a written plan"
+      - "plan already fixes scope, order, acceptance checks, and validation commands"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  run: "lifecycle/run.md"
 uses: []
-
 resources:
   references: []
   scripts: []

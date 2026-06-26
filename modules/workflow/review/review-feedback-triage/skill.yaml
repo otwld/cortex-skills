@@ -1,32 +1,49 @@
-name: review-feedback-triage
-description: "Internal Cortex module applied when receiving code review, CI review, agent review, or external technical feedback before implementing suggested changes."
-activation: routed
-visibility: hidden
-status: active
-
+name: "review-feedback-triage"
+description: "Internal Cortex module applied when receiving code review, CI review, agent review, or external technical feedback prior to implementing suggested changes."
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Review feedback: User, CI, reviewer, or agent gives technical feedback"
-    medium:
-      - "User, CI, reviewer, or agent gives technical feedback"
-    weak:
-      - "Review feedback"
-
-relations:
-  before: []
-  with:
-    - "systematic-debugging"
-    - "test-first-discipline"
-    - "completion-verification"
-    - "review-gate"
-  after: []
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "Triage external technical feedback"
+      - "Respond to reviewer comments"
+      - "Decide whether a suggested change is valid"
+    surfaces:
+      - "code review comment"
+      - "CI finding"
+      - "agent review"
+      - "reviewer bug report"
+      - "suggested patch"
+    risks:
+      - "reviewer claim may be stale or context-free"
+      - "blind patch may damage established design"
+      - "fix may expand beyond the requested concern"
+      - "feedback may contradict requirements"
+    artifacts:
+      - "review comment text"
+      - "pull request diff"
+      - "CI log"
+      - "changed file"
+      - "test output"
+      - "review response draft"
+    repo:
+      - "reviewed files"
+      - "changed files"
+      - "failing checks"
+      - "line references"
+      - "local diff"
+    request:
+      - "address review feedback"
+      - "triage review comments"
+      - "fix reviewer finding"
+      - "respond to CI review"
+      - "apply requested changes"
+      - "evaluate this suggested patch"
+lifecycle:
+  review: "lifecycle/review.md"
 uses: []
-
 resources:
   references: []
   scripts: []

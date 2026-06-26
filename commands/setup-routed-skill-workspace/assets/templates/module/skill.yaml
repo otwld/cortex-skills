@@ -6,17 +6,16 @@ status: draft
 
 routing:
   priority: 5
-  signals:
-    strong: []
-    medium: []
-    weak: []
+  facets:
+    intents: []
+    surfaces: []
+    risks: []
+    artifacts: []
+    repo: []
+    request: []
 
-relations:
-  before: []
-  with: []
-  after: []
-  excludes: []
-  replaces: []
+lifecycle:
+  activate: lifecycle/activate.md
 
 uses: []
 

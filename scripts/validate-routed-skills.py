@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Validate routed skill workspace structure, metadata, routing, and generated artifacts."""
+"""Validate Cortex routed skill workspace structure, metadata, lifecycle, and generated artifacts."""
 
 from __future__ import annotations
 
 import argparse
 import importlib.util
+import json
 import re
 import sys
 from pathlib import Path
@@ -14,21 +15,25 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 REBUILD_PATH = SCRIPT_DIR / 'rebuild-routed-skills.py'
 VALID_ACTIVATIONS = {'entry', 'routed', 'explicit'}
 VALID_VISIBILITIES = {'public', 'hidden'}
-RELATION_KEYS = ('before', 'with', 'after', 'excludes', 'replaces')
 RESOURCE_KEYS = ('references', 'scripts', 'templates', 'assets')
 AGENT_SKILL_NAME = 'SKILL.md'
 AGENT_METADATA_PATH = Path('agents') / 'openai.yaml'
 AGENT_SKILL_NAME_RE = re.compile(r'^[a-z0-9]+(?:-[a-z0-9]+)*$')
-INSTRUCTION_REQUIRED_MARKERS = (
-    '# Output Marker',
-    '## Overview',
-    '## Workflow',
-    '## Quality Gates',
-    '## Hard Stops',
-    '## Usage Checklist',
-    '## Cross References',
-)
+AGENT_METADATA_INTERFACE_FIELDS = ('display_name', 'short_description', 'default_prompt')
 PROHIBITED_RESOURCE_NAMES = {'legacy-extracted-patterns.md'}
+PROHIBITED_METADATA_KEYS = ('relations',)
+PROHIBITED_ROUTING_KEYS = ('signals', 'always')
+PROHIBITED_LIFECYCLE_TEXT = (
+    'BEFORE:',
+    'WITH:',
+    'AFTER:',
+    'using module:',
+    'using skill:',
+    '# Output Marker',
+    'required before modules',
+    'evidence-backed with modules',
+    'deferred after modules',
+)
 PROHIBITED_PROSE_PHRASES = (
     'Apply the module-specific rules:',
     'Guidance is grounded in current files or explicit user intent.',
@@ -52,10 +57,13 @@ PROHIBITED_PROSE_PATTERNS = (
     re.compile(r'^- .+ docs, metadata, tests, or generated artifacts affected by the change were updated together\.$'),
     re.compile(r'^- .+ risks, rejected paths, and validation gaps are stated\.$'),
 )
-NON_CONTENT_BULLET_SECTIONS = {'Reference Routing', 'Cross References'}
-DUPLICATED_BULLET_LIMIT = 2
-AGENT_METADATA_INTERFACE_FIELDS = ('display_name', 'short_description', 'default_prompt')
-BROAD_STRONG_SIGNAL_TERMS = ('final response',)
+LIFECYCLE_REQUIRED_MARKERS = (
+    '## Overview',
+    '## Workflow',
+    '## Quality Gates',
+    '## Hard Stops',
+    '## Phase Output',
+)
 
 
 def load_rebuild_module() -> Any:
@@ -85,49 +93,6 @@ def manifest_value(workspace: Any, key: str, default: dict[str, str]) -> dict[st
     return rebuild.merge_defaults(workspace.manifest.get(key), default, key)
 
 
-def relation_targets(artifact: Any) -> set[str]:
-    """Return all relation targets for one artifact."""
-    targets: set[str] = set()
-    for key in RELATION_KEYS:
-        targets.update(artifact.relations[key])
-    return targets
-
-
-def before_chain(name: str, before_map: dict[str, list[str]], stack: list[str], errors: list[str], limit: int) -> int:
-    """Return maximum before depth while recording cycles and depth violations."""
-    if name in stack:
-        errors.append(f'before cycle: {" -> ".join(stack[stack.index(name):] + [name])}')
-        return 0
-    children = before_map.get(name, [])
-    if not children:
-        return 0
-    max_depth = 0
-    for child in children:
-        depth = 1 + before_chain(child, before_map, [*stack, name], errors, limit)
-        max_depth = max(max_depth, depth)
-    if max_depth > limit:
-        errors.append(f'{name}: before depth {max_depth} exceeds cap {limit}')
-    return max_depth
-
-
-def connected(left: Any, right: Any) -> bool:
-    """Return whether two artifacts are directly related."""
-    return right.name in relation_targets(left) or left.name in relation_targets(right)
-
-
-def normalized_signal_text(value: str) -> str:
-    """Normalize a signal or artifact name for routing-quality comparisons."""
-    return re.sub(r'[^a-z0-9]+', ' ', value.lower()).strip()
-
-
-def signal_category(value: str) -> str | None:
-    """Return a strong-signal category prefix when the signal declares one."""
-    if ':' not in value:
-        return None
-    category = normalized_signal_text(value.split(':', 1)[0])
-    return category or None
-
-
 def resource_candidates(artifact: Any, workspace: Any, kind: str, value: str) -> list[Path]:
     """Return accepted paths for a resource declaration."""
     if value.startswith('shared/'):
@@ -149,16 +114,16 @@ def has_descendant_artifact(path: Path, artifact_dirs: set[Path]) -> bool:
     return any(path in artifact.parents for artifact in artifact_dirs)
 
 
-def has_module_like_contents(path: Path, instructions_name: str) -> bool:
+def has_module_like_contents(path: Path) -> bool:
     """Return whether a non-artifact folder contains files that require artifact metadata."""
-    if (path / instructions_name).exists() or (path / AGENT_SKILL_NAME).exists():
+    if (path / AGENT_SKILL_NAME).exists() or (path / 'instructions.md').exists():
         return True
-    if (path / AGENT_METADATA_PATH).exists():
+    if (path / AGENT_METADATA_PATH).exists() or (path / 'lifecycle').exists():
         return True
     return any((path / folder).exists() for folder in RESOURCE_KEYS)
 
 
-def validate_modules_tree(root: Path, modules_root: Path, metadata_name: str, instructions_name: str, errors: list[str]) -> None:
+def validate_modules_tree(root: Path, modules_root: Path, metadata_name: str, errors: list[str]) -> None:
     """Validate nested routed module artifacts and inert category folders."""
     if not modules_root.exists():
         return
@@ -178,14 +143,12 @@ def validate_modules_tree(root: Path, modules_root: Path, metadata_name: str, in
                 metadata = {}
             if metadata.get('activation') == 'explicit':
                 errors.append(f'{rel(root, directory)}: command skill must live under commands')
-            if not (directory / instructions_name).exists():
-                errors.append(f'{rel(root, directory)}: missing {instructions_name}')
             continue
 
         if is_under_artifact(directory, artifact_dirs):
             continue
 
-        if has_module_like_contents(directory, instructions_name):
+        if has_module_like_contents(directory):
             errors.append(f'{rel(root, directory)}: missing {metadata_name}')
         elif not has_descendant_artifact(directory, artifact_dirs):
             errors.append(f'{rel(root, directory)}: category folder has no descendant module artifact')
@@ -231,118 +194,27 @@ def validate_generated(workspace: Any, errors: list[str]) -> None:
             errors.append(f'{rel(workspace.root, path)}: stale generated artifact')
 
 
-def validate_always_loaded_modules(workspace: Any, names: dict[str, Any], errors: list[str]) -> None:
-    """Validate manifest-level always-loaded routed modules."""
-    for target in workspace.always:
-        artifact = names.get(target)
-        if artifact is None:
-            errors.append(f'routing.always target does not exist: {target}')
-            continue
-        if artifact.activation != 'routed':
-            errors.append(f'routing.always target must be a routed module: {target}')
-        if artifact.visibility != 'hidden':
-            errors.append(f'routing.always target must be hidden: {target}')
-        if artifact.status != 'active':
-            errors.append(f'routing.always target must be active: {target}')
-
-
-def validate_active_routed_module_content(
-    workspace: Any,
-    active_routed: list[Any],
-    instructions_name: str,
-    errors: list[str],
-) -> None:
-    """Validate active module reachability and instruction prose quality."""
-    duplicated_bullets: dict[str, list[str]] = {}
-    for artifact in active_routed:
-        if not any(artifact.signals[key] for key in rebuild.SIGNAL_KEYS):
-            errors.append(f'{artifact.name}: active routed module has no routing signals')
-        for signal in artifact.signals['strong']:
-            normalized_signal = normalized_signal_text(signal)
-            normalized_name = normalized_signal_text(artifact.name)
-            if re.search(rf'\bevidence for {re.escape(artifact.name)}:', signal, re.IGNORECASE):
-                errors.append(f'{artifact.name}: strong signal uses mechanical evidence prefix: {signal}')
-            if normalized_signal == normalized_name:
-                errors.append(f'{artifact.name}: strong signal only restates module name: {signal}')
-            for term in BROAD_STRONG_SIGNAL_TERMS:
-                if term in signal.lower():
-                    errors.append(f'{artifact.name}: strong signal uses broad lifecycle wording: {signal}')
-        for signal in artifact.signals['weak']:
-            if normalized_signal_text(signal) == normalized_signal_text(artifact.name):
-                errors.append(f'{artifact.name}: weak signal only restates module name: {signal}')
-
-        instruction_path = artifact.directory / instructions_name
-        if not instruction_path.exists():
-            continue
-        text = instruction_path.read_text(encoding='utf-8')
-        for marker in INSTRUCTION_REQUIRED_MARKERS:
-            if marker not in text:
-                errors.append(f'{rel(workspace.root, instruction_path)}: missing required instruction section: {marker}')
-        for phrase in PROHIBITED_PROSE_PHRASES:
-            if phrase in text:
-                errors.append(f'{rel(workspace.root, instruction_path)}: template prose remains: {phrase}')
-        for line_number, line in enumerate(text.splitlines(), 1):
-            if any(pattern.fullmatch(line) for pattern in PROHIBITED_PROSE_PATTERNS):
-                errors.append(f'{rel(workspace.root, instruction_path)}:{line_number}: title-swapped boilerplate remains')
-
-        section = ''
-        for line_number, line in enumerate(text.splitlines(), 1):
-            if line.startswith('## '):
-                section = line[3:].strip()
-            if not line.startswith('- ') or section in NON_CONTENT_BULLET_SECTIONS:
-                continue
-            duplicated_bullets.setdefault(line, []).append(f'{rel(workspace.root, instruction_path)}:{line_number}')
-
-    for bullet, locations in duplicated_bullets.items():
-        if len(locations) > DUPLICATED_BULLET_LIMIT:
-            errors.append(f'duplicated instruction bullet across active modules: {bullet}')
-
-
-def load_agent_skill_frontmatter(root: Path, skill_path: Path, errors: list[str]) -> dict[str, Any]:
-    """Load the constrained YAML frontmatter from an agent SKILL.md."""
+def validate_agent_skill_frontmatter(root: Path, skill_path: Path, expected_name: str, errors: list[str]) -> None:
+    """Validate a public agent skill frontmatter block."""
     if not skill_path.exists():
         errors.append(f'{rel(root, skill_path.parent)}: missing {AGENT_SKILL_NAME}')
-        return {}
+        return
     text = skill_path.read_text(encoding='utf-8')
     if not text.startswith('---\n'):
         errors.append(f'{rel(root, skill_path)}: missing YAML frontmatter')
-        return {}
+        return
     try:
         closing_index = text.index('\n---', 4)
     except ValueError:
         errors.append(f'{rel(root, skill_path)}: invalid YAML frontmatter')
-        return {}
+        return
     try:
         data = rebuild.simple_yaml_load(text[4:closing_index])
     except Exception as error:
         errors.append(f'{rel(root, skill_path)}: invalid YAML frontmatter: {error}')
-        return {}
-    if not isinstance(data, dict):
-        errors.append(f'{rel(root, skill_path)}: frontmatter must be a mapping')
-        return {}
-    return data
-
-
-def validate_agent_entry(root: Path, entry_dir: Path, expected_name: str, instructions_name: str, errors: list[str]) -> None:
-    """Validate the public entry is also an invokable agent skill."""
-    validate_agent_skill_folder(root, entry_dir, expected_name, errors)
-
-    legacy_agent_metadata = entry_dir / 'openai.yaml'
-    if legacy_agent_metadata.exists():
-        errors.append(f'{rel(root, legacy_agent_metadata)}: use agents/openai.yaml instead')
-
-    entry_instructions = entry_dir / instructions_name
-    if entry_instructions.exists():
-        errors.append(f'{rel(root, entry_instructions)}: entry instructions belong in {AGENT_SKILL_NAME}')
-
-
-def validate_agent_skill_folder(root: Path, skill_dir: Path, expected_name: str, errors: list[str]) -> None:
-    """Validate a public agent skill folder and direct-invocation policy."""
-    skill_path = skill_dir / AGENT_SKILL_NAME
-    frontmatter = load_agent_skill_frontmatter(root, skill_path, errors)
-    validate_output_marker(root, skill_path, f'using skill: {expected_name}', errors)
-    name = frontmatter.get('name')
-    description = frontmatter.get('description')
+        return
+    name = data.get('name')
+    description = data.get('description')
     if not isinstance(name, str) or not name:
         errors.append(f'{rel(root, skill_path)}: missing name in frontmatter')
     elif not AGENT_SKILL_NAME_RE.fullmatch(name):
@@ -351,6 +223,11 @@ def validate_agent_skill_folder(root: Path, skill_dir: Path, expected_name: str,
         errors.append(f'{rel(root, skill_path)}: name {name!r} does not match metadata {expected_name!r}')
     if not isinstance(description, str) or not description:
         errors.append(f'{rel(root, skill_path)}: missing description in frontmatter')
+
+
+def validate_agent_skill_folder(root: Path, skill_dir: Path, expected_name: str, errors: list[str]) -> None:
+    """Validate a public agent skill folder and direct-invocation UI metadata."""
+    validate_agent_skill_frontmatter(root, skill_dir / AGENT_SKILL_NAME, expected_name, errors)
 
     agent_metadata = skill_dir / AGENT_METADATA_PATH
     if not agent_metadata.exists():
@@ -371,17 +248,178 @@ def validate_agent_skill_folder(root: Path, skill_dir: Path, expected_name: str,
             errors.append(f'{rel(root, agent_metadata)}: policy.allow_implicit_invocation must be false')
 
 
-def validate_output_marker(root: Path, path: Path, expected_line: str, errors: list[str]) -> None:
-    """Validate an instruction artifact declares its client display marker."""
+def validate_agent_entry(root: Path, entry_dir: Path, expected_name: str, errors: list[str]) -> None:
+    """Validate the public entry is also an invokable agent skill."""
+    validate_agent_skill_folder(root, entry_dir, expected_name, errors)
+
+    legacy_agent_metadata = entry_dir / 'openai.yaml'
+    if legacy_agent_metadata.exists():
+        errors.append(f'{rel(root, legacy_agent_metadata)}: use agents/openai.yaml instead')
+
+    entry_instructions = entry_dir / 'instructions.md'
+    if entry_instructions.exists():
+        errors.append(f'{rel(root, entry_instructions)}: entry instructions belong in {AGENT_SKILL_NAME}')
+
+
+def load_metadata(root: Path, artifact: Any, errors: list[str]) -> dict[str, Any]:
+    """Load artifact metadata for validation-only checks."""
+    metadata_path = artifact.directory / 'skill.yaml'
+    try:
+        return rebuild.load_yaml(metadata_path)
+    except Exception as error:
+        errors.append(f'{rel(root, metadata_path)}: {error}')
+        return {}
+
+
+def validate_lifecycle_file(root: Path, artifact: Any, phase: str, raw_path: str, errors: list[str]) -> None:
+    """Validate one lifecycle phase file."""
+    if phase not in artifact.lifecycle:
+        return
+    relative = Path(raw_path)
+    if relative.is_absolute() or '..' in relative.parts:
+        errors.append(f'{artifact.name}: lifecycle {phase} path must stay inside the module: {raw_path}')
+        return
+    if not relative.parts or relative.parts[0] != 'lifecycle':
+        errors.append(f'{artifact.name}: lifecycle {phase} path must be under lifecycle/: {raw_path}')
+    path = artifact.directory / relative
+    try:
+        path.relative_to(artifact.directory)
+    except ValueError:
+        errors.append(f'{artifact.name}: lifecycle {phase} path must stay inside the module: {raw_path}')
+        return
     if not path.exists():
+        errors.append(f'{artifact.name}: missing lifecycle file: {raw_path}')
         return
     text = path.read_text(encoding='utf-8')
-    if '# Output Marker' not in text or 'Display:' not in text or expected_line not in text:
-        errors.append(f'{rel(root, path)}: missing output marker: {expected_line}')
+    for marker in LIFECYCLE_REQUIRED_MARKERS:
+        if marker not in text:
+            errors.append(f'{rel(root, path)}: missing required lifecycle section: {marker}')
+    for phrase in PROHIBITED_LIFECYCLE_TEXT:
+        if phrase in text:
+            errors.append(f'{rel(root, path)}: prohibited lifecycle routing/output text remains: {phrase}')
+    for phrase in PROHIBITED_PROSE_PHRASES:
+        if phrase in text:
+            errors.append(f'{rel(root, path)}: template prose remains: {phrase}')
+    for line_number, line in enumerate(text.splitlines(), 1):
+        if any(pattern.fullmatch(line) for pattern in PROHIBITED_PROSE_PATTERNS):
+            errors.append(f'{rel(root, path)}:{line_number}: title-swapped boilerplate remains')
+
+
+def validate_lifecycle(workspace: Any, artifact: Any, metadata: dict[str, Any], errors: list[str]) -> None:
+    """Validate routed module lifecycle declarations and files."""
+    if artifact.activation == 'explicit' and metadata.get('lifecycle'):
+        errors.append(f'{artifact.name}: command skills must not declare lifecycle files')
+    if artifact.activation != 'routed':
+        return
+
+    instructions_path = artifact.directory / 'instructions.md'
+    if instructions_path.exists():
+        errors.append(f'{rel(workspace.root, instructions_path)}: routed module runtime belongs in lifecycle files')
+
+    for phase in artifact.lifecycle:
+        if phase not in workspace.phases:
+            errors.append(f'{artifact.name}: unknown lifecycle phase: {phase}')
+    for phase, path in artifact.lifecycle.items():
+        validate_lifecycle_file(workspace.root, artifact, phase, path, errors)
+
+    lifecycle_dir = artifact.directory / 'lifecycle'
+    declared = {value for value in artifact.lifecycle.values()}
+    if lifecycle_dir.exists():
+        for file_path in sorted(path for path in lifecycle_dir.rglob('*.md') if path.is_file()):
+            relative = file_path.relative_to(artifact.directory).as_posix()
+            if relative not in declared:
+                errors.append(f'{artifact.name}: undeclared lifecycle file: {relative}')
+
+    if artifact.status == 'active' and not artifact.lifecycle:
+        errors.append(f'{artifact.name}: active routed module has no lifecycle files')
+
+
+def normalized_text(value: str) -> str:
+    """Normalize text for weak routing-quality checks."""
+    return re.sub(r'[^a-z0-9]+', ' ', value.lower()).strip()
+
+
+def validate_facets(workspace: Any, artifact: Any, metadata: dict[str, Any], errors: list[str]) -> None:
+    """Validate structured routing facets for routed modules."""
+    routing = rebuild.as_mapping(metadata.get('routing'), f'{artifact.name}.routing')
+    for key in PROHIBITED_ROUTING_KEYS:
+        if key in routing:
+            errors.append(f'{artifact.name}: prohibited routing key remains: {key}')
+
+    facets_raw = rebuild.as_mapping(routing.get('facets'), f'{artifact.name}.routing.facets')
+    for key in facets_raw:
+        if key not in workspace.facet_keys:
+            errors.append(f'{artifact.name}: unknown routing facet key: {key}')
+    if artifact.activation != 'routed' or artifact.status != 'active':
+        return
+
+    values = [value for facet_values in artifact.facets.values() for value in facet_values]
+    if not values:
+        errors.append(f'{artifact.name}: active routed module has no routing facets')
+    normalized_name = normalized_text(artifact.name)
+    for key, facet_values in artifact.facets.items():
+        for value in facet_values:
+            normalized_value = normalized_text(value)
+            if not normalized_value:
+                errors.append(f'{artifact.name}: empty routing facet value in {key}')
+            if normalized_value == normalized_name:
+                errors.append(f'{artifact.name}: routing facet only restates module name: {value}')
+            if 'evidence for ' in value.lower():
+                errors.append(f'{artifact.name}: routing facet uses mechanical evidence wording: {value}')
+
+
+def validate_codex_config(workspace: Any, names: dict[str, Any], errors: list[str]) -> None:
+    """Validate operator-local Cortex config if it exists."""
+    config_path = workspace.root / '.codex' / 'config.json'
+    if not config_path.exists():
+        return
+    try:
+        data = json.loads(config_path.read_text(encoding='utf-8'))
+    except json.JSONDecodeError as error:
+        errors.append(f'{rel(workspace.root, config_path)}: invalid JSON: {error}')
+        return
+    if not isinstance(data, dict):
+        errors.append(f'{rel(workspace.root, config_path)}: expected JSON object')
+        return
+    phases = data.get('phases')
+    if not isinstance(phases, dict):
+        errors.append(f'{rel(workspace.root, config_path)}: phases must be an object')
+        return
+    for phase, config in phases.items():
+        if phase not in workspace.phases:
+            errors.append(f'{rel(workspace.root, config_path)}: unknown phase in config: {phase}')
+            continue
+        if not isinstance(config, dict):
+            errors.append(f'{rel(workspace.root, config_path)}: phases.{phase} must be an object')
+            continue
+        always = config.get('always', [])
+        if not isinstance(always, list):
+            errors.append(f'{rel(workspace.root, config_path)}: phases.{phase}.always must be a list')
+            continue
+        for target in always:
+            if not isinstance(target, str):
+                errors.append(f'{rel(workspace.root, config_path)}: phases.{phase}.always must contain strings')
+                continue
+            artifact = names.get(target)
+            if artifact is None:
+                errors.append(f'{rel(workspace.root, config_path)}: phases.{phase}.always target does not exist: {target}')
+            elif artifact.activation != 'routed' or artifact.visibility != 'hidden' or artifact.status != 'active':
+                errors.append(f'{rel(workspace.root, config_path)}: phases.{phase}.always target must be an active hidden routed module: {target}')
+
+
+def validate_gitignore(root: Path, errors: list[str]) -> None:
+    """Validate local run traces are ignored by git."""
+    gitignore = root / '.gitignore'
+    if not gitignore.exists():
+        errors.append('.gitignore: missing file required to ignore .cortex/runs/')
+        return
+    lines = {line.strip() for line in gitignore.read_text(encoding='utf-8').splitlines()}
+    if '.cortex/runs/' not in lines:
+        errors.append('.gitignore: missing .cortex/runs/')
 
 
 def validate_workspace(raw_manifest: str | None) -> list[str]:
-    """Return routed workspace validation errors."""
+    """Return Cortex routed workspace validation errors."""
     errors: list[str] = []
     try:
         manifest_path = rebuild.find_manifest(raw_manifest)
@@ -393,8 +431,15 @@ def validate_workspace(raw_manifest: str | None) -> list[str]:
     try:
         paths = rebuild.merge_defaults(manifest.get('paths'), rebuild.DEFAULT_PATHS, 'paths')
         artifacts = rebuild.merge_defaults(manifest.get('artifacts'), rebuild.DEFAULT_ARTIFACTS, 'artifacts')
+        facet_keys = rebuild.facet_keys_from_manifest(manifest)
+        phases = rebuild.phases_from_manifest(manifest)
     except Exception as error:
         return [str(error)]
+    if not facet_keys:
+        errors.append('routing.facets.keys: expected at least one facet key')
+    if not phases:
+        errors.append('lifecycle.phases: expected at least one phase')
+
     entry_config = rebuild.as_mapping(manifest.get('entry'), 'entry')
     entry_path_value = entry_config.get('path')
     if not isinstance(entry_path_value, str) or not entry_path_value:
@@ -403,7 +448,6 @@ def validate_workspace(raw_manifest: str | None) -> list[str]:
     entry_root = root / paths['entry']
     entry_dir = root / entry_path_value
     metadata_name = artifacts['metadata']
-    instructions_name = artifacts['instructions']
 
     entry_dirs: list[Path] = []
     if entry_root.exists():
@@ -426,7 +470,7 @@ def validate_workspace(raw_manifest: str | None) -> list[str]:
         errors.append(f'{rel(root, entry_dir)}: missing {metadata_name}')
 
     modules_root = root / paths['modules']
-    validate_modules_tree(root, modules_root, metadata_name, instructions_name, errors)
+    validate_modules_tree(root, modules_root, metadata_name, errors)
 
     commands_root = root / paths['commands']
     if commands_root.exists():
@@ -435,8 +479,8 @@ def validate_workspace(raw_manifest: str | None) -> list[str]:
                 continue
             if not (child / metadata_name).exists():
                 errors.append(f'{rel(root, child)}: missing {metadata_name}')
-            if (child / instructions_name).exists():
-                errors.append(f'{rel(root, child / instructions_name)}: command behavior belongs in {AGENT_SKILL_NAME}')
+            if (child / 'instructions.md').exists():
+                errors.append(f'{rel(root, child / "instructions.md")}: command behavior belongs in {AGENT_SKILL_NAME}')
 
     try:
         workspace = rebuild.load_workspace(str(manifest_path))
@@ -449,6 +493,13 @@ def validate_workspace(raw_manifest: str | None) -> list[str]:
         if artifact.name in names:
             errors.append(f'duplicate artifact name: {artifact.name}')
         names[artifact.name] = artifact
+
+    known_names = set(names)
+    for artifact in workspace.artifacts:
+        metadata = load_metadata(workspace.root, artifact, errors)
+        for key in PROHIBITED_METADATA_KEYS:
+            if key in metadata:
+                errors.append(f'{artifact.name}: prohibited metadata key remains: {key}')
         if artifact.activation not in VALID_ACTIVATIONS:
             errors.append(f'{artifact.name}: invalid activation {artifact.activation!r}')
         if artifact.visibility not in VALID_VISIBILITIES:
@@ -459,15 +510,9 @@ def validate_workspace(raw_manifest: str | None) -> list[str]:
             errors.append(f'{artifact.name}: routed module must be hidden')
         if artifact.activation == 'explicit' and artifact.visibility != 'public':
             errors.append(f'{artifact.name}: command skill must be public')
-        if artifact.activation == 'routed' and not (artifact.directory / instructions_name).exists():
-            errors.append(f'{artifact.name}: missing {instructions_name}')
-        if artifact.activation == 'routed':
-            validate_output_marker(
-                workspace.root,
-                artifact.directory / instructions_name,
-                f'using module: {artifact.name}',
-                errors,
-            )
+        validate_resources(workspace, artifact, known_names, errors)
+        validate_facets(workspace, artifact, metadata, errors)
+        validate_lifecycle(workspace, artifact, metadata, errors)
         if artifact.activation == 'explicit':
             validate_agent_skill_folder(workspace.root, artifact.directory, artifact.name, errors)
 
@@ -475,74 +520,10 @@ def validate_workspace(raw_manifest: str | None) -> list[str]:
         errors.append(f'{workspace.entry.name}: entry skill must use activation entry')
     if workspace.entry.visibility != 'public':
         errors.append(f'{workspace.entry.name}: entry skill must be public')
-    validate_agent_entry(workspace.root, workspace.entry.directory, workspace.entry.name, instructions_name, errors)
-    validate_always_loaded_modules(workspace, names, errors)
+    validate_agent_entry(workspace.root, workspace.entry.directory, workspace.entry.name, errors)
 
-    name_set = set(names)
-    for artifact in [*workspace.modules, *workspace.commands]:
-        for key in RELATION_KEYS:
-            for target in artifact.relations[key]:
-                if target not in name_set:
-                    errors.append(f'{artifact.name}: {key} target does not exist: {target}')
-        validate_resources(workspace, artifact, name_set, errors)
-
-    before_map = {
-        artifact.name: artifact.relations['before']
-        for artifact in workspace.modules
-        if artifact.activation == 'routed'
-    }
-    validation = rebuild.as_mapping(workspace.manifest.get('validation'), 'validation')
-    max_depth = validation.get('max_before_depth', 3)
-    if not isinstance(max_depth, int):
-        errors.append('validation.max_before_depth: expected integer')
-        max_depth = 3
-    for name in before_map:
-        before_chain(name, before_map, [], errors, max_depth)
-
-    active_routed = [
-        artifact for artifact in workspace.modules
-        if artifact.activation == 'routed' and artifact.status == 'active'
-    ]
-    validate_active_routed_module_content(workspace, active_routed, instructions_name, errors)
-    signals: dict[str, list[Any]] = {}
-    signal_categories: dict[str, list[Any]] = {}
-    for artifact in active_routed:
-        for signal in artifact.signals['strong']:
-            signals.setdefault(signal.strip().lower(), []).append(artifact)
-            category = signal_category(signal)
-            if category is not None:
-                signal_categories.setdefault(category, []).append(artifact)
-    for signal, artifacts_with_signal in signals.items():
-        if len(artifacts_with_signal) < 2:
-            continue
-        unrelated = [
-            artifact.name for artifact in artifacts_with_signal
-            if any(not connected(artifact, other) for other in artifacts_with_signal if other is not artifact)
-        ]
-        if unrelated:
-            errors.append(f'duplicate strong signal across unrelated modules: {signal}')
-    for category, artifacts_with_category in signal_categories.items():
-        if len(artifacts_with_category) < 2:
-            continue
-        unrelated = [
-            artifact.name for artifact in artifacts_with_category
-            if any(not connected(artifact, other) for other in artifacts_with_category if other is not artifact)
-        ]
-        if unrelated:
-            errors.append(f'duplicate strong signal category across unrelated modules: {category}')
-
-    shared_root = workspace.root / paths['shared']
-    used_shared = {
-        value.removeprefix('shared/')
-        for artifact in [*workspace.modules, *workspace.commands]
-        for value in [*artifact.uses, *sum((artifact.resources[key] for key in RESOURCE_KEYS), [])]
-        if value.startswith('shared/')
-    }
-    if shared_root.exists():
-        for child in sorted(shared_root.iterdir()):
-            if child.name not in used_shared and not any(value.startswith(f'{child.name}/') for value in used_shared):
-                errors.append(f'{rel(workspace.root, child)}: orphaned shared resource')
-
+    validate_codex_config(workspace, names, errors)
+    validate_gitignore(workspace.root, errors)
     validate_generated(workspace, errors)
     return sorted(set(errors))
 
@@ -555,7 +536,7 @@ def parse_args(argv: list[str] | None) -> argparse.Namespace:
 
 
 def main(argv: list[str] | None = None) -> int:
-    """Run routed workspace validation."""
+    """Run Cortex routed workspace validation."""
     args = parse_args(argv)
     errors = validate_workspace(args.manifest)
     if errors:

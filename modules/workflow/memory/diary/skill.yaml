@@ -1,28 +1,50 @@
-name: diary
+name: "diary"
 description: "Internal Cortex module applied when the user asks to log, journal, summarize, hand off, or preserve agent work history, decisions, blockers, validations, or completed outcomes."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Work history: User asks to log, summarize, hand off, preserve decisions, or record validation"
-    medium:
-      - "User asks to log, summarize, hand off, preserve decisions, or record validation"
-    weak:
-      - "Work history"
-
-relations:
-  before: []
-  with: []
-  after: []
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "Record work history"
+      - "Prepare a handoff log"
+      - "Preserve decisions or validation evidence"
+    surfaces:
+      - "repo-local diary"
+      - "work summary"
+      - "handoff notes"
+      - "decision log"
+      - "validation record"
+    risks:
+      - "secrets or unnecessary personal data may be persisted"
+      - "unverified assumptions may become durable history"
+      - "diary entries may duplicate authoritative docs or issues"
+      - "future agents may rely on incomplete context"
+    artifacts:
+      - ".diary/YYYY-MM-DD.md"
+      - "diary dry-run output"
+      - "recent diary entries"
+      - "validation summary"
+      - "changed file list"
+      - "blocker list"
+    repo:
+      - "project root"
+      - ".diary directory"
+      - "current working directory"
+      - "changed files"
+    request:
+      - "log this work"
+      - "write a diary entry"
+      - "journal progress"
+      - "prepare a handoff summary"
+      - "record this decision"
+      - "preserve validation results"
+      - "show recent diary entries"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  finalize: "lifecycle/finalize.md"
 uses: []
-
 resources:
   references: []
   scripts:

@@ -1,25 +1,9 @@
-name: setup-agent-instructions
+name: "setup-agent-instructions"
 description: "Use only when the user explicitly includes $setup-agent-instructions; sets up or audits workspace AI-agent instruction files such as AGENTS.md, nested AGENTS.md, CLAUDE.md, .github/copilot-instructions.md, .cursorrules, .cursor/rules, .windsurf, or .clinerules."
-activation: explicit
-visibility: public
-status: active
-
-routing:
-  priority: 0
-  signals:
-    strong: []
-    medium: []
-    weak: []
-
-relations:
-  before: []
-  with: []
-  after: []
-  excludes: []
-  replaces: []
-
+activation: "explicit"
+visibility: "public"
+status: "active"
 uses: []
-
 resources:
   references: []
   scripts: []

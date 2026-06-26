@@ -1,28 +1,12 @@
-name: setup-routed-skill-workspace
+name: "setup-routed-skill-workspace"
 description: "Use only when the user explicitly includes $setup-routed-skill-workspace; sets up, analyzes, validates, rebuilds, or evolves generic routed skill workspaces with one public entry skill, hidden routed modules, command skills, explicit routing metadata, local resources, generated catalogs and graphs, and deterministic integrity checks."
-activation: explicit
-visibility: public
-status: active
-
-routing:
-  priority: 0
-  signals:
-    strong: []
-    medium: []
-    weak: []
-
-relations:
-  before: []
-  with: []
-  after: []
-  excludes: []
-  replaces: []
-
+activation: "explicit"
+visibility: "public"
+status: "active"
 uses:
   - "scripts/rebuild-routed-skills.py"
   - "scripts/validate-routed-skills.py"
   - "scripts/test-validate-routed-skills.py"
-
 resources:
   references:
     - "operations.md"
@@ -39,6 +23,6 @@ resources:
     - "templates/generated/SKILL_CATALOG.md"
     - "templates/generated/module-cascade.md"
     - "templates/generated/module-graph.md"
-    - "templates/module/instructions.md"
+    - "templates/module/lifecycle/activate.md"
     - "templates/module/skill.yaml"
     - "templates/routed-skills.yaml"

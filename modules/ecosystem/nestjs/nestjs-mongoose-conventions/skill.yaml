@@ -1,33 +1,48 @@
-name: nestjs-mongoose-conventions
+name: "nestjs-mongoose-conventions"
 description: "Internal Cortex module applied when creating or reviewing NestJS Mongoose schemas, models, repositories, aggregation helpers, ObjectId handling, or persistence-facing DTO contracts."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Mongoose persistence: Schema, model, repository, aggregation, ObjectId, or persistence DTO changes"
-    medium:
-      - "Schema, model, repository, aggregation, ObjectId, or persistence DTO changes"
-    weak:
-      - "Mongoose persistence"
-
-relations:
-  before:
-    - "nestjs-conventions"
-  with:
-    - "typescript-api-conventions"
-    - "public-api-design"
-    - "code-documentation"
-  after:
-    - "skill-evolution"
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "Apply NestJS Mongoose conventions to schemas, models, repositories, and persistence contracts"
+      - "Review Mongoose query, ObjectId, aggregation, and plain-result boundaries in NestJS code"
+    surfaces:
+      - "@nestjs/mongoose MongooseModule forRoot forFeature forFeatureAsync and InjectModel"
+      - "Schema Prop SchemaFactory raw schema definitions hooks plugins virtuals indexes and discriminators"
+      - "Mongoose Model Query Aggregate populate lean sessions transactions and ObjectId handling"
+      - "Repository providers mappers persistence DTOs and API-facing return contracts"
+    risks:
+      - "Hydrated document or raw ObjectId leaks across a public API or transport boundary"
+      - "Schema class is reused as a domain model DTO or response contract where shapes differ"
+      - "Aggregation result is untyped or assumes schema casting that Mongoose does not perform"
+      - "Lean/plain query result is used where getters virtuals document methods or save behavior are required"
+      - "Hook plugin index or discriminator registration happens after model compilation"
+      - "Index synchronization can drop existing database indexes without diff evidence"
+      - "Repository exposes model internals instead of behavior-oriented persistence methods"
+    artifacts:
+      - "*.schema.ts"
+      - "*.repository.ts and persistence provider files"
+      - "*.module.ts MongooseModule registration"
+      - "*.dto.ts persistence-facing contracts and mappers"
+      - "aggregation helper files and query builders"
+      - "index diff or sync evidence"
+      - "*.spec.ts *.e2e-spec.ts persistence tests"
+    repo:
+      - "Installed @nestjs/mongoose and mongoose versions"
+      - "Existing schema and repository patterns"
+      - "Connection registration model tokens and named connection usage"
+      - "Persistence tests fixtures indexes migrations and database setup"
+    request:
+      - "Create or modify NestJS Mongoose schema model repository aggregation ObjectId mapper or persistence DTO code"
+      - "Review Mongoose persistence for schema shape query typing document leakage ObjectId conversion or repository boundaries"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
 uses: []
-
 resources:
   references: []
   scripts: []

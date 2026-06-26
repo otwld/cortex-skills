@@ -1,29 +1,47 @@
-name: bundle-performance
+name: "bundle-performance"
 description: "Internal Cortex module applied when changes may affect bundle size, tree-shaking, side effects, UI dependencies, entry points, or broadly consumed runtime code."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Bundle performance: bundle size, tree-shaking, side effects, optional dependency isolation, entry point broadening, or runtime dependency added to shared UI"
-    medium:
-      - "Bundle size, tree-shaking, side effects, optional integration, entry point, or broadly consumed runtime dependency"
-    weak:
-      - "Bundle risk"
-
-relations:
-  before: []
-  with:
-    - "public-api-design"
-  after: []
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "control bundle size impact"
+      - "preserve tree-shaking"
+      - "isolate optional runtime dependencies"
+      - "review shared entry point changes"
+    surfaces:
+      - "package entry points and exports"
+      - "barrel files and shared UI roots"
+      - "dynamic imports and lazy-loaded integrations"
+      - "bundler configuration and side-effect declarations"
+    risks:
+      - "shared import path pulls heavy dependency for unaffected consumers"
+      - "import-time side effect prevents dead-code elimination"
+      - "optional integration becomes part of the core runtime path"
+      - "public import path changes without compatibility handling"
+      - "bundle impact is accepted without measurement or static evidence"
+    artifacts:
+      - "package.json and lockfiles"
+      - "index files, barrels, and package export maps"
+      - "build configuration and sideEffects metadata"
+      - "bundle analyzer output, chunk reports, and size-limit results"
+    repo:
+      - "diff adds runtime dependency or broad import in shared code"
+      - "diff expands root exports or package entry points"
+      - "diff changes side-effectful setup, global registration, CSS imports, or polyfills"
+      - "diff moves optional charting, editor, date, i18n, analytics, or SDK code into a common path"
+    request:
+      - "evaluate bundle size, chunking, tree-shaking, side effects, or dependency cost"
+      - "add, remove, or move a runtime dependency"
+      - "change package exports, barrels, shared imports, lazy loading, or build configuration"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
+  verify: "lifecycle/verify.md"
 uses: []
-
 resources:
   references: []
   scripts: []

@@ -1,32 +1,41 @@
-name: typescript-api-conventions
-description: "Internal Cortex module applied when designing or reviewing TypeScript public APIs, exported types, DTOs, contracts, generics, strict typing, entry points, or reusable type surfaces."
-activation: routed
-visibility: hidden
-status: active
-
+name: "typescript-api-conventions"
+description: "Internal Cortex module applied when designing or reviewing exported TypeScript API contracts, public type surfaces, DTOs, generic helpers, declaration files, or package entry points."
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "TypeScript API surface: exported type, interface, abstract class, DTO, contract, generic, or reusable type surface changes"
-    medium:
-      - "Exported type, interface, abstracts, DTO, contract, generic, or reusable type surface changes"
-    weak:
-      - "TypeScript public API"
-
-relations:
-  before: []
-  with:
-    - "public-api-design"
-    - "naming-consistency"
-    - "typescript-code-style"
-    - "code-documentation"
-  after: []
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "Design or review an exported TypeScript contract"
+      - "Model public TypeScript states, DTOs, or reusable type utilities"
+    surfaces:
+      - "TypeScript exported interfaces, type aliases, classes, functions, constants, and enums"
+      - "DTOs, service contracts, SDK shapes, declaration files, and package entry points"
+      - "Generic helpers, discriminated unions, branded values, nullability, and readonly contracts"
+    risks:
+      - "Optional-field state bag permits invalid combinations"
+      - "Unconstrained or return-only generic lets callers assert unsupported shapes"
+      - "Private helper type is exported to satisfy an internal import"
+      - "Runtime export and type-only export boundaries are unclear"
+      - "Contract change lacks consumer migration, typecheck, or public documentation evidence"
+    artifacts:
+      - "*.ts, *.tsx, *.mts, *.cts, and *.d.ts files that expose exported symbols"
+      - "index files, barrel files, package exports, generated declaration surfaces, and API docs"
+      - "Tests or examples that compile against the public TypeScript contract"
+    repo:
+      - "Existing imports of the changed export"
+      - "Package entry points and declaration output"
+      - "Typecheck, API extraction, contract tests, or compile-time examples"
+    request:
+      - "Add, remove, rename, or redesign an exported TypeScript symbol"
+      - "Change a DTO, public interface, SDK type, service contract, generic utility, or declaration file"
+      - "Review whether a TypeScript API makes invalid states, nullability, or generic constraints explicit"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
 uses: []
-
 resources:
   references: []
   scripts: []

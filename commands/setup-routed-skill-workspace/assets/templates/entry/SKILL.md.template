@@ -1,23 +1,16 @@
 ---
 name: {{entry_name}}
-description: Use only when the user explicitly includes {{entry_invocation}}; routes work through the {{workspace_name}} routed skill workspace and its hidden modules.
----
-
-# Output Marker
-
-Display:
-using skill: {{entry_name}}
-
+description: Use only when the user explicitly includes {{entry_invocation}}; routes work through lifecycle atoms in the {{workspace_name}} routed skill workspace.
 ---
 
 # {{entry_display_name}}
 
 ## Overview
 
-Route explicit {{entry_invocation}} requests through the hidden modules in this
-routed skill workspace.
+Route explicit {{entry_invocation}} requests through hidden atoms selected by
+structured facets and lifecycle phase coverage.
 
-Use the routed workspace metadata as the source of truth:
+Use routed workspace metadata as the source of truth:
 
 - `../../routed-skills.yaml`
 - `../../generated/SKILL_CATALOG.md`
@@ -26,65 +19,44 @@ Use the routed workspace metadata as the source of truth:
 
 ## Workflow
 
-1. Accept the request only when the user explicitly includes
-   {{entry_invocation}} or when a directly invoked command emits a
-   `Router handoff:` block containing a literal {{entry_invocation}} request.
-2. Load always-loaded modules listed in the generated cascade.
-3. Run an intent-understanding gate: state the desired outcome, task type,
-   artifact target, known context, constraints, and requested mode.
-4. For command handoffs, treat only the handoff block as passed context; inspect
-   files normally instead of inheriting command-owned resources.
-5. Inspect the request and relevant files for direct routing evidence; do not
-   ask questions the repository can answer.
-6. Select additional routed modules using the generated cascade, classifying
-   selected, candidate, deferred, and skipped modules when routing is broad or
-   ambiguous.
-7. Ask operator questions only for candidate modules where the answer changes
-   routing, planning, execution, review depth, validation, or durable artifacts.
-8. Expand required `before` relations up to the configured depth cap.
-9. Add `with` modules only when they have independent evidence.
-10. Defer `after` modules until the later phase is relevant.
-11. Reject excluded module combinations.
-12. Use local resources only when a selected module references them.
+1. Accept the request only when the user explicitly includes {{entry_invocation}} or when a command emits a `Router handoff:` block containing a literal {{entry_invocation}} request.
+2. Start `.cortex/runs/{date-slug}/` and write `request.md`.
+3. Read `.codex/config.json`; if missing, invoke the config command atom or scaffold the workspace's documented default config.
+4. Run lifecycle phases in manifest order.
+5. Report phase progress such as `Starting phase: activate`, `Activated modules: ...`, and `Completed phase: plan`.
+6. Select atoms from structured facets, phase config, and declared lifecycle files.
+7. Write phase traces as each phase completes.
+8. Pass hidden phase trace forward so later phases know the matched facets, activated atoms, lifecycle files used, and unresolved questions.
 
 ## Quality Gates
 
-- This public entry skill is invoked only by explicit {{entry_invocation}} use
-  or a command handoff block containing a literal {{entry_invocation}} request.
+- This public entry skill is invoked only by explicit {{entry_invocation}} use or a valid command handoff.
 - Modules are hidden behind this entry point.
 - Generated artifacts are derived from module metadata.
-- Routing decisions remain inspectable.
-- Challenge, planning, implementation, and review modules are selected only
-  after the request intent can be stated.
+- Routing decisions remain inspectable through facets, lifecycle declarations, and run traces.
 
 ## Hard Stops
 
 - Do not use this skill through implicit invocation.
-- Do not treat ordinary prose, examples, or docs that mention
-  {{entry_invocation}} as command handoffs; the active boundary is the
-  `Router handoff:` block.
-- Do not inherit command-owned references, templates, assets, scripts, or other
-  private context unless the handoff block includes that context.
-- Do not load hidden modules unless they are always-loaded, directly evidenced,
-  or required by relations.
+- Do not route hidden modules through relation concepts such as `before`, `with`, `after`, `excludes`, or `replaces`.
 - Do not treat generated catalog, graph, or cascade files as source files.
+- Do not add hidden resource coupling.
 
 ## Output Format
 
-State the selected modules and any skipped tempting modules when routing is
-broad or ambiguous.
+Show phase progress and concise phase results. Keep routing evidence, matched
+facets, and lifecycle files used in the run trace.
 
-## Usage Checklist
+## Completion Checklist
 
 - Generated catalog was available.
-- Generated graph was available.
+- Generated graph was available and interpreted as a facet/lifecycle graph.
 - Generated cascade was available.
-- Invocation came from explicit {{entry_invocation}} use or a valid
-  `Router handoff:` block.
-- Always-loaded modules were loaded before evidence-selected modules.
-- Relations and exclusions were respected.
+- Run trace was started.
+- Config was read or scaffolded.
+- Activated atoms had direct facet evidence, phase config, or lifecycle coverage.
 
-## Cross References
+## Source Artifacts
 
 - Routed entry metadata: `skill.yaml`
 - UI metadata: `agents/openai.yaml`

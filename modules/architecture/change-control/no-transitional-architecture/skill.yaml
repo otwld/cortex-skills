@@ -1,34 +1,45 @@
-name: no-transitional-architecture
+name: "no-transitional-architecture"
 description: "Internal Cortex module always loaded to force direct replacement instead of transitional architecture: compatibility aliases, legacy adapters, migration shims, temporary wrappers, parallel old/new implementations, staged migrations, placeholder code, stubs, fallback preservation, previous-behavior preservation, and dead-code retention are blocked unless a named external compatibility contract is proven."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 10
-  signals:
-    strong:
-      - "Transitional architecture: compatibility alias, legacy adapter, migration shim, temporary wrapper, side-by-side old/new implementation, staged migration, fallback preserving previous behavior, old executor, old event name, old option name, placeholder implementation, stub, or dead-code preservation"
-      - "Replacement required: breaking change, rename, extraction, moved source of truth, obsolete public API, old export removal, caller migration, or duplicate implementation removal"
-    medium:
-      - "Compatibility layer, alias, legacy adapter, migration shim, temporary wrapper, implementation layer, parallel implementation, preserve current behavior, preserve previous behavior, placeholder implementation, stub, obsolete code, or old API retention"
-      - "Delete or replace old files, callers, tests, exports, events, option names, executor names, DTOs, routes, services, adapters, factories, or registries"
-    weak:
-      - "Transitional architecture"
-      - "Replacement gate"
-
-relations:
-  before: []
-  with: []
-  after: []
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "force direct replacement of changed architecture surfaces"
+      - "evaluate whether compatibility is an externally required contract"
+    surfaces:
+      - "public APIs, exports, routes, events, commands, options, and DTOs"
+      - "source-of-truth files, services, adapters, factories, and registries"
+      - "tests, fixtures, docs, examples, and generated outputs"
+      - "runtime registrations and dependency injection providers"
+    risks:
+      - "old and new implementations remain reachable"
+      - "alias, shim, wrapper, or fallback hides incomplete caller updates"
+      - "placeholder or stub creates false completion"
+      - "obsolete name remains in docs, fixtures, schema, or registration"
+    artifacts:
+      - "replacement ledger"
+      - "compatibility exception"
+      - "renamed or moved file"
+      - "deleted export or public name"
+      - "deletion audit"
+    repo:
+      - "codebase undergoing rename, move, extraction, or behavior replacement"
+    request:
+      - "renames, moves, extracts, or replaces a source of truth"
+      - "adds a compatibility alias, legacy adapter, migration shim, wrapper, fallback, stub, or placeholder"
+      - "keeps old and new APIs, event names, option names, DTO fields, routes, services, adapters, factories, or registries side by side"
+      - "asks to preserve old behavior while introducing a new public surface"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  plan: "lifecycle/plan.md"
+  review: "lifecycle/review.md"
 uses: []
-
 resources:
   references:
-    - "replacement-contract.md"
+    - "references/replacement-contract.md"
   scripts: []
   templates: []
   assets: []

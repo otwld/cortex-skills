@@ -1,33 +1,46 @@
-name: test-first-discipline
-description: "Internal Cortex module applied before behavior changes, bug fixes, refactors, e2e workflows, or test framework setup where tests can prove the intended behavior or regression."
-activation: routed
-visibility: hidden
-status: active
-
+name: "test-first-discipline"
+description: "Internal Cortex module applied to behavior changes, bug fixes, refactors, e2e workflows, or test framework setup where tests can prove the intended behavior or regression."
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Test or behavior proof: new behavior, bug fix, refactor, regression risk, e2e workflow, or test framework setup changes"
-    medium:
-      - "New behavior, bug fix, refactor, regression risk, test, e2e, vitest, playwright, or validation path changes"
-    weak:
-      - "Behavior proof"
-
-relations:
-  before: []
-  with:
-    - "systematic-debugging"
-    - "completion-verification"
-    - "jest-conventions"
-    - "vitest-conventions"
-    - "playwright-conventions"
-  after: []
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "define behavior proof prior to implementation"
+      - "add regression coverage for a bug fix"
+      - "protect public behavior during refactor"
+      - "verify test harness changes through a smoke path"
+    surfaces:
+      - "public APIs and service interfaces"
+      - "UI workflows and command behavior"
+      - "integration boundaries and e2e paths"
+      - "test framework setup and harness configuration"
+    risks:
+      - "implementation-only test pins private structure"
+      - "behavior change ships without failing or newly relevant coverage"
+      - "refactor changes behavior without public seam protection"
+      - "test setup change lacks a smoke proof"
+      - "exception to test-first discipline is undocumented"
+    artifacts:
+      - "unit, integration, and e2e tests"
+      - "fixtures, test harnesses, and assertions"
+      - "test framework configuration"
+      - "regression tests"
+    repo:
+      - "diff changes behavior, bug fix, refactor, validation path, or public contract"
+      - "diff adds or changes tests, fixtures, test harnesses, or e2e workflows"
+      - "diff changes test runner, setup files, mocks, or framework configuration"
+    request:
+      - "implement new behavior, fix a bug, refactor behavior, or add regression protection"
+      - "add or update tests, e2e workflows, fixtures, mocks, or test framework setup"
+      - "decide what test should prove a requested behavior"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
+  verify: "lifecycle/verify.md"
 uses: []
-
 resources:
   references: []
   scripts: []

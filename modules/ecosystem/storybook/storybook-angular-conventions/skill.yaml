@@ -1,33 +1,44 @@
-name: storybook-angular-conventions
+name: "storybook-angular-conventions"
 description: "Internal Cortex module applied when creating, modifying, or reviewing Angular Storybook stories, Angular story providers, module metadata, standalone story setup, or Angular story mocks."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Storybook surface: Story, MDX docs, preview setup, addon, mock, or story organization changes"
-    medium:
-      - "Story, MDX docs, preview setup, addon, mock, or story organization changes"
-    weak:
-      - "Storybook surface"
-
-relations:
-  before:
-    - "storybook-conventions"
-    - "angular-conventions"
-  with:
-    - "typescript-code-style"
-    - "code-documentation"
-  after:
-    - "skill-evolution"
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "Apply Angular-specific Storybook conventions to stories, providers, module metadata, and typed args"
+      - "Review Angular Storybook setup for standalone or NgModule correctness and deterministic component states"
+    surfaces:
+      - "@storybook/angular Meta StoryObj render moduleMetadata applicationConfig and decorators"
+      - "Angular standalone imports NgModule declarations providers and environment providers in stories"
+      - "Angular inputs outputs forms template dependencies pipes directives and service mocks"
+      - "Compodoc docs setup angular.json project targets and build-storybook configuration"
+    risks:
+      - "Story setup hides missing Angular imports declarations providers or required inputs"
+      - "applicationConfig provider scope is broader than the story state requires"
+      - "Args do not match Angular inputs outputs form values or template-facing types"
+      - "Story depends on live Angular services HTTP router state current time or shared mutable state"
+      - "Standalone and NgModule setup styles are mixed without local project evidence"
+    artifacts:
+      - "*.stories.ts files using @storybook/angular"
+      - ".storybook/main.* .storybook/preview.* Angular Storybook config"
+      - "angular.json project.json Storybook targets"
+      - "Compodoc documentation.json and docs integration files"
+      - "Angular fixture mock provider and decorator files"
+    repo:
+      - "Installed @storybook/angular storybook @angular/* and builder versions"
+      - "Existing Angular story setup for standalone or NgModule components"
+      - "Angular component inputs outputs providers forms directives and pipes under story"
+      - "Storybook Angular serve build and docs commands"
+    request:
+      - "Create or modify Angular Storybook stories provider mocks moduleMetadata applicationConfig args fixtures or Compodoc setup"
+      - "Review Angular Storybook for component setup provider scope typed args deterministic data or Storybook Angular validation"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
 uses: []
-
 resources:
   references: []
   scripts: []

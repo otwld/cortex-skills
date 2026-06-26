@@ -1,45 +1,45 @@
-name: code-documentation
+name: "code-documentation"
 description: "Internal Cortex module applied whenever a request asks for, accepts, generates, edits, moves, deletes, splits, refactors, or materially reviews code; when public, reusable, or user-facing documentation, Storybook docs, examples, stories, MDX docs, or API usage notes change; and when dense implementation blocks need explanatory line comments."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Planned code touch: User asks for or accepts work that will implement, create, edit, move, delete, split, refactor, or materially review code"
-      - "Documentation or examples: JSDoc, TSDoc, public docs, examples, stories, fixtures, payloads, or illustrative data change"
-      - "Public documentation coverage: exported symbol, public member, component input or output, route, command, config option, DTO, schema, reusable helper, generated docs, README, Storybook, MDX, usage note, or user-facing behavior needs coverage"
-      - "Dense implementation comments: long function, dense function, complex block, phase comment, invariant comment, ordering-sensitive logic, lifecycle constraint, concurrency, caching, retry, pagination, or error recovery needs explanatory line comments"
-    medium:
-      - "Code will be implemented, created, edited, moved, deleted, split, refactored, or materially reviewed"
-      - "JSDoc, TSDoc, public docs, examples, stories, fixtures, payloads, or illustrative data change"
-      - "Exported, public, reusable, framework-bound, or user-facing surface needs documentation coverage"
-      - "Long or dense logic needs block-level line comments explaining phases, invariants, constraints, or non-obvious decisions"
-    weak:
-      - "Planned code touch"
-      - "Documentation or examples"
-      - "Public documentation coverage"
-      - "Dense function comments"
-
-relations:
-  before: []
-  with:
-    - "example-universe-enforcer"
-    - "storybook-conventions"
-  after:
-    - "skill-evolution"
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "keep code-adjacent documentation current"
+      - "document touched public or reusable code surfaces"
+      - "explain dense implementation logic"
+    surfaces:
+      - "exported symbols and package entry points"
+      - "component inputs, routes, commands, hooks, services, and providers"
+      - "DTOs, schemas, payloads, generated docs, README usage, Storybook, and MDX"
+      - "long or branch-heavy functions"
+    risks:
+      - "changed behavior lacks consumer-facing documentation"
+      - "comments narrate syntax instead of preserving intent"
+      - "stale examples or docs remain reachable when code has moved"
+    artifacts:
+      - "JSDoc and TSDoc"
+      - "README, Storybook, MDX, and generated documentation"
+      - "fixtures, payload samples, stories, and usage examples"
+    repo:
+      - "diff creates, edits, moves, splits, deletes, or materially reviews code"
+      - "diff changes a public import, framework binding, configuration, command, or user workflow"
+      - "diff touches ordering-sensitive, lifecycle-sensitive, cached, concurrent, retrying, paginated, or error-recovery logic"
+    request:
+      - "implement, create, edit, move, delete, split, refactor, or review code"
+      - "add, update, or review JSDoc, TSDoc, examples, stories, fixtures, payloads, or usage notes"
+      - "ask whether comments, API docs, or generated documentation are sufficient"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
+  verify: "lifecycle/verify.md"
 uses: []
-
 resources:
   references:
     - "references/coverage-and-comments.md"
-    - "shared/recruitment-universe.md"
-    - "shared/skill-quality-standard.md"
   scripts: []
   templates: []
   assets: []

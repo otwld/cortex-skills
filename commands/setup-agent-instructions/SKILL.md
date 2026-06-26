@@ -3,12 +3,6 @@ name: setup-agent-instructions
 description: Use only when the user explicitly includes $setup-agent-instructions; sets up or audits workspace AI-agent instruction files such as AGENTS.md, nested AGENTS.md, CLAUDE.md, .github/copilot-instructions.md, .cursorrules, .cursor/rules, .windsurf, or .clinerules.
 ---
 
-# Output Marker
-
-Display:
-using skill: setup-agent-instructions
-
----
 
 # Setup Agent Instructions
 
@@ -76,7 +70,7 @@ root `AGENTS.md` plus a nested app guide only if the app has distinct rules.
 - Do not claim completion without checking the generated guidance against the
   current repository.
 
-## Usage Checklist
+## Completion Checklist
 
 - Existing agent instruction files and repo docs were inspected.
 - User preferences were challenged where files could not answer the decision.
@@ -86,6 +80,6 @@ root `AGENTS.md` plus a nested app guide only if the app has distinct rules.
 - Nested or tool-specific files are justified by concrete scope differences.
 - Final instructions were re-read against current files.
 
-## Cross References
+## Source Artifacts
 
 - None

@@ -1,37 +1,52 @@
-name: systematic-debugging
-description: "Internal Cortex module applied when encountering bugs, failing tests, build failures, performance problems, or unexpected behavior before proposing fixes."
-activation: routed
-visibility: hidden
-status: active
-
+name: "systematic-debugging"
+description: "Internal Cortex module applied when encountering bugs, failing tests, build failures, performance problems, or unexpected behavior that needs diagnosis prior to proposing fixes."
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Failure investigation: Failing test, build failure, bug, performance problem, or unexpected behavior"
-    medium:
-      - "Failing test, build failure, bug, performance problem, or unexpected behavior"
-    weak:
-      - "Failure investigation"
-
-relations:
-  before: []
-  with:
-    - "test-first-discipline"
-    - "completion-verification"
-    - "architecture-drift-detector"
-  after:
-    - "skill-evolution"
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "reproduce or localize a failure"
+      - "test falsifiable debugging hypotheses"
+      - "fix root cause instead of symptom"
+      - "stabilize flaky asynchronous behavior"
+    surfaces:
+      - "failing tests and CI logs"
+      - "runtime errors and stack traces"
+      - "performance regressions and unexpected behavior"
+      - "async waits, integration boundaries, and data validation"
+    risks:
+      - "symptom patch leaves earlier invalid state path open"
+      - "multiple suspected causes change at once"
+      - "failure cannot be reproduced or reduced"
+      - "temporary diagnostics remain in delivered code"
+      - "fixed sleep hides a readiness race"
+    artifacts:
+      - "failure logs, traces, and stack traces"
+      - "minimal reproductions and focused probes"
+      - "temporary instrumentation"
+      - "regression tests and validation guards"
+    repo:
+      - "test, build, CI, runtime, or performance failure is present"
+      - "diff changes code while investigating a reported bug"
+      - "workflow contains sleeps, polling, retries, or flaky async behavior"
+      - "invalid data flows across entry point, domain, integration, or environment boundaries"
+    request:
+      - "debug, investigate, diagnose, reproduce, or fix a failure"
+      - "fix a failing test, build failure, bug, flaky workflow, performance problem, or unexpected behavior"
+      - "explain why a failure occurs prior to changing code"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
+  verify: "lifecycle/verify.md"
 uses: []
-
 resources:
   references:
-    - "condition-based-waiting.md"
-    - "defense-in-depth.md"
-    - "root-cause-tracing.md"
+    - "references/condition-based-waiting.md"
+    - "references/defense-in-depth.md"
+    - "references/root-cause-tracing.md"
   scripts: []
   templates: []
   assets: []

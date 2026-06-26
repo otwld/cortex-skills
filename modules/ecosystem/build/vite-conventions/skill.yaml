@@ -1,32 +1,46 @@
-name: vite-conventions
+name: "vite-conventions"
 description: "Internal Cortex module applied when creating, modifying, or reviewing Vite configuration, library builds, aliases, plugins, source maps, dependency externalization, or dev-server settings."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Vite surface: Vite config, library build, alias, plugin, source map, externalization, or dev server changes"
-    medium:
-      - "Vite config, library build, alias, plugin, source map, externalization, or dev server changes"
-    weak:
-      - "Vite surface"
-
-relations:
-  before: []
-  with:
-    - "bundle-performance"
-    - "typescript-code-style"
-    - "code-documentation"
-  after:
-    - "skill-evolution"
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "Apply Vite configuration conventions to dev server behavior, plugins, aliases, and production builds"
+      - "Review Vite library and application builds for public entry point and dependency correctness"
+    surfaces:
+      - "vite.config.* defineConfig config loading and environment modes"
+      - "resolve.alias publicDir define envDir optimizeDeps and CSS handling"
+      - "plugins plugin order transform behavior and framework integrations"
+      - "build.lib output formats source maps externals and bundler options"
+      - "server proxy HMR allowed hosts watch settings and preview behavior"
+    risks:
+      - "Alias bypasses package public entry points or TypeScript path contracts"
+      - "Library build bundles framework or peer dependencies into published output"
+      - "Plugin order changes transform semantics for dev or build"
+      - "Source maps dev server proxy or HMR changes are not validated in the mode they affect"
+      - "Version-sensitive bundler options are changed without checking installed Vite"
+    artifacts:
+      - "vite.config.*"
+      - "vitest.config.* when shared Vite config affects tests"
+      - "package.json dependencies peerDependencies exports and scripts"
+      - "tsconfig*.json paths and module settings"
+      - "dist build output source maps and generated package artifacts"
+      - ".storybook main or preview files when Vite builder config is changed"
+    repo:
+      - "Installed vite @vitejs/* and framework plugin versions"
+      - "Existing Vite config for nearby projects"
+      - "Package exports public entry points and TypeScript path aliases"
+      - "Build dev preview and Storybook commands that consume the config"
+    request:
+      - "Create or modify Vite config aliases plugins library build source maps dependency externalization or dev server settings"
+      - "Review Vite behavior for build output dev server HMR plugin order public entry points or dependency bundling"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
 uses: []
-
 resources:
   references: []
   scripts: []

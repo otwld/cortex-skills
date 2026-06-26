@@ -1,31 +1,54 @@
-name: branch-completion
+name: "branch-completion"
 description: "Internal Cortex module applied when implementation is complete and the user asks to merge, push, open a pull request, publish, discard, clean up, or finish branch work."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Branch completion: commit, push, pull request, merge, release, publish, close branch, discard branch, or finish branch request"
-    medium:
-      - "Commit, push, pull request, merge, release, publish, branch cleanup, or finish branch decision"
-    weak:
-      - "Branch finish request"
-
-relations:
-  before:
-    - "workspace-state-guard"
-    - "completion-verification"
-  with:
-    - "review-gate"
-  after: []
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "Finish local branch work"
+      - "Create a durable branch handoff"
+      - "Publish or clean up completed repository work"
+    surfaces:
+      - "git branch lifecycle"
+      - "commit preparation"
+      - "remote publishing"
+      - "pull request preparation"
+      - "release handoff"
+    risks:
+      - "unrelated dirty files may be committed or discarded"
+      - "publish, merge, release, and discard actions may be hard to reverse"
+      - "stale validation may make branch readiness claims false"
+      - "local branch state may diverge from the expected remote or base"
+    artifacts:
+      - "git status output"
+      - "scoped diff"
+      - "validation output"
+      - "commit message"
+      - "remote branch"
+      - "pull request metadata"
+      - "release notes"
+    repo:
+      - "dirty tree"
+      - "staged changes"
+      - "current branch"
+      - "upstream tracking"
+      - "unpushed commits"
+      - "untracked files"
+    request:
+      - "commit changes"
+      - "push this branch"
+      - "open or update a pull request"
+      - "merge this work"
+      - "publish or release this change"
+      - "discard or clean up branch work"
+      - "finish this branch"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  verify: "lifecycle/verify.md"
+  finalize: "lifecycle/finalize.md"
 uses: []
-
 resources:
   references: []
   scripts: []

@@ -1,34 +1,45 @@
-name: angular-tanstack-query-conventions
-description: "Internal Cortex module applied when creating, modifying, or reviewing TanStack Query integration in Angular code, including query keys, query options, mutations, pagination, and skippable inputs."
-activation: routed
-visibility: hidden
-status: active
-
+name: "angular-tanstack-query-conventions"
+description: "Internal Cortex module applied when TanStack Query integration in Angular code is created, modified, or reviewed, including query keys, query options, mutations, pagination, invalidation, and skippable inputs."
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Angular TanStack Query: Query key, options, mutation, pagination, or skippable input changes"
-    medium:
-      - "Query key, options, mutation, pagination, or skippable input changes"
-    weak:
-      - "Angular TanStack Query"
-
-relations:
-  before:
-    - "angular-conventions"
-  with:
-    - "rxjs-conventions"
-    - "typescript-api-conventions"
-    - "public-api-design"
-    - "code-documentation"
-  after:
-    - "skill-evolution"
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "Apply TanStack Query conventions to Angular data fetching and cache contracts"
+      - "Review Angular query keys options mutations pagination invalidation and skippable inputs"
+    surfaces:
+      - "TanStack Query Angular injectQuery injectMutation queryOptions and mutationOptions"
+      - "QueryClient providers defaults invalidation and cache writes"
+      - "Angular services and components that expose query state"
+      - "Pagination filtering authorization and skippable input boundaries"
+    risks:
+      - "Query key omits data-changing input or authorization partition"
+      - "Disabled query behavior is hidden behind nullable values"
+      - "Mutation side effects leave stale or over-invalidated cache state"
+      - "Pagination or filters reuse cache entries across distinct server results"
+      - "Angular tests share QueryClient cache or wait on unstable query state"
+    artifacts:
+      - "*query*.ts"
+      - "*queries*.ts"
+      - "*.service.ts"
+      - "*.component.ts"
+      - "*.spec.ts"
+      - "app.config.ts"
+    repo:
+      - "package.json TanStack Query Angular package and version"
+      - "Application QueryClient provider and default options"
+      - "Existing query key factories query option helpers and mutation helpers"
+      - "Server API clients DTOs filters pagination and authorization context"
+    request:
+      - "Create modify or review Angular TanStack Query keys options mutations invalidation pagination or skip conditions"
+      - "Debug stale cache cache collisions duplicate fetches mutation side effects or query test instability"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
 uses: []
-
 resources:
   references: []
   scripts: []

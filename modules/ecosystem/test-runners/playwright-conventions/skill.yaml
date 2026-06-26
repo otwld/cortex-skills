@@ -1,31 +1,46 @@
-name: playwright-conventions
+name: "playwright-conventions"
 description: "Internal Cortex module applied when creating, modifying, or reviewing Playwright configuration, browser projects, end-to-end tests, locators, assertions, fixtures, or setup projects."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Playwright E2E: playwright.config, browser project, page fixture, locator assertion, setup project, trace, integration snapshot, or end-to-end test changes"
-    medium:
-      - "Playwright config, browser project, fixtures, locators, assertions, setup project, integration snapshot, e2e, or end-to-end test"
-    weak:
-      - "Playwright surface"
-
-relations:
-  before: []
-  with:
-    - "typescript-code-style"
-    - "code-documentation"
-  after:
-    - "skill-evolution"
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "author or review Playwright end-to-end and browser integration tests"
+      - "change Playwright config, browser projects, fixtures, locators, assertions, setup projects, traces, or retries"
+      - "diagnose flaky browser tests, unstable selectors, timing waits, or shared browser state"
+    surfaces:
+      - "browser-test-runner"
+      - "playwright"
+      - "end-to-end-tests"
+      - "browser-project-matrix"
+      - "user-observable-web-behavior"
+    risks:
+      - "locator depends on DOM structure instead of user-facing contract"
+      - "fixed timeout hides missing readiness condition"
+      - "test data or storage state leaks across specs or browser projects"
+      - "retry or trace settings mask product regression instead of exposing evidence"
+      - "assertion checks implementation timing rather than visible browser state"
+    artifacts:
+      - "playwright.config.*"
+      - "tests/e2e/**, e2e/**, *.e2e.*, and Playwright *.spec.* files"
+      - "browser projects, use options, storageState, webServer, retries, trace, screenshot, and video config"
+      - "Playwright fixtures, setup projects, page objects, locators, and expect assertions"
+      - "CI browser install, browser cache, and Playwright report artifacts"
+    repo:
+      - "dependencies or scripts invoke @playwright/test or playwright test"
+      - "tests import test, expect, Page, Locator, or devices from @playwright/test"
+      - "repository has Playwright setup projects, fixtures, storage state, reports, traces, or browser project definitions"
+    request:
+      - "mentions Playwright, playwright.config, browser project, locator, page fixture, setup project, trace, storageState, e2e, or end-to-end test"
+      - "asks to add, repair, review, or stabilize browser automation that runs through Playwright"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
+  verify: "lifecycle/verify.md"
 uses: []
-
 resources:
   references: []
   scripts: []

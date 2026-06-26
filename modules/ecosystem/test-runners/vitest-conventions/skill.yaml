@@ -1,32 +1,46 @@
-name: vitest-conventions
+name: "vitest-conventions"
 description: "Internal Cortex module applied when creating, modifying, or reviewing Vitest configuration, Vitest tests, setup files, environments, mocks, or Vite-integrated test behavior."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Vitest: vitest.config, Vite-integrated test setup, vi.fn, vi.mock, import.meta.vitest, or test file intended for Vitest"
-    medium:
-      - "Vitest config, Vite-integrated tests, vi mocks, environments, timers, fixtures, or assertions"
-    weak:
-      - "Vitest surface"
-
-relations:
-  before: []
-  with:
-    - "vite-conventions"
-    - "typescript-code-style"
-    - "code-documentation"
-  after:
-    - "skill-evolution"
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "author or review Vitest unit, component, and Vite-integrated tests"
+      - "change Vitest config, setup files, environments, globals, mocks, timers, workspaces, or isolation"
+      - "diagnose flaky, over-mocked, environment-mismatched, or Vite-alias-sensitive Vitest tests"
+    surfaces:
+      - "vite-integrated-test-runner"
+      - "vitest"
+      - "unit-and-component-test-conventions"
+      - "node-jsdom-happydom-or-browser-test-environment"
+    risks:
+      - "test environment does not match Node, DOM, browser, or Vite behavior under test"
+      - "hoisted module mock changes imports beyond the intended boundary"
+      - "setup file import cache prevents intended module mocking"
+      - "fake timers, stubbed env, globals, or module mocks leak across tests"
+      - "disabled isolation or shared worker state hides order dependence"
+    artifacts:
+      - "vitest.config.*"
+      - "vite.config.* test property and Vite aliases used by tests"
+      - "package.json Vitest scripts and workspace project config"
+      - "setupFiles, globalSetup, environment, globals, isolate, pool, sequence, and projects config"
+      - "vi.fn, vi.spyOn, vi.mock, vi.doMock, vi.hoisted, vi.useFakeTimers, vi.setSystemTime, vi.stubEnv, and vi.stubGlobal usage"
+      - "import.meta.vitest guarded test code"
+    repo:
+      - "dependencies or scripts invoke vitest or @vitest packages"
+      - "tests import test, expect, vi, beforeEach, or afterEach from vitest"
+      - "repository has Vite config, Vitest setup files, workspace projects, DOM environment types, or Vite alias-dependent tests"
+    request:
+      - "mentions Vitest, vitest.config, Vite test config, vi.fn, vi.mock, import.meta.vitest, setupFiles, globals, fake timers, or test environment"
+      - "asks to add, repair, review, or stabilize tests that run through Vitest"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
+  verify: "lifecycle/verify.md"
 uses: []
-
 resources:
   references: []
   scripts: []

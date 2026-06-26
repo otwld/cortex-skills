@@ -1,30 +1,51 @@
-name: workspace-state-guard
-description: "Internal Cortex module applied before substantial edits, plan execution, branch cleanup, publishing, or work that may collide with user changes or workspace isolation."
-activation: routed
-visibility: hidden
-status: active
-
+name: "workspace-state-guard"
+description: "Internal Cortex module applied prior to substantial edits, plan execution, branch cleanup, publishing, or work that may risk user changes or workspace isolation."
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Workspace collision risk: Substantial edits, cleanup, publish step, or dirty tree risk"
-    medium:
-      - "Substantial edits, current changes, cleanup, publish step, or dirty tree risk"
-    weak:
-      - "Workspace collision risk"
-
-relations:
-  before: []
-  with:
-    - "branch-completion"
-    - "completion-verification"
-  after: []
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "Protect existing workspace changes"
+      - "Classify dirty tree prior to edits"
+      - "Control cleanup or destructive command scope"
+    surfaces:
+      - "git status"
+      - "local workspace"
+      - "generated files"
+      - "ignored files"
+      - "branch cleanup"
+      - "formatting or write operation"
+    risks:
+      - "user changes may be overwritten"
+      - "unrelated files may be staged or formatted"
+      - "destructive git command may discard work"
+      - "baseline failures may be misattributed"
+      - "generated output may be hand-edited accidentally"
+    artifacts:
+      - "git status output"
+      - "scoped diff"
+      - "ignored file listing"
+      - "baseline validation output"
+      - "cleanup plan"
+    repo:
+      - "dirty tree"
+      - "untracked files"
+      - "ignored files"
+      - "staged changes"
+      - "current branch"
+      - "generated outputs"
+    request:
+      - "start substantial edits"
+      - "clean up workspace"
+      - "discard changes"
+      - "format files"
+      - "publish branch"
+      - "handle dirty tree"
+lifecycle:
+  activate: "lifecycle/activate.md"
 uses: []
-
 resources:
   references: []
   scripts: []

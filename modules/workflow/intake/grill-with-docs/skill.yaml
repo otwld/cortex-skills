@@ -1,31 +1,36 @@
-name: grill-with-docs
+name: "grill-with-docs"
 description: "Internal Cortex module applied when the operator asks to grill, challenge, go deeper, ask decision-changing questions, or stress-test a known intent, plan, vocabulary, documented decision, or domain rule."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Challenge request: user asks to grill, challenge, go deeper, ask decision-changing questions, or stress-test a known plan, intent, vocabulary, or decision"
-    medium:
-      - "Grill me, challenge me, ask me questions, ask questions, go deeper, fuzzy vocabulary, ADR impact, or decision should update memory"
-    weak:
-      - "Challenge known intent"
-
-relations:
-  before: []
-  with:
-    - "design-intake"
-    - "implementation-plan"
-  after:
-    - "issue-decomposition"
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "challenge-known-decision"
+      - "stress-test-domain-language"
+    surfaces:
+      - "workflow-intake"
+      - "docs-grounded-questioning"
+      - "decision-alignment"
+    risks:
+      - "questions-not-grounded-in-project-memory"
+      - "broad-interview-instead-of-blocking-tradeoff"
+      - "durable-vocabulary-drift"
+    artifacts:
+      - "challenge-question"
+      - "decision-record-candidate"
+      - "glossary-update-candidate"
+    repo:
+      - "project-memory-glossary-or-adrs-can-ground-the-question"
+      - "known-plan-term-or-decision-is-available-to-examine"
+    request:
+      - "asks to grill, challenge, go deeper, stress-test, or ask decision-changing questions"
+      - "target is a stated plan, vocabulary term, domain rule, ADR candidate, or documented decision"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  plan: "lifecycle/plan.md"
 uses: []
-
 resources:
   references:
     - "shared/adr-format.md"

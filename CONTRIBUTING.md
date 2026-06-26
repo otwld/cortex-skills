@@ -1,124 +1,62 @@
 # Contributing
 
-Pull requests are welcome for routed modules, command skills,
-metadata refinements, validation improvements, generated artifact handling, and
-documentation updates.
+Cortex is a routed skill workspace. Keep changes inspectable, validated, and
+free of hidden coupling.
 
-## Contribution Rules
+## Routing Contract
 
-- Keep active instructions project-agnostic and reusable across TypeScript
-  ecosystem projects.
-- Preserve narrow scope. Prefer small focused artifacts over broad doctrine
-  documents.
-- Write strong routing signals as direct request or repository evidence. Do not
-  use generated phrases such as `evidence for <module>` or signals that only
-  restate the module name.
-- Use `skill.yaml` as the source of truth for routing, relations, resources,
-  activation, visibility, and generated catalog data.
-- Keep selected-module behavior in `instructions.md`.
-- Keep the public `$cortex` entry as the only public routed entry skill.
-- Do not add `MODULE.md`, compatibility shims, implicit inheritance, or hidden
-  resource sharing.
-- Category folders under `modules/` are allowed only as readability containers;
-  they do not create routing behavior, inheritance, or implicit resources.
-- Keep all illustrative examples inside the recruitment job-board universe.
-- Do not hand-edit files under `generated/`.
+- Use `skill.yaml` as the source of truth for metadata, facets, lifecycle
+  declarations, resources, and ownership.
+- Use lifecycle files for routed module runtime behavior.
+- Do not add routed module `instructions.md`.
+- Do not add module relations such as `before`, `with`, `after`, `excludes`, or
+  `replaces`.
+- Do not add output marker blocks.
 
-## Artifact Structure
+## Module Rules
 
-The public entry skill must keep this shape:
+Active routed modules must:
 
-```text
-entry/cortex/
-|-- SKILL.md
-|-- agents/
-|   `-- openai.yaml
-`-- skill.yaml
-```
+- use `activation: routed` and `visibility: hidden`;
+- declare structured routing facets;
+- declare at least one lifecycle file;
+- keep lifecycle guidance phase-specific;
+- avoid naming peer modules or routing other atoms;
+- declare owned resources under `resources`.
 
-Routed modules use:
+Draft modules may keep incomplete facets while their routing evidence is still
+being designed.
 
-```text
-modules/category/path/artifact-name/
-|-- instructions.md
-`-- skill.yaml
-```
+## Command Rules
 
-Generic routed workspaces may keep flat `modules/artifact-name/` paths. This
-repository uses nested category paths for readability while keeping category
-folders inert.
+Command skills live under `commands/`, use `activation: explicit`, and are
+public. They own `SKILL.md`, `agents/openai.yaml`, and `skill.yaml`. Commands do
+not declare lifecycle files.
 
-Command skills use:
-
-```text
-commands/command-name/
-|-- SKILL.md
-|-- agents/
-|   `-- openai.yaml
-`-- skill.yaml
-```
-
-Optional runtime support files belong under the owning artifact:
-
-- `references/` for detailed guidance loaded only when needed.
-- `scripts/` for deterministic checks or repeated operations.
-- `templates/` for reusable text or scaffold inputs.
-- `assets/` for reusable output resources.
-
-Cross-cutting support files belong under `shared/` and must be declared by each
-consumer in `skill.yaml`.
+`$cortex` may invoke command atoms when orchestration requires it.
 
 ## Validation
 
-Run the validator before opening a pull request:
+Run before opening a pull request:
 
 ```bash
+python3 scripts/rebuild-routed-skills.py routed-skills.yaml
+python3 scripts/rebuild-routed-skills.py --check routed-skills.yaml
 python3 scripts/validate-routed-skills.py routed-skills.yaml
 ```
 
-Check generated freshness:
-
-```bash
-python3 scripts/rebuild-routed-skills.py --check routed-skills.yaml
-```
-
-For validator or rebuild changes, run the fixture regression suite:
+When rebuild or validation behavior changes, also run:
 
 ```bash
 python3 scripts/test-validate-routed-skills.py
 ```
 
-The validator checks entry shape, command skill shape, nested module categories,
-metadata, activation and visibility rules, relations, resources, active module
-reachability, instruction prose quality, title-swapped boilerplate, public
-`agents/openai.yaml` display metadata, duplicate strong signals, generated
-freshness, and routed cascade exclusion for command skills.
+## Generated Files
 
-## Pull Request Checklist
+Do not hand-edit files under `generated/`. Rebuild them from metadata.
 
-- The changed artifact remains focused on one task, domain, or workflow.
-- Metadata and instructions are updated together.
-- Routed modules use `activation: routed` and `visibility: hidden`.
-- Command skills live under `commands/`, use `activation: explicit` and
-  `visibility: public`, and say they run only when directly invoked.
-- New or moved resources are declared.
-- Active routed modules have routing signals and no legacy-only declared
-  resources.
-- Instruction changes avoid copied template prose, title-swapped quality gates,
-  and repeated low-value checklist bullets.
-- Public entry and command skills keep complete `agents/openai.yaml` interface
-  metadata and `policy.allow_implicit_invocation: false`.
-- Generated artifacts were rebuilt or verified fresh.
-- New examples use `JobOffer`, `Candidate`, `Application`, `Recruiter`,
-  `Company`, `Interview`, `Contract`, or `SkillTag` where examples need domain
-  entities.
-- `python3 scripts/validate-routed-skills.py routed-skills.yaml` passes.
-- `python3 scripts/rebuild-routed-skills.py --check routed-skills.yaml`
-  passes.
-- `python3 scripts/test-validate-routed-skills.py` passes when validator
-  behavior changes.
+## Examples
 
-## Release Notes
-
-User-visible changes should update `CHANGELOG.md`. Keep entries concise and
-grouped by release.
+Examples, fixtures, and snippets should use the recruitment agency universe:
+Candidate, JobOffer, Application, Recruiter, Company, Interview, Contract, and
+SkillTag.

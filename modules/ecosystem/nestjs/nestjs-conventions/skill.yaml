@@ -1,32 +1,47 @@
-name: nestjs-conventions
+name: "nestjs-conventions"
 description: "Internal Cortex module applied when creating, modifying, or reviewing NestJS modules, providers, controllers, interceptors, guards, pipes, application bootstrap, or microservice runtimes."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "NestJS surface: Module, provider, controller, guard, pipe, interceptor, bootstrap, or runtime changes"
-    medium:
-      - "Module, provider, controller, guard, pipe, interceptor, bootstrap, or runtime changes"
-    weak:
-      - "NestJS surface"
-
-relations:
-  before: []
-  with:
-    - "rxjs-conventions"
-    - "typescript-code-style"
-    - "code-documentation"
-  after:
-    - "skill-evolution"
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "Apply NestJS conventions to modules, controllers, providers, and runtime boundaries"
+      - "Review NestJS request lifecycle behavior, dependency injection, validation, and bootstrap changes"
+    surfaces:
+      - "@nestjs/common modules controllers providers and decorators"
+      - "Dependency injection tokens custom providers factories and provider scopes"
+      - "Pipes validation DTOs guards interceptors filters middleware and request lifecycle"
+      - "Application bootstrap global providers adapters and microservice runtime setup"
+      - "Nest testing modules e2e setup and framework-facing tests"
+    risks:
+      - "Controller contains business behavior that belongs behind an injectable provider"
+      - "Provider token or scope is implicit when implementations or lifetimes can vary"
+      - "Validation transformation authorization or interception is bypassed with ad hoc code"
+      - "Global pipe guard interceptor filter or bootstrap change alters routes not covered by evidence"
+      - "Request-scoped or transient provider widens runtime cost or state lifetime unexpectedly"
+    artifacts:
+      - "*.module.ts"
+      - "*.controller.ts"
+      - "*.service.ts and provider files"
+      - "*.guard.ts *.pipe.ts *.interceptor.ts *.filter.ts middleware files"
+      - "*.dto.ts and validation classes"
+      - "main.ts application bootstrap and microservice setup files"
+      - "*.spec.ts *.e2e-spec.ts Nest testing module files"
+    repo:
+      - "Installed @nestjs/* versions and platform adapter packages"
+      - "Existing same-feature module controller provider and DTO patterns"
+      - "Global bootstrap pipes guards interceptors filters and exception handling"
+      - "Testing module setup and e2e runtime configuration"
+    request:
+      - "Create or modify NestJS module provider controller guard pipe interceptor filter middleware bootstrap or runtime code"
+      - "Review NestJS code for request lifecycle behavior dependency injection validation scope or transport separation"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
 uses: []
-
 resources:
   references: []
   scripts: []

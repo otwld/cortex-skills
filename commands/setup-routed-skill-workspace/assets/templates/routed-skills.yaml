@@ -10,19 +10,31 @@ paths:
 
 artifacts:
   metadata: skill.yaml
-  instructions: instructions.md
 
 entry:
   required: true
   path: entry/{{entry_slug}}
 
 routing:
-  always: []
+  facets:
+    keys:
+      - intents
+      - surfaces
+      - risks
+      - artifacts
+      - repo
+      - request
+
+lifecycle:
+  phases:
+    - activate
+    - plan
+    - run
+    - review
+    - verify
+    - finalize
 
 generated:
   catalog: generated/SKILL_CATALOG.md
   graph: generated/module-graph.md
   cascade: generated/module-cascade.md
-
-validation:
-  max_before_depth: 3

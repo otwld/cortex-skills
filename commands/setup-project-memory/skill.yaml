@@ -1,25 +1,9 @@
-name: setup-project-memory
+name: "setup-project-memory"
 description: "Use only when the user explicitly includes $setup-project-memory; sets up or verifies project-memory artifacts such as domain glossary, ADR location, out-of-scope decisions, issue tracker config, or triage label mapping."
-activation: explicit
-visibility: public
-status: active
-
-routing:
-  priority: 0
-  signals:
-    strong: []
-    medium: []
-    weak: []
-
-relations:
-  before: []
-  with: []
-  after: []
-  excludes: []
-  replaces: []
-
+activation: "explicit"
+visibility: "public"
+status: "active"
 uses: []
-
 resources:
   references:
     - "shared/issue-tracker-setup.md"

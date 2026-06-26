@@ -1,31 +1,46 @@
-name: jest-conventions
+name: "jest-conventions"
 description: "Internal Cortex module applied when creating, modifying, or reviewing Jest configuration, Jest tests, setup files, custom matchers, test environments, or Jest mocks."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Jest: jest.config, Jest setup file, Jest mock, custom matcher, testEnvironment, __mocks__, or test file intended for Jest"
-    medium:
-      - "Jest config, setup, mocks, matchers, environments, fixtures, or assertions"
-    weak:
-      - "Jest surface"
-
-relations:
-  before: []
-  with:
-    - "typescript-code-style"
-    - "code-documentation"
-  after:
-    - "skill-evolution"
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "author or review Jest unit and integration tests"
+      - "change Jest configuration, setup, environment, matcher, mock, or fixture behavior"
+      - "diagnose flaky, slow, over-mocked, or implementation-coupled Jest tests"
+    surfaces:
+      - "javascript-test-runner"
+      - "jest"
+      - "node-or-jsdom-test-environment"
+      - "unit-and-integration-test-conventions"
+    risks:
+      - "mock replaces private implementation instead of an external boundary"
+      - "global setup or custom matcher added for one local test"
+      - "test environment does not match the code under test"
+      - "async work, fake timers, module mocks, or globals leak across tests"
+      - "snapshot or call-count assertion hides the user-visible behavior being protected"
+    artifacts:
+      - "jest.config.*"
+      - "package.json jest configuration or Jest npm scripts"
+      - "__tests__/**, *.test.*, *.spec.*, and Jest project testMatch/testRegex targets"
+      - "__mocks__/** and manual module mocks"
+      - "setupFiles, setupFilesAfterEnv, testEnvironment, moduleNameMapper, transform, and projects config"
+      - "expect.extend custom matchers and Jest environment files"
+    repo:
+      - "dependencies or scripts invoke jest, @jest/globals, jest-environment-jsdom, ts-jest, babel-jest, or swc/jest transforms"
+      - "tests import from @jest/globals or rely on Jest global APIs"
+      - "repository has Jest setup, matcher, environment, or manual mock files"
+    request:
+      - "mentions Jest, jest.config, jest.mock, jest.fn, @jest/globals, testEnvironment, setupFilesAfterEnv, __mocks__, or custom Jest matchers"
+      - "asks to add, repair, review, or stabilize unit tests that are run by Jest"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
+  verify: "lifecycle/verify.md"
 uses: []
-
 resources:
   references: []
   scripts: []

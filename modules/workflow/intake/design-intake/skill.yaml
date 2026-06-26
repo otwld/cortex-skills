@@ -1,34 +1,36 @@
-name: design-intake
+name: "design-intake"
 description: "Internal Cortex module applied before ambiguous, creative, behavioral, user-facing, or architecture-affecting work where desired outcome, task type, scope, constraints, or success criteria are not already clear."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Intent clarification: desired outcome, what the user wants to do, task type, scope, constraints, audience, or success criteria are not clear before planning or challenge"
-    medium:
-      - "Goal, understand what I want, what I want to do, behavior, architecture, user experience, audience, scope, or success criteria need clarification"
-    weak:
-      - "Intent clarification"
-
-relations:
-  before: []
-  with:
-    - "grill-with-docs"
-    - "prototype"
-    - "architecture-drift-detector"
-    - "library-placement-decision"
-    - "public-api-design"
-  after:
-    - "implementation-plan"
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "clarify-ambiguous-request"
+      - "stabilize-user-facing-outcome"
+    surfaces:
+      - "workflow-intake"
+      - "requirements-clarification"
+      - "scope-definition"
+    risks:
+      - "repo-answerable-question-sent-to-user"
+      - "public-behavior-chosen-by-assumption"
+      - "implementation-starts-from-unstable-intent"
+    artifacts:
+      - "intake-summary"
+      - "clarifying-question"
+      - "success-criteria"
+    repo:
+      - "existing-source-docs-or-memory-may-answer-context"
+      - "target-artifact-or-audience-is-unclear"
+    request:
+      - "desired outcome, audience, task type, constraints, non-goals, or success criteria are missing"
+      - "request concerns creative, behavioral, user-facing, architecture-affecting, or scope-sensitive work"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  plan: "lifecycle/plan.md"
 uses: []
-
 resources:
   references: []
   scripts: []

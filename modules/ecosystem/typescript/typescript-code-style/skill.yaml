@@ -1,29 +1,41 @@
-name: typescript-code-style
-description: "Internal Cortex module applied when writing, editing, generating, refactoring, or reviewing TypeScript or TSX source files, tests, build scripts, imports, exports, classes, functions, or interfaces."
-activation: routed
-visibility: hidden
-status: active
-
+name: "typescript-code-style"
+description: "Internal Cortex module applied when writing, editing, refactoring, generating, or reviewing TypeScript and TSX source for import/export style, naming, typing, language features, comments, tooling, or strictness."
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "TypeScript implementation: TypeScript source, tests, imports, classes, functions, or strict typing are edited"
-    medium:
-      - "TypeScript source, tests, imports, classes, functions, or strict typing are edited"
-    weak:
-      - "TypeScript implementation"
-
-relations:
-  before: []
-  with:
-    - "code-documentation"
-  after: []
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "Apply TypeScript source style and strictness rules"
+      - "Review TypeScript implementation clarity, imports, naming, and comments"
+    surfaces:
+      - "TypeScript and TSX source files, tests, scripts, and framework components"
+      - "Imports, exports, type-only imports, file structure, public entry points, and module boundaries"
+      - "Names, type annotations, narrowing, assertions, JSDoc, ordinary comments, and compiler directives"
+    risks:
+      - "Broad cast, non-null assertion, any, or bracket access hides a type modeling issue"
+      - "Private-file import bypasses the package entry point that owns a symbol"
+      - "Style-only churn obscures the functional change under review"
+      - "Comment repeats syntax instead of documenting intent, invariants, or tool constraints"
+      - "Generated, framework-owned, or locally non-conforming code is reformatted without a focused reason"
+    artifacts:
+      - "*.ts, *.tsx, *.mts, and *.cts source files"
+      - "TypeScript tests, build scripts, config-adjacent helpers, and generated-type consumers"
+      - "Owned references under references/ and the ts_style_preflight.py helper"
+    repo:
+      - "Nearest project lint, format, typecheck, and test commands"
+      - "Neighboring TypeScript files in the same package or component tree"
+      - "Public package entry points used by imports in the touched code"
+    request:
+      - "Write, edit, refactor, generate, or review TypeScript or TSX implementation code"
+      - "Change imports, exports, names, classes, functions, comments, type annotations, assertions, or compiler directives"
+      - "Decide whether local TypeScript style, strict typing, or tooling should block a change"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
 uses: []
-
 resources:
   references:
     - "comments-tooling-policy.md"

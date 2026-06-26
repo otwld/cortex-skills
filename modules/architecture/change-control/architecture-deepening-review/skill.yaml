@@ -1,34 +1,43 @@
-name: architecture-deepening-review
+name: "architecture-deepening-review"
 description: "Internal Cortex module applied when finding shallow modules, deepening candidates, test seams, or architecture improvements that should increase leverage and locality."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Architecture deepening: shallow module, too-wide interface, weak seam, poor locality, missing test surface, or low leverage abstraction"
-    medium:
-      - "Shallow module, too-wide interface, weak seam, poor locality, missing test surface, or low leverage abstraction"
-    weak:
-      - "Architecture deepening"
-
-relations:
-  before: []
-  with:
-    - "architecture-drift-detector"
-    - "library-placement-decision"
-    - "public-api-design"
-    - "test-first-discipline"
-    - "code-documentation"
-  after:
-    - "skill-evolution"
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "evaluate whether a module hides enough behavior behind its interface"
+      - "find deeper seams that improve locality, leverage, or test surface"
+    surfaces:
+      - "module interface and implementation boundary"
+      - "test surface"
+      - "adapter or dependency boundary"
+      - "responsibility locality"
+      - "architecture decision memory"
+    risks:
+      - "wide interface hides little implementation"
+      - "tests target private helpers instead of supported behavior"
+      - "seam created for a hypothetical adapter"
+      - "deepening review expands into an unbounded rewrite"
+    artifacts:
+      - "module interface"
+      - "implementation boundary"
+      - "adapter"
+      - "test contract"
+      - "architecture recommendation"
+    repo:
+      - "modular TypeScript workspace"
+      - "codebase with durable architecture memory"
+    request:
+      - "reviews a shallow module, broad interface, weak test surface, or low-leverage abstraction"
+      - "asks where behavior should be hidden or which interface tests should cross"
+      - "plans architecture improvement based on locality, leverage, or dependency classification"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  plan: "lifecycle/plan.md"
+  review: "lifecycle/review.md"
 uses: []
-
 resources:
   references:
     - "shared/architecture-deepening.md"

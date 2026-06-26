@@ -3,12 +3,6 @@ name: setup-project-memory
 description: Use only when the user explicitly includes $setup-project-memory; sets up or verifies project-memory artifacts such as domain glossary, ADR location, out-of-scope decisions, issue tracker config, or triage label mapping.
 ---
 
-# Output Marker
-
-Display:
-using skill: setup-project-memory
-
----
 
 # Setup Project Memory
 
@@ -20,7 +14,7 @@ This command skill runs only when directly invoked as `$setup-project-memory`.
 Establish durable project memory so agents can use shared language, decisions, and
 tracker rules.
 
-## Reference Routing
+## Local Inputs
 
 - Use `shared/project-memory.md` when this task touches that concern.
 - Use `shared/issue-tracker-setup.md` when this task touches that concern.
@@ -53,7 +47,7 @@ strings project-specific.
 - Do not create placeholder guidance, examples, metadata, or documentation.
 - Do not claim completion without evidence that covers this command skill's checklist.
 
-## Usage Checklist
+## Completion Checklist
 
 - Direct `$setup-project-memory` invocation is explicit.
 - Existing glossary, ADR, out-of-scope, tracker, and label memory was checked.
@@ -61,6 +55,6 @@ strings project-specific.
 - Artifacts, docs, metadata, or tests affected by the work were updated together.
 - Remaining memory decisions, ownership questions, or validation gaps are stated.
 
-## Cross References
+## Source Artifacts
 
 - None

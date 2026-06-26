@@ -1,0 +1,6 @@
+interface:
+  display_name: "Setup Cortex Config"
+  short_description: "Create Cortex phase config"
+  default_prompt: "Use $setup-cortex-config to create or repair .codex/config.json for Cortex phase routing."
+policy:
+  allow_implicit_invocation: false

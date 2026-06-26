@@ -1,31 +1,41 @@
-name: rxjs-conventions
-description: "Internal Cortex module applied when creating, modifying, or reviewing RxJS observables, operators, subscriptions, subjects, multicasting, cleanup, or async stream composition."
-activation: routed
-visibility: hidden
-status: active
-
+name: "rxjs-conventions"
+description: "Internal Cortex module applied when creating, modifying, or reviewing RxJS streams, operators, subscriptions, subjects, multicasting, teardown, cancellation, ordering, or observable error handling."
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "RxJS surface: Observable, operator, subject, subscription, multicasting, or cleanup changes"
-    medium:
-      - "Observable, operator, subject, subscription, multicasting, or cleanup changes"
-    weak:
-      - "RxJS surface"
-
-relations:
-  before: []
-  with:
-    - "typescript-code-style"
-    - "code-documentation"
-  after:
-    - "skill-evolution"
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "Design or review observable stream behavior"
+      - "Make RxJS time, ownership, cancellation, and error semantics explicit"
+    surfaces:
+      - "RxJS Observable, Subject, BehaviorSubject, ReplaySubject, Subscription, Scheduler, and operator chains"
+      - "pipe composition, subscribe calls, flattening operators, multicasting, caching, and teardown"
+      - "Framework services, components, stores, effects, and tests that expose or consume streams"
+    risks:
+      - "Nested subscription hides ordering, cancellation, or error propagation"
+      - "Subject acts as an unowned event bus or leaks mutation methods to consumers"
+      - "Flattening operator does not match concurrency, cancellation, or ordering requirements"
+      - "Long-lived subscription lacks a teardown path"
+      - "Error handling swallows failures or terminates a shared stream unexpectedly"
+    artifacts:
+      - "*.ts and *.tsx files importing rxjs or rxjs/operators"
+      - "Observable-returning services, effects, components, stores, and tests"
+      - "Marble tests, fake timer tests, integration tests, and subscription cleanup assertions"
+    repo:
+      - "Existing stream naming, $ suffix, and subscription ownership conventions"
+      - "Lifecycle or disposal mechanism for the surrounding framework"
+      - "Tests that prove ordering, cancellation, teardown, and error behavior"
+    request:
+      - "Create, modify, or review an Observable, operator chain, subscription, subject, or multicasted stream"
+      - "Choose between switchMap, mergeMap, concatMap, exhaustMap, share, shareReplay, or manual subscription"
+      - "Fix a stream leak, stale request, duplicate emission, cancellation bug, or swallowed error"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
 uses: []
-
 resources:
   references: []
   scripts: []

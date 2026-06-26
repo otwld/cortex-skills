@@ -24,6 +24,14 @@ pnpm-debug.log*
 # Build, coverage, and cache output
 dist/
 build/
+!modules/ecosystem/build/
+!modules/ecosystem/build/**/
+!modules/ecosystem/build/**/skill.yaml
+!modules/ecosystem/build/**/lifecycle/*.md
+!modules/ecosystem/build/**/references/**
+!modules/ecosystem/build/**/scripts/**
+!modules/ecosystem/build/**/templates/**
+!modules/ecosystem/build/**/assets/**
 coverage/
 .cache/
 .turbo/
@@ -39,3 +47,4 @@ temp/
 
 # Agent-local history
 .diary/
+.cortex/runs/

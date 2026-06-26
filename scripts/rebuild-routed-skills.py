@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Regenerate routed skill workspace catalog, graph, and cascade artifacts."""
+"""Regenerate Cortex routed skill catalog, lifecycle graph, and cascade artifacts."""
 
 from __future__ import annotations
 
@@ -18,19 +18,19 @@ DEFAULT_PATHS = {
 }
 DEFAULT_ARTIFACTS = {
     'metadata': 'skill.yaml',
-    'instructions': 'instructions.md',
 }
 DEFAULT_GENERATED = {
     'catalog': 'generated/SKILL_CATALOG.md',
     'graph': 'generated/module-graph.md',
     'cascade': 'generated/module-cascade.md',
 }
-RELATION_KEYS = ('before', 'with', 'after', 'excludes', 'replaces')
-SIGNAL_KEYS = ('strong', 'medium', 'weak')
+DEFAULT_FACET_KEYS = ('intents', 'surfaces', 'risks', 'artifacts', 'repo', 'request')
+DEFAULT_PHASES = ('activate', 'plan', 'run', 'review', 'verify', 'finalize')
+RESOURCE_KEYS = ('references', 'scripts', 'templates', 'assets')
 
 
 class RoutedSkillError(Exception):
-    """Raised when a routed skill workspace cannot be loaded or rebuilt."""
+    """Raised when a Cortex routed skill workspace cannot be loaded or rebuilt."""
 
 
 @dataclass(frozen=True)
@@ -45,15 +45,15 @@ class Artifact:
     directory: Path
     relative_path: str
     priority: int
-    signals: dict[str, list[str]]
-    relations: dict[str, list[str]]
+    facets: dict[str, list[str]]
+    lifecycle: dict[str, str]
     uses: list[str]
     resources: dict[str, list[str]]
 
 
 @dataclass(frozen=True)
 class Workspace:
-    """Loaded routed skill workspace model with separated module and command collections."""
+    """Loaded Cortex routed skill workspace model."""
 
     manifest_path: Path
     root: Path
@@ -61,9 +61,9 @@ class Workspace:
     entry: Artifact
     modules: list[Artifact]
     commands: list[Artifact]
-    always: list[str]
     metadata_name: str
-    instructions_name: str
+    facet_keys: list[str]
+    phases: list[str]
 
     @property
     def artifacts(self) -> list[Artifact]:
@@ -72,7 +72,7 @@ class Workspace:
 
 
 def parse_scalar(value: str) -> Any:
-    """Parse the constrained YAML scalar shape used by templates."""
+    """Parse the constrained YAML scalar shape used by Cortex metadata."""
     value = value.strip()
     if value == '':
         return ''
@@ -98,7 +98,7 @@ def parse_scalar(value: str) -> Any:
 
 
 def simple_yaml_load(text: str) -> dict[str, Any]:
-    """Load the small YAML subset used by routed workspace metadata."""
+    """Load the small YAML subset used by Cortex workspace metadata."""
     logical_lines: list[tuple[int, str]] = []
     for raw_line in text.splitlines():
         if not raw_line.strip() or raw_line.lstrip().startswith('#'):
@@ -212,6 +212,21 @@ def workspace_relative(root: Path, path: Path) -> str:
         return path.as_posix()
 
 
+def facet_keys_from_manifest(manifest: dict[str, Any]) -> list[str]:
+    """Return manifest-declared facet keys or Cortex defaults."""
+    routing = as_mapping(manifest.get('routing'), 'routing')
+    facets = as_mapping(routing.get('facets'), 'routing.facets')
+    keys = as_list(facets.get('keys'), 'routing.facets.keys')
+    return keys or list(DEFAULT_FACET_KEYS)
+
+
+def phases_from_manifest(manifest: dict[str, Any]) -> list[str]:
+    """Return manifest-declared lifecycle phases or Cortex defaults."""
+    lifecycle = as_mapping(manifest.get('lifecycle'), 'lifecycle')
+    phases = as_list(lifecycle.get('phases'), 'lifecycle.phases')
+    return phases or list(DEFAULT_PHASES)
+
+
 def load_artifact(directory: Path, metadata_name: str, root: Path) -> Artifact:
     """Load one artifact directory."""
     metadata_path = directory / metadata_name
@@ -231,12 +246,18 @@ def load_artifact(directory: Path, metadata_name: str, root: Path) -> Artifact:
         raise RoutedSkillError(f'{workspace_relative(root, metadata_path)}: activation, visibility, and status must be strings')
 
     routing = as_mapping(metadata.get('routing'), f'{name}.routing')
-    signals_raw = as_mapping(routing.get('signals'), f'{name}.routing.signals')
-    relations_raw = as_mapping(metadata.get('relations'), f'{name}.relations')
+    facets_raw = as_mapping(routing.get('facets'), f'{name}.routing.facets')
     resources_raw = as_mapping(metadata.get('resources'), f'{name}.resources')
+    lifecycle_raw = as_mapping(metadata.get('lifecycle'), f'{name}.lifecycle')
     priority = routing.get('priority', 0)
     if not isinstance(priority, int):
         raise RoutedSkillError(f'{name}.routing.priority: expected integer')
+
+    lifecycle: dict[str, str] = {}
+    for phase, path in lifecycle_raw.items():
+        if not isinstance(path, str):
+            raise RoutedSkillError(f'{name}.lifecycle.{phase}: expected string')
+        lifecycle[str(phase)] = path
 
     return Artifact(
         name=name,
@@ -247,10 +268,10 @@ def load_artifact(directory: Path, metadata_name: str, root: Path) -> Artifact:
         directory=directory,
         relative_path=workspace_relative(root, directory),
         priority=priority,
-        signals={key: as_list(signals_raw.get(key), f'{name}.signals.{key}') for key in SIGNAL_KEYS},
-        relations={key: as_list(relations_raw.get(key), f'{name}.relations.{key}') for key in RELATION_KEYS},
+        facets={key: as_list(value, f'{name}.routing.facets.{key}') for key, value in facets_raw.items()},
+        lifecycle=lifecycle,
         uses=as_list(metadata.get('uses'), f'{name}.uses'),
-        resources={key: as_list(resources_raw.get(key), f'{name}.resources.{key}') for key in ('references', 'scripts', 'templates', 'assets')},
+        resources={key: as_list(resources_raw.get(key), f'{name}.resources.{key}') for key in RESOURCE_KEYS},
     )
 
 
@@ -274,14 +295,14 @@ def discover_artifact_directories(search_root: Path, metadata_name: str, root: P
 
 
 def load_workspace(raw_manifest: str | None = None) -> Workspace:
-    """Load a routed skill workspace from its manifest."""
+    """Load a Cortex routed skill workspace from its manifest."""
     manifest_path = find_manifest(raw_manifest)
     manifest = load_yaml(manifest_path)
     root = manifest_path.parent
     paths = merge_defaults(manifest.get('paths'), DEFAULT_PATHS, 'paths')
     artifacts = merge_defaults(manifest.get('artifacts'), DEFAULT_ARTIFACTS, 'artifacts')
-    routing = as_mapping(manifest.get('routing'), 'routing')
-    always = as_list(routing.get('always'), 'routing.always')
+    facet_keys = facet_keys_from_manifest(manifest)
+    phases = phases_from_manifest(manifest)
     entry_config = as_mapping(manifest.get('entry'), 'entry')
     entry_path = entry_config.get('path')
     if not isinstance(entry_path, str) or not entry_path:
@@ -314,15 +335,10 @@ def load_workspace(raw_manifest: str | None = None) -> Workspace:
         entry=entry,
         modules=modules,
         commands=commands,
-        always=always,
         metadata_name=artifacts['metadata'],
-        instructions_name=artifacts['instructions'],
+        facet_keys=facet_keys,
+        phases=phases,
     )
-
-
-def cell(values: list[str]) -> str:
-    """Render a generated table cell."""
-    return ', '.join(f'`{value}`' for value in values) if values else 'None'
 
 
 def text_cell(value: str) -> str:
@@ -331,15 +347,23 @@ def text_cell(value: str) -> str:
 
 
 def list_text(values: list[str]) -> str:
-    """Render signal text for a generated table cell."""
+    """Render list text for a generated table cell."""
     return '<br>'.join(text_cell(value) for value in values) if values else 'None'
 
 
-def rows_for_values(values: list[str]) -> list[str]:
-    """Render a one-column generated table body."""
-    if not values:
-        return ['| None |']
-    return [f'| `{value}` |' for value in values]
+def lifecycle_text(artifact: Artifact) -> str:
+    """Render lifecycle phase names for a generated table cell."""
+    return ', '.join(f'`{phase}`' for phase in artifact.lifecycle) if artifact.lifecycle else 'None'
+
+
+def facets_text(artifact: Artifact, facet_keys: list[str]) -> str:
+    """Render compact facet text for a generated table cell."""
+    entries: list[str] = []
+    for key in facet_keys:
+        values = artifact.facets.get(key, [])
+        if values:
+            entries.append(f'`{key}`: {", ".join(text_cell(value) for value in values)}')
+    return '<br>'.join(entries) if entries else 'None'
 
 
 def generated_paths(workspace: Workspace) -> dict[str, Path]:
@@ -371,14 +395,17 @@ def render_catalog(workspace: Workspace) -> str:
         '',
         '## Routed Modules',
         '',
-        '| Module | Description | Priority | Status | Path |',
-        '| --- | --- | --- | --- | --- |',
+        '| Module | Description | Priority | Lifecycle | Status | Path |',
+        '| --- | --- | --- | --- | --- | --- |',
     ]
     if routed:
         for artifact in routed:
-            lines.append(f'| `{artifact.name}` | {text_cell(artifact.description)} | {artifact.priority} | `{artifact.status}` | `{artifact.relative_path}/` |')
+            lines.append(
+                f'| `{artifact.name}` | {text_cell(artifact.description)} | {artifact.priority} | '
+                f'{lifecycle_text(artifact)} | `{artifact.status}` | `{artifact.relative_path}/` |'
+            )
     else:
-        lines.append('| None | None | None | None | None |')
+        lines.append('| None | None | None | None | None | None |')
     lines.extend([
         '',
         '## Command Skills',
@@ -393,43 +420,65 @@ def render_catalog(workspace: Workspace) -> str:
         lines.append('| None | None | None | None |')
     lines.extend([
         '',
-        '## Routing Signals',
+        '## Routing Facets',
         '',
-        '| Module | Priority | Strong | Medium | Weak |',
-        '| --- | --- | --- | --- | --- |',
+        '| Module | Priority | Facets | Lifecycle |',
+        '| --- | --- | --- | --- |',
     ])
     if routed:
         for artifact in routed:
             lines.append(
-                f'| `{artifact.name}` | {artifact.priority} | {list_text(artifact.signals["strong"])} | '
-                f'{list_text(artifact.signals["medium"])} | {list_text(artifact.signals["weak"])} |'
+                f'| `{artifact.name}` | {artifact.priority} | {facets_text(artifact, workspace.facet_keys)} | '
+                f'{lifecycle_text(artifact)} |'
             )
     else:
-        lines.append('| None | None | None | None | None |')
+        lines.append('| None | None | None | None |')
     return '\n'.join(lines) + '\n'
 
 
 def render_graph(workspace: Workspace) -> str:
-    """Render the generated relation graph."""
+    """Render a generated bipartite module-to-facet and module-to-phase graph."""
+    routed = [artifact for artifact in workspace.modules if artifact.activation == 'routed']
     lines = [
         '# Module Graph',
         '',
-        'Generated from routed module and command skill relation metadata. Do not edit by hand.',
+        'Generated from routed module facets and lifecycle declarations. Do not edit by hand.',
         '',
-        '| Artifact | Activation | Before | With | After | Excludes | Replaces |',
-        '| --- | --- | --- | --- | --- | --- | --- |',
+        'This graph is bipartite: modules link to facet values and lifecycle phases. It contains no module-to-module dependency edges.',
+        '',
+        '## Module To Facets',
+        '',
+        '| Module | Facet Key | Values |',
+        '| --- | --- | --- |',
     ]
-    relation_artifacts = [*workspace.modules, *workspace.commands]
-    if relation_artifacts:
-        for artifact in relation_artifacts:
-            relations = artifact.relations
-            lines.append(
-                f'| `{artifact.name}` | `{artifact.activation}` | {cell(relations["before"])} | '
-                f'{cell(relations["with"])} | {cell(relations["after"])} | '
-                f'{cell(relations["excludes"])} | {cell(relations["replaces"])} |'
-            )
-    else:
-        lines.append('| None | None | None | None | None | None | None |')
+    has_facets = False
+    for artifact in routed:
+        for key in workspace.facet_keys:
+            values = artifact.facets.get(key, [])
+            if not values:
+                continue
+            has_facets = True
+            lines.append(f'| `{artifact.name}` | `{key}` | {list_text(values)} |')
+    if not has_facets:
+        lines.append('| None | None | None |')
+
+    lines.extend([
+        '',
+        '## Module To Lifecycle Phases',
+        '',
+        '| Module | Phase | File |',
+        '| --- | --- | --- |',
+    ])
+    has_lifecycle = False
+    for artifact in routed:
+        for phase in workspace.phases:
+            path = artifact.lifecycle.get(phase)
+            if not path:
+                continue
+            has_lifecycle = True
+            lines.append(f'| `{artifact.name}` | `{phase}` | `{path}` |')
+    if not has_lifecycle:
+        lines.append('| None | None | None |')
     return '\n'.join(lines) + '\n'
 
 
@@ -444,49 +493,47 @@ def render_cascade(workspace: Workspace) -> str:
         '',
         '## Routing Rules',
         '',
-        '1. Load modules listed in `routing.always` for every routed request.',
-        '2. Run the entry skill intent-understanding gate before challenge, planning, implementation, or review modules.',
-        '3. Collect direct evidence from the user request and relevant files.',
-        '4. Prefer strong signals over medium signals.',
-        '5. Prefer medium signals over weak signals.',
-        '6. Break ties using priority.',
-        '7. Classify selected, candidate, deferred, and skipped modules when routing is broad or ambiguous.',
-        '8. Ask operator questions only for candidate modules where the answer changes routing or execution.',
-        '9. Load `before` modules recursively up to the manifest depth cap.',
-        '10. Load `with` modules only when they also have direct evidence.',
-        '11. Suggest `after` modules only when the later phase becomes relevant.',
-        '12. Reject combinations declared in `excludes`.',
-        '13. Prefer modules declared as replacements through `replaces`.',
+        '1. Start a run trace under `.cortex/runs/{date-slug}/`.',
+        '2. Read `.codex/config.json`; if missing, invoke the config command atom and scaffold an empty phase config.',
+        '3. Run lifecycle phases in order: ' + ', '.join(f'`{phase}`' for phase in workspace.phases) + '.',
+        '4. For each phase, combine phase-specific config `always` modules with modules matched by structured facets.',
+        '5. Collect request and repository evidence before selecting modules.',
+        '6. Prefer higher-priority modules when facet evidence is otherwise equivalent.',
+        '7. A phase subagent may own the whole phase and returns visible phase output plus hidden trace data.',
+        '8. Hidden phase trace carries selected modules, matched facets, lifecycle files used, and next-phase inputs.',
+        '9. Command skills are public atoms; `$cortex` may invoke them when orchestration requires it.',
+        '10. Routed modules never declare peer module dependencies or exclusions.',
         '',
-        '## Always Loaded Modules',
+        '## Lifecycle Phases',
         '',
-        'These modules load for every routed request before evidence-selected modules.',
-        '',
-        '| Module |',
+        '| Phase |',
         '| --- |',
-        *rows_for_values(workspace.always),
+        *[f'| `{phase}` |' for phase in workspace.phases],
+        '',
+        '## Facet Keys',
+        '',
+        '| Facet Key |',
+        '| --- |',
+        *[f'| `{key}` |' for key in workspace.facet_keys],
         '',
         '## Routed Modules',
         '',
-        '| Module | Priority | Strong Signals | Medium Signals | Weak Signals | Before | With | After | Excludes | Replaces |',
-        '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |',
+        '| Module | Priority | Facets | Lifecycle |',
+        '| --- | --- | --- | --- |',
     ]
     if routed:
         for artifact in sorted(routed, key=lambda item: (-item.priority, item.name)):
-            relations = artifact.relations
             lines.append(
-                f'| `{artifact.name}` | {artifact.priority} | {list_text(artifact.signals["strong"])} | '
-                f'{list_text(artifact.signals["medium"])} | {list_text(artifact.signals["weak"])} | '
-                f'{cell(relations["before"])} | {cell(relations["with"])} | '
-                f'{cell(relations["after"])} | {cell(relations["excludes"])} | {cell(relations["replaces"])} |'
+                f'| `{artifact.name}` | {artifact.priority} | {facets_text(artifact, workspace.facet_keys)} | '
+                f'{lifecycle_text(artifact)} |'
             )
     else:
-        lines.append('| None | None | None | None | None | None | None | None | None | None |')
+        lines.append('| None | None | None | None |')
     lines.extend([
         '',
         '## Command Skills',
         '',
-        'Command skills are public direct-invocation skills and are excluded from routed cascade selection.',
+        'Command skills are public atoms. They are not selected by facet routing, but `$cortex` may invoke them for orchestration such as config bootstrap.',
         '',
         '| Command | Path |',
         '| --- | --- |',

@@ -1,28 +1,46 @@
-name: skill-evolution
-description: "Internal Cortex module applied when routing metadata, module signals, repeated agent failure, reusable workflow patterns, durable Cortex conventions, or doctrine gaps need to evolve."
-activation: routed
-visibility: hidden
-status: active
-
+name: "skill-evolution"
+description: "Internal Cortex module applied when durable skill behavior needs to change: routing facets, lifecycle guidance, declared resources, reusable workflow doctrine, recurring agent failure handling, or a concrete Cortex convention gap."
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Skill evolution: routing metadata, router behavior, module signals, repeated agent failure, reusable workflow pattern, workspace conventions, durable Cortex convention, or doctrine gap changes"
-    medium:
-      - "Routing metadata, router, module signals, repeated agent failure, recurring workflow, workspace conventions, durable convention, or doctrine gap emerges"
-    weak:
-      - "Doctrine gap"
-
-relations:
-  before: []
-  with: []
-  after: []
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "Evolve Cortex skill behavior"
+      - "Codify recurring agent failure"
+      - "Close durable workflow doctrine gap"
+    surfaces:
+      - "Routed skill metadata"
+      - "Lifecycle phase guidance"
+      - "Skill-owned references"
+      - "Skill workspace conventions"
+    risks:
+      - "One-off preference becomes reusable doctrine"
+      - "Overlapping ownership across skill artifacts"
+      - "Metadata, lifecycle, and resource declarations drift"
+      - "Routing evidence is too broad to audit"
+    artifacts:
+      - "skill.yaml"
+      - "lifecycle/*.md"
+      - "references/*.md"
+      - "templates/*"
+      - "assets/*"
+    repo:
+      - "entry/*/skill.yaml"
+      - "commands/*/skill.yaml"
+      - "modules/*/*/*/skill.yaml"
+      - "modules/*/*/*/lifecycle/*.md"
+    request:
+      - "User asks to create, split, retire, narrow, or rewrite Cortex skill behavior"
+      - "Repeated agent failure, recurring workflow pattern, or durable doctrine gap needs reusable guidance"
+      - "Routing facets, lifecycle files, declared resources, or validation expectations need synchronized changes"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  plan: "lifecycle/plan.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
 uses: []
-
 resources:
   references:
     - "shared/skill-quality-standard.md"

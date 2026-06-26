@@ -1,33 +1,45 @@
-name: angular-material-conventions
-description: "Internal Cortex module applied when adding, modifying, or reviewing Angular Material or Angular CDK components, utilities, theming, overlays, accessibility, or density settings."
-activation: routed
-visibility: hidden
-status: active
-
+name: "angular-material-conventions"
+description: "Internal Cortex module applied when Angular Material or Angular CDK components, utilities, theming, overlays, accessibility behavior, or density settings are added, modified, or reviewed."
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Angular Material or CDK: Material component, CDK utility, overlay, theme, accessibility, or density changes"
-    medium:
-      - "Material component, CDK utility, overlay, theme, accessibility, or density changes"
-    weak:
-      - "Angular Material or CDK"
-
-relations:
-  before:
-    - "angular-conventions"
-  with:
-    - "bundle-performance"
-    - "typescript-code-style"
-    - "code-documentation"
-  after:
-    - "skill-evolution"
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "Apply Angular Material and CDK conventions to UI components and behavior primitives"
+      - "Review Material/CDK accessibility theming density overlay and dependency impact"
+    surfaces:
+      - "@angular/material component APIs"
+      - "@angular/cdk a11y overlay portal testing and behavior utilities"
+      - "Angular Material Sass theming density and token overrides"
+      - "Material harnesses and Angular component tests"
+    risks:
+      - "Keyboard focus labeling or screen-reader behavior regresses"
+      - "Overlay positioning scroll backdrop or teardown behavior leaks"
+      - "Material dependency added to shared UI without theme or bundle impact"
+      - "Theme density or CSS override depends on private Material DOM"
+    artifacts:
+      - "*.component.ts"
+      - "*.component.html"
+      - "*.component.scss"
+      - "*.theme.scss"
+      - "styles.scss"
+      - "*.spec.ts"
+      - "*harness*.ts"
+    repo:
+      - "package.json @angular/material and @angular/cdk versions"
+      - "Global Angular Material theme and styles"
+      - "Existing Material imports components overlays and harness tests"
+      - "Local design-system or shared UI components"
+    request:
+      - "Add modify or review Angular Material component CDK utility overlay theme accessibility or density code"
+      - "Assess whether a Material component CDK primitive or existing local component should own an interaction"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
 uses: []
-
 resources:
   references: []
   scripts: []

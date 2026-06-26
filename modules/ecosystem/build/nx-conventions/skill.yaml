@@ -1,30 +1,45 @@
-name: nx-conventions
+name: "nx-conventions"
 description: "Internal Cortex module applied when creating, modifying, or reviewing Nx workspace configuration, generators, targets, project metadata, inferred tasks, or project graph behavior."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Nx workspace configuration: nx.json, project.json, workspace targets, generators, executors, inferred tasks, or project graph behavior changes"
-    medium:
-      - "Nx config, workspace graph, project metadata, generate, generators, executors, inferred targets, or project targets change"
-    weak:
-      - "Nx workspace config"
-
-relations:
-  before: []
-  with:
-    - "nx-module-boundaries"
-    - "library-placement-decision"
-  after: []
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "Apply Nx workspace conventions to project metadata, task targets, generators, and cache behavior"
+      - "Review Nx project graph changes for accurate inputs, outputs, and affected execution"
+    surfaces:
+      - "nx.json targetDefaults namedInputs plugins and workspace layout"
+      - "project.json package.json Nx targets and inferred task configuration"
+      - "Nx generators executors plugins migrations and workspace scripts"
+      - "Project graph tags implicit dependencies affected commands and cache outputs"
+    risks:
+      - "Root workspace config changed to solve a project-local problem"
+      - "Cache inputs omit runtime files environment values or upstream production inputs"
+      - "Target outputs do not match files produced by the task"
+      - "Manual target duplicates an inferred task or weakens plugin-managed caching"
+      - "Project move changes graph ownership tags or affected execution without evidence"
+    artifacts:
+      - "nx.json"
+      - "project.json"
+      - "package.json"
+      - "tsconfig.base.json and tsconfig*.json"
+      - "workspace generator migration and plugin files"
+      - "Nx graph affected command target log and cache output evidence"
+    repo:
+      - "Installed nx and @nx/* versions"
+      - "Existing project metadata for nearby projects"
+      - "Target defaults namedInputs plugins cache settings and output folders"
+      - "Tool configuration files used by Nx plugins to infer tasks"
+    request:
+      - "Create or modify Nx workspace configuration project metadata targets generators executors inferred tasks cache settings or project graph behavior"
+      - "Review Nx config for target correctness cache safety affected execution project movement or graph metadata"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
 uses: []
-
 resources:
   references: []
   scripts: []

@@ -1,38 +1,36 @@
-name: implementation-plan
+name: "implementation-plan"
 description: "Internal Cortex module applied when requirements are known and the user asks to draft a plan, full plan, phases, roadmap, migration path, or written execution sequence before edits."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Implementation planning: user asks to draft a plan, plan to change something, full plan, phases, roadmap, migration path, or execution sequence for known work"
-    medium:
-      - "Draft a plan, plan to, full plan, phases, roadmap, cross-boundary change, migration, risky refactor, or substantial implementation"
-    weak:
-      - "Plan drafting"
-
-relations:
-  before: []
-  with:
-    - "design-intake"
-    - "grill-with-docs"
-    - "issue-decomposition"
-    - "workspace-state-guard"
-    - "test-first-discipline"
-    - "architecture-drift-detector"
-    - "library-placement-decision"
-    - "public-api-design"
-    - "code-documentation"
-  after:
-    - "plan-execution"
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "draft-decision-complete-plan"
+      - "sequence-known-work"
+    surfaces:
+      - "workflow-planning"
+      - "implementation-sequencing"
+      - "migration-planning"
+    risks:
+      - "generic-phase-list"
+      - "hidden-design-decisions"
+      - "tests-docs-or-compatibility-omitted"
+    artifacts:
+      - "written-execution-plan"
+      - "validation-matrix"
+      - "migration-notes"
+    repo:
+      - "requirements-and-non-goals-are-known"
+      - "affected-files-interfaces-or-commands-can-be-mapped"
+    request:
+      - "asks for a plan, full plan, phases, roadmap, migration path, or execution sequence"
+      - "work is substantial or cross-boundary and requirements are stable enough to plan"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  plan: "lifecycle/plan.md"
 uses: []
-
 resources:
   references:
     - "shared/skill-quality-standard.md"

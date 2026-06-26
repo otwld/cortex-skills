@@ -1,31 +1,45 @@
-name: storybook-conventions
+name: "storybook-conventions"
 description: "Internal Cortex module applied when creating, modifying, or reviewing Storybook stories, MDX docs, preview setup, addons, mocks, visual regression data, or story organization."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Storybook surface: Story, MDX docs, preview setup, addon, mock, or story organization changes"
-    medium:
-      - "Story, MDX docs, preview setup, addon, mock, or story organization changes"
-    weak:
-      - "Storybook surface"
-
-relations:
-  before: []
-  with:
-    - "typescript-code-style"
-    - "code-documentation"
-  after:
-    - "skill-evolution"
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "Apply Storybook conventions to component stories, docs, mocks, and preview configuration"
+      - "Review stories for meaningful states, deterministic fixtures, typed args, and validation evidence"
+    surfaces:
+      - "CSF story files Meta StoryObj args argTypes parameters decorators loaders and play functions"
+      - "MDX docs doc blocks autodocs tags and story organization"
+      - ".storybook main preview manager addon builder and project annotations"
+      - "Story fixtures network mocks module mocks providers and visual regression data"
+      - "Storybook build test-runner interaction accessibility and visual test outputs"
+    risks:
+      - "Story only mirrors default props without demonstrating behavior or state"
+      - "Random live or environment-dependent data makes stories non-repeatable"
+      - "Mocks hide missing component dependencies instead of modeling external boundaries"
+      - "MDX becomes product documentation unrelated to story setup or component behavior"
+      - "Play function decorator loader or addon change is not validated in Storybook runtime"
+    artifacts:
+      - "*.stories.ts *.stories.tsx *.stories.js *.stories.jsx *.stories.mdx"
+      - "*.mdx Storybook docs files"
+      - ".storybook/main.* .storybook/preview.* .storybook/manager.*"
+      - "storybook fixture mock and decorator files"
+      - "visual snapshots interaction-test output accessibility output and build-storybook output"
+    repo:
+      - "Installed storybook @storybook/* framework builder and addon versions"
+      - "Existing story naming organization fixture and docs patterns"
+      - "Preview annotations global decorators loaders parameters and addon setup"
+      - "Storybook commands for dev build test-runner accessibility and visual checks"
+    request:
+      - "Create or modify Storybook stories MDX docs preview setup addons mocks fixtures decorators loaders play functions or story organization"
+      - "Review Storybook behavior for meaningful states typed args deterministic mocks docs scope interaction tests or visual evidence"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
 uses: []
-
 resources:
   references: []
   scripts: []

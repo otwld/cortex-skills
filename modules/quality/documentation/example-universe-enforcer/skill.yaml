@@ -1,31 +1,46 @@
-name: example-universe-enforcer
+name: "example-universe-enforcer"
 description: "Internal Cortex module applied when producing examples, sample code, DTOs, API payloads, Storybook data, docs snippets, tests, or illustrative data."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Documentation or examples: JSDoc, TSDoc, public docs, examples, stories, fixtures, payloads, or illustrative data change"
-    medium:
-      - "JSDoc, TSDoc, public docs, examples, stories, fixtures, payloads, or illustrative data change"
-    weak:
-      - "Documentation or examples"
-
-relations:
-  before: []
-  with: []
-  after: []
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "normalize invented examples to one domain"
+      - "replace generic placeholders in sample data"
+      - "keep illustrative data relationships coherent"
+    surfaces:
+      - "sample code"
+      - "DTOs and schemas"
+      - "API payloads"
+      - "tests, fixtures, Storybook data, and docs snippets"
+    risks:
+      - "generic Foo, Bar, User, Product, Item, or ExampleEntity placeholders"
+      - "mixed illustrative domains in one response or artifact"
+      - "invented sample data overwrites real user-provided project data"
+      - "oversized fixtures obscure the behavior being demonstrated"
+    artifacts:
+      - "code examples"
+      - "JSON payload samples"
+      - "fixtures and test data"
+      - "stories, MDX, README snippets, and docs examples"
+    repo:
+      - "diff adds or changes illustrative entities, mock records, sample payloads, or example snippets"
+      - "changed examples introduce generic names or an unrelated sample domain"
+    request:
+      - "create examples, sample code, DTOs, API payloads, tests, stories, fixtures, or docs snippets"
+      - "replace placeholder sample data"
+      - "review whether examples are coherent and minimal"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
+  verify: "lifecycle/verify.md"
 uses: []
-
 resources:
   references:
-    - "recruitment-universe.md"
+    - "references/recruitment-universe.md"
   scripts: []
   templates: []
   assets: []

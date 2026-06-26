@@ -1,32 +1,37 @@
-name: agent-delegation
+name: "agent-delegation"
 description: "Internal Cortex module applied when independent tasks, investigations, or review passes can be delegated without shared state or sequential dependencies."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Delegation: independent investigations, parallel review passes, isolated implementation briefs, or sub-agent handoff with no shared mutable state"
-    medium:
-      - "Independent task, parallel investigation, review pass, implementation handoff, or sub-agent coordination"
-    weak:
-      - "Delegation request"
-
-relations:
-  before: []
-  with:
-    - "plan-execution"
-    - "review-gate"
-    - "systematic-debugging"
-    - "completion-verification"
-  after: []
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "delegate-independent-work"
+      - "coordinate-parallel-review"
+      - "scope-isolated-implementation-handoff"
+    surfaces:
+      - "workflow-execution"
+      - "subagent-briefing"
+      - "evidence-reconciliation"
+    risks:
+      - "shared-mutable-state-between-workers"
+      - "overlapping-file-mutations"
+      - "uncited-delegated-conclusions"
+    artifacts:
+      - "delegation-brief"
+      - "worker-report"
+      - "review-findings"
+    repo:
+      - "separable-files-or-behavioral-surfaces"
+      - "validation-commands-can-be-named-per-task"
+    request:
+      - "asks for subagents, workers, parallel investigation, parallel review, or isolated implementation handoff"
+      - "work can be split into bounded tasks whose outputs are independently verifiable"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  run: "lifecycle/run.md"
 uses: []
-
 resources:
   references:
     - "code-reviewer-prompt.md"

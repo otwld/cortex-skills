@@ -3,9 +3,10 @@
 ## Purpose
 
 This workspace is a routed Cortex skill workspace. It has exactly one public
-entry skill, `$cortex`, and hidden routed modules selected through explicit
-metadata. Treat `skill.yaml` files and instruction files as source artifacts;
-treat generated catalogs and routing views as disposable rebuild outputs.
+entry skill, `$cortex`, and hidden routed modules selected through structured
+facets and lifecycle phase files. Treat `skill.yaml` files and lifecycle files
+as source artifacts; treat generated catalogs and routing views as disposable
+rebuild outputs.
 
 These rules govern writing and maintaining routed skill artifacts in this
 repository. Keep guidance precise, project-agnostic, and easy to validate.
@@ -40,9 +41,10 @@ Context7 workflow:
 4. Answer using the fetched documentation.
 
 Use the official library name with proper punctuation. Use the user's full
-question as the query. Do not run more than three Context7 commands per
-question. Do not include secrets, tokens, credentials, or private values in
-Context7 queries.
+question as the query. Run as many targeted Context7 commands as needed to
+cover the libraries, frameworks, SDKs, APIs, CLI tools, or cloud services
+actually involved in the task. Do not include secrets, tokens, credentials, or
+private values in Context7 queries.
 
 If Context7 fails with a quota error, tell the user and suggest logging in or
 setting a `CONTEXT7_API_KEY`. If the environment is sandboxed and Context7 fails
@@ -59,7 +61,13 @@ entry/cortex/
 |-- agents/openai.yaml
 `-- skill.yaml
 modules/<area>/<cluster>/<artifact-name>/
-|-- instructions.md
+|-- lifecycle/
+|   |-- activate.md
+|   |-- plan.md
+|   |-- run.md
+|   |-- review.md
+|   |-- verify.md
+|   `-- finalize.md
 |-- skill.yaml
 `-- references/ or scripts/ or templates/ or assets/ when declared
 commands/<command-name>/
@@ -77,37 +85,38 @@ Rules:
 - Routed modules live under non-semantic category folders in `modules/` with
   `activation: routed` and `visibility: hidden`.
 - Command skills live under `commands/` with `activation: explicit` and
-  `visibility: public`; they are direct-invocation only and excluded from routed
-  cascade selection.
+  `visibility: public`; they are public command atoms and may be invoked by
+  `$cortex` when orchestration requires them.
 - Category folders under `modules/` are for readability only; they do not create
   inheritance, routing behavior, implicit resources, or hidden coupling.
 - Do not add `MODULE.md`, compatibility shims, hidden inheritance, or implicit
   resource sharing.
+- Do not add routed module `instructions.md` files.
 - Do not hand-edit files under `generated/`.
 
-## Metadata And Instructions
+## Metadata And Lifecycle
 
 Every entry, module, and command skill has a `skill.yaml` metadata file.
-Routed module behavior belongs in `instructions.md`. Public entry and command
-skill behavior belongs in `SKILL.md`; do not add `entry/cortex/instructions.md`
-or command `instructions.md` files.
+Routed module behavior belongs in declared `lifecycle/<phase>.md` files. Public
+entry and command skill behavior belongs in `SKILL.md`; do not add
+`entry/cortex/instructions.md`, command `instructions.md`, or routed module
+`instructions.md` files.
 
 Use `skill.yaml` for:
 
 - `name`, `description`, `activation`, `visibility`, and `status`.
-- Routing priority and strong, medium, and weak signals.
-- `relations.before`, `relations.with`, `relations.after`, `relations.excludes`,
-  and `relations.replaces`.
+- Routing priority and structured facets under `routing.facets`.
+- Lifecycle phase declarations under `lifecycle`.
 - Explicit `uses` and `resources` declarations.
 
-Use `instructions.md` for:
+Use lifecycle files for:
 
-- Purpose, usage, workflow, gates, hard stops, output format, checklist, and
-  cross-reference prose.
-- Concise runtime behavior that agents need after the module is selected.
+- Phase-specific workflow, quality gates, hard stops, and `## Phase Output`.
+- Runtime behavior that agents need for that phase only.
 
-Keep routing evidence in metadata and execution guidance in instructions. Do not
-duplicate every routing signal in prose.
+Keep routing evidence in metadata and execution guidance in lifecycle files. Do
+not duplicate every facet in prose. Do not name peer modules from lifecycle
+files.
 
 ## Resources
 
@@ -131,7 +140,7 @@ metadata:
 - `generated/module-graph.md`
 - `generated/module-cascade.md`
 
-Rebuild them after metadata, relation, signal, or artifact changes:
+Rebuild them after metadata, facet, lifecycle, or artifact changes:
 
 ```bash
 python3 scripts/rebuild-routed-skills.py routed-skills.yaml
@@ -172,10 +181,10 @@ Document the touched code at the right level:
 ## Maintenance Rules
 
 - Preserve narrow artifact scope.
-- Use metadata relations instead of inline graph maintenance.
-- Update `skill.yaml` and `instructions.md` together when behavior changes.
+- Use structured facets and lifecycle files instead of module relations.
+- Update `skill.yaml` and lifecycle files together when behavior changes.
 - Add new routed modules only after checking existing names, descriptions,
-  strong signals, relations, and resources for overlap.
+  facets, lifecycle coverage, and resources for overlap.
 - Present a challenge report when responsibilities overlap materially.
 - If adding a script, make it deterministic and declare or document its use.
 - If adding a reference, template, or asset, make it discoverable from the
@@ -187,14 +196,15 @@ Before finishing any routed workspace change, verify:
 
 - There is exactly one public entry skill under `entry/cortex/`.
 - No `MODULE.md` files or obsolete flat module artifact directories remain.
-- Routed modules are hidden and command skills are public direct-invocation
-  artifacts under `commands/`.
-- Relation targets name existing entry, routed module, or command skill
-  artifacts.
+- Routed modules are hidden and command skills are public artifacts under
+  `commands/`.
+- No routed module `instructions.md` files remain.
+- No relation metadata remains.
 - Shared and module-owned resources are declared and not orphaned.
-- Active routed modules have direct routing signals.
-- Active instruction files avoid copied template prose and repeated low-value
-  checklist bullets.
+- Active routed modules have structured facets and at least one lifecycle file.
+- Lifecycle files avoid copied template prose and repeated low-value checklist
+  bullets.
+- `.cortex/runs/` is ignored.
 - Generated artifacts were rebuilt from metadata and are fresh.
 - Examples follow `example-universe-enforcer`.
 

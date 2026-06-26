@@ -1,31 +1,38 @@
-name: issue-decomposition
+name: "issue-decomposition"
 description: "Internal Cortex module applied when turning a PRD, plan, design, or large request into vertical slices, durable agent briefs, issue tracker work, or ready-for-agent implementation units."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Issue decomposition: huge plan, multiple detailed phases, PRD, or large request must become vertical slices, briefs, or implementation units"
-    medium:
-      - "Huge plan, multiple detailed phases, PRD, plan, or large request must become vertical slices or briefs"
-    weak:
-      - "Work decomposition"
-
-relations:
-  before: []
-  with:
-    - "implementation-plan"
-    - "grill-with-docs"
-  after:
-    - "plan-execution"
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "decompose-large-work"
+      - "prepare-agent-briefs"
+      - "produce-tracker-issues"
+    surfaces:
+      - "workflow-planning"
+      - "vertical-slicing"
+      - "issue-tracker-preparation"
+    risks:
+      - "layer-only-slices"
+      - "afk-brief-open-decisions"
+      - "unconfigured-tracker-publishing"
+    artifacts:
+      - "issue-brief"
+      - "vertical-slice"
+      - "acceptance-criteria"
+      - "tracker-label-map"
+    repo:
+      - "source-context-or-prd-can-support-slices"
+      - "tracker-mode-or-local-markdown-output-can-be-identified"
+    request:
+      - "asks to turn a PRD, plan, roadmap, or large request into issues, briefs, slices, or implementation units"
+      - "work spans multiple behaviors that need independently verifiable acceptance criteria"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  plan: "lifecycle/plan.md"
 uses: []
-
 resources:
   references:
     - "shared/agent-briefs.md"

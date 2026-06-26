@@ -1,35 +1,43 @@
-name: extraction-decision
+name: "extraction-decision"
 description: "Internal Cortex module applied when repeated logic, DTOs, contracts, data-access patterns, UI composition, or orchestration suggest extracting a reusable abstraction."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Extraction decision: repeated logic, duplicated DTO shape, shared contract candidate, reusable data-access pattern, repeated UI composition, or orchestration copied across owners"
-    medium:
-      - "Repeated logic, duplicated shape, shared contract candidate, reusable data access, repeated UI composition, or copied orchestration"
-    weak:
-      - "Extraction candidate"
-
-relations:
-  before:
-    - "library-placement-decision"
-    - "nx-module-boundaries"
-  with:
-    - "public-api-design"
-    - "naming-consistency"
-    - "bundle-performance"
-    - "code-documentation"
-  after:
-    - "skill-evolution"
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "decide whether repeated code should become an owned abstraction"
+      - "separate stable shared behavior from coincidental similarity"
+    surfaces:
+      - "duplicated logic, DTOs, contracts, and orchestration"
+      - "UI composition and data-access patterns"
+      - "consumer variation points"
+      - "abstraction owner and public API"
+      - "dependency direction"
+    risks:
+      - "shared helper extracted from coincidental shape"
+      - "new abstraction has no stable owner"
+      - "dependency direction is inverted for convenience"
+      - "extraction creates a shallow common module"
+    artifacts:
+      - "duplicated code cluster"
+      - "extracted function, component, service, contract, or adapter"
+      - "consumer inventory"
+      - "variation analysis"
+      - "reusable-abstraction decision record"
+    repo:
+      - "TypeScript workspace"
+      - "modular application codebase"
+    request:
+      - "mentions repeated logic, duplicated DTO shape, copied orchestration, reusable data access, or repeated UI composition"
+      - "asks whether code should be extracted, shared, kept local, or moved to an owner"
+      - "plans a reusable abstraction from multiple current consumers"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  plan: "lifecycle/plan.md"
+  review: "lifecycle/review.md"
 uses: []
-
 resources:
   references:
     - "shared/architecture-deepening.md"

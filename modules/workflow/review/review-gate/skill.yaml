@@ -1,33 +1,51 @@
-name: review-gate
-description: "Internal Cortex module applied when the user asks to review, audit, list findings, inspect quality, check code smell, assess implementation, or gate completed work before merge, pull request, push, or publish."
-activation: routed
-visibility: hidden
-status: active
-
+name: "review-gate"
+description: "Internal Cortex module applied when the user asks to review, audit, list findings, inspect quality, check code smell, assess implementation, or gate completed work prior to merge, pull request, push, or publish."
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Review request: user asks to review, audit, list findings, inspect quality, check code smell, assess completed implementation, or risk-review before merge"
-    medium:
-      - "Review this implementation, audit completed change, list findings, quality gate, requested changes, or review before merge"
-    weak:
-      - "Review request"
-
-relations:
-  before: []
-  with:
-    - "agent-delegation"
-    - "completion-verification"
-    - "review-feedback-triage"
-    - "public-api-design"
-    - "architecture-drift-detector"
-  after: []
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "Review completed work"
+      - "Gate implementation quality"
+      - "Audit change risk"
+    surfaces:
+      - "code review"
+      - "diff review"
+      - "quality gate"
+      - "pre-merge inspection"
+      - "acceptance review"
+    risks:
+      - "requirement may be missed"
+      - "behavior may regress"
+      - "tests may be inadequate"
+      - "public contract may break"
+      - "documentation may drift"
+      - "security or data handling risk may be introduced"
+    artifacts:
+      - "user requirements"
+      - "git diff"
+      - "test result"
+      - "API contract"
+      - "documentation"
+      - "review findings"
+    repo:
+      - "changed files"
+      - "test files"
+      - "public interfaces"
+      - "generated outputs"
+      - "dependency or configuration changes"
+    request:
+      - "review this implementation"
+      - "audit completed change"
+      - "list findings"
+      - "quality check"
+      - "pre-merge review"
+      - "inspect code smell"
+lifecycle:
+  review: "lifecycle/review.md"
 uses: []
-
 resources:
   references: []
   scripts: []

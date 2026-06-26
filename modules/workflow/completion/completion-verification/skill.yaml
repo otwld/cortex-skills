@@ -1,30 +1,51 @@
-name: completion-verification
-description: "Internal Cortex module applied before explicit success claims, done claims, acceptance evidence, task completion, commits, pushes, pull requests, or publishing decisions."
-activation: routed
-visibility: hidden
-status: active
-
+name: "completion-verification"
+description: "Internal Cortex module applied prior to explicit success claims, done claims, acceptance evidence, task completion, commits, pushes, pull requests, or publishing decisions."
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Completion claim: user asks for done status, success claim, acceptance evidence, validation proof, task completion, or release readiness"
-    medium:
-      - "Done claim, success claim, validation proof, acceptance evidence, completion evidence, or release readiness"
-    weak:
-      - "Completion claim"
-
-relations:
-  before: []
-  with:
-    - "review-gate"
-    - "branch-completion"
-  after: []
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "Verify a completion claim"
+      - "Prove acceptance against the latest request"
+      - "Name remaining gaps prior to success wording"
+    surfaces:
+      - "task completion"
+      - "acceptance evidence"
+      - "validation summary"
+      - "release readiness"
+      - "final response"
+    risks:
+      - "success may be claimed from stale output"
+      - "partial requirements may be overlooked"
+      - "skipped checks may be hidden"
+      - "current workspace may contradict earlier evidence"
+    artifacts:
+      - "latest user request"
+      - "requirements checklist"
+      - "test output"
+      - "inspected diff"
+      - "runtime evidence"
+      - "blocked validation note"
+    repo:
+      - "modified files"
+      - "generated outputs"
+      - "test suite"
+      - "runtime artifacts"
+      - "documentation changes"
+    request:
+      - "is this done"
+      - "claim the task is complete"
+      - "show validation proof"
+      - "confirm acceptance criteria"
+      - "ready to ship"
+      - "summarize completion evidence"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  verify: "lifecycle/verify.md"
+  finalize: "lifecycle/finalize.md"
 uses: []
-
 resources:
   references: []
   scripts: []

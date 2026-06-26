@@ -1,31 +1,44 @@
-name: bricks
-description: "Internal Cortex module applied when working with Bricks in consumer Nx repositories: inspecting or running Bricks init, source, install, merge, diff, status, doctor, or contribute commands; reviewing installed-brick edits; updating installed copies; or helping contribute consumer edits back to source repos through Bricks worktree workflows. Do not use for Nx release, npm publishing, or source-repo maintainer release workflows unless Bricks consumer state is directly involved."
-activation: routed
-visibility: hidden
-status: active
-
+name: "bricks"
+description: "Internal Cortex module applied when working with Bricks in consumer Nx workspaces: initializing metadata, registering sources, installing projects, merging source updates, comparing installed copies, checking state, running doctor, or contributing consumer edits back to source repos through dedicated worktrees. Do not use for Nx release, npm publishing, or source-repo maintainer release workflows unless Bricks consumer state is directly involved."
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Bricks workflow: bricks init, source, install, merge, diff, status, doctor, contribute, installed brick, source worktree, or consumer edit propagation"
-    medium:
-      - "Bricks command, installed brick state, consumer workspace copy, source worktree, or contribute workflow"
-    weak:
-      - "Bricks workflow"
-
-relations:
-  before: []
-  with:
-    - "workspace-state-guard"
-    - "nx-conventions"
-    - "completion-verification"
-  after: []
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "Inspect Bricks consumer workspace state"
+      - "Run Bricks install or source-update workflow"
+      - "Prepare Bricks contribution worktree"
+    surfaces:
+      - "Consumer Nx workspace"
+      - "Bricks metadata"
+      - "Installed brick source files"
+      - "Bricks source cache"
+      - "Bricks contribution worktree"
+    risks:
+      - "Consumer edits are overwritten"
+      - "Source cache is mistaken for editable contribution worktree"
+      - "Release workflow is mistaken for consumer workflow"
+      - "Manual file copy bypasses Bricks provenance"
+    artifacts:
+      - ".bricks/config.json"
+      - ".bricks/sources/<source>"
+      - "Installed app or library files"
+      - "Source contribution branch"
+    repo:
+      - "apps/**"
+      - "libs/**"
+      - "packages/**"
+    request:
+      - "bricks init, source, install, merge, diff, status, remove, doctor, or contribute"
+      - "Installed brick local edits, source update, merge conflict, or contribution session"
+      - "Compare consumer copy to source or push consumer fixes upstream through Bricks"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  run: "lifecycle/run.md"
+  verify: "lifecycle/verify.md"
 uses: []
-
 resources:
   references:
     - "cli-workflows.md"

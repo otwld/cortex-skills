@@ -1,32 +1,37 @@
-name: prototype
+name: "prototype"
 description: "Internal Cortex module applied when building a throwaway prototype to answer a design question, compare UI variants, or test a state model before committing production code."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Throwaway design learning: User wants to prototype, compare UI variants, or test a state model"
-    medium:
-      - "User wants to prototype, compare UI variants, or test a state model"
-    weak:
-      - "Throwaway design learning"
-
-relations:
-  before: []
-  with:
-    - "design-intake"
-    - "test-first-discipline"
-    - "code-documentation"
-  after:
-    - "issue-decomposition"
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "answer-design-question-with-prototype"
+      - "compare-ui-variants"
+      - "test-state-model"
+    surfaces:
+      - "workflow-planning"
+      - "throwaway-prototype"
+      - "design-learning"
+    risks:
+      - "prototype-becomes-production-dependency"
+      - "multiple-unrelated-questions"
+      - "persistent-state-added-without-need"
+    artifacts:
+      - "prototype-question"
+      - "throwaway-shell"
+      - "learning-report"
+    repo:
+      - "safe-isolated-workspace-can-be-used"
+      - "one-runnable-command-can-demonstrate-learning"
+    request:
+      - "asks for a prototype, spike, UI variant comparison, or state-model experiment"
+      - "goal is learning or decision support rather than production-ready code"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  plan: "lifecycle/plan.md"
 uses: []
-
 resources:
   references:
     - "shared/prototype-guidance.md"

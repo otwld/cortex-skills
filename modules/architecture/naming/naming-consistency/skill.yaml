@@ -1,31 +1,42 @@
-name: naming-consistency
+name: "naming-consistency"
 description: "Internal Cortex module applied when creating or renaming files, classes, functions, exports, DTOs, contracts, events, commands, providers, factories, or reusable abstractions."
-activation: routed
-visibility: hidden
-status: active
-
+activation: "routed"
+visibility: "hidden"
+status: "active"
 routing:
   priority: 5
-  signals:
-    strong:
-      - "Naming decision: files, classes, functions, exports, DTOs, contracts, events, commands, providers, factories, or reusable abstractions are created or renamed"
-    medium:
-      - "Naming, names, rename, files, classes, functions, exports, DTOs, contracts, events, commands, or providers change"
-    weak:
-      - "Naming decision"
-
-relations:
-  before: []
-  with:
-    - "public-api-design"
-    - "typescript-api-conventions"
-    - "code-documentation"
-  after: []
-  excludes: []
-  replaces: []
-
+  facets:
+    intents:
+      - "choose names that encode domain role, lifecycle, and ownership"
+      - "review public and reusable names for project vocabulary alignment"
+    surfaces:
+      - "files, folders, exports, classes, functions, and constants"
+      - "DTOs, contracts, events, commands, providers, and factories"
+      - "domain glossary and project memory"
+      - "tests, stories, fixtures, docs, and generated references"
+    risks:
+      - "generic name forces readers to inspect implementation"
+      - "role suffix describes a pattern instead of the local responsibility"
+      - "public rename leaves old imports or docs behind"
+      - "term conflicts with the project glossary"
+    artifacts:
+      - "new or renamed symbol"
+      - "file or folder name"
+      - "public export"
+      - "domain term"
+      - "rename audit"
+    repo:
+      - "TypeScript workspace"
+      - "codebase with domain vocabulary"
+    request:
+      - "creates or renames files, classes, functions, exports, DTOs, contracts, events, commands, providers, factories, or abstractions"
+      - "asks for a better name or naming consistency review"
+      - "changes public names that consumers, docs, tests, fixtures, or generated references may mention"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  plan: "lifecycle/plan.md"
+  review: "lifecycle/review.md"
 uses: []
-
 resources:
   references:
     - "shared/domain-glossary.md"
