@@ -44,9 +44,9 @@ modules/category/path/artifact-name/
 `-- skill.yaml
 ```
 
-Generic routed workspaces may keep flat `modules/artifact-name/` paths unless
-their manifest configures a higher `validation.module_path_min_depth`. This
-repository uses nested category paths for readability.
+Generic routed workspaces may keep flat `modules/artifact-name/` paths. This
+repository uses nested category paths for readability while keeping category
+folders inert.
 
 Command skills use:
 
@@ -89,10 +89,10 @@ python3 scripts/test-validate-routed-skills.py
 ```
 
 The validator checks entry shape, command skill shape, nested module categories,
-module path depth, metadata, activation and visibility rules, relations,
-resources, active module reachability, instruction prose quality, title-swapped
-boilerplate, public `agents/openai.yaml` display metadata, duplicate strong
-signals, generated freshness, and routed cascade exclusion for command skills.
+metadata, activation and visibility rules, relations, resources, active module
+reachability, instruction prose quality, title-swapped boilerplate, public
+`agents/openai.yaml` display metadata, duplicate strong signals, generated
+freshness, and routed cascade exclusion for command skills.
 
 ## Pull Request Checklist
 

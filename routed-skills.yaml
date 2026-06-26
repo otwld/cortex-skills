@@ -7,7 +7,6 @@ paths:
   commands: commands
   shared: shared
   generated: generated
-  proposals: proposals
 
 artifacts:
   metadata: skill.yaml
@@ -28,5 +27,3 @@ generated:
 
 validation:
   max_before_depth: 3
-  module_path_min_depth: 3
-  module_path_max_depth: 4

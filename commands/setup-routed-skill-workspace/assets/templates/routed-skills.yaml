@@ -7,7 +7,6 @@ paths:
   commands: commands
   shared: shared
   generated: generated
-  proposals: proposals
 
 artifacts:
   metadata: skill.yaml

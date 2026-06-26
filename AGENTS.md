@@ -69,7 +69,6 @@ commands/<command-name>/
 shared/
 generated/
 scripts/
-proposals/
 ```
 
 Rules:
@@ -177,8 +176,7 @@ Document the touched code at the right level:
 - Update `skill.yaml` and `instructions.md` together when behavior changes.
 - Add new routed modules only after checking existing names, descriptions,
   strong signals, relations, and resources for overlap.
-- Create a challenge or merge proposal under `proposals/` when responsibilities
-  overlap materially.
+- Present a challenge report when responsibilities overlap materially.
 - If adding a script, make it deterministic and declare or document its use.
 - If adding a reference, template, or asset, make it discoverable from the
   owning artifact metadata.

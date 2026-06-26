@@ -8,7 +8,7 @@ artifact names and category names.
 
 A routed skill workspace contains one public entry skill, hidden routed modules,
 optional public command skills, shared resources, generated artifacts,
-validation scripts, and proposals.
+and validation scripts.
 
 Default layout:
 
@@ -28,7 +28,6 @@ Default layout:
   shared/
   generated/
   scripts/
-  proposals/
 ```
 
 Supported roots are `.skills`, `skills`, and `.`. The manifest makes those
@@ -48,7 +47,6 @@ paths:
   commands: commands
   shared: shared
   generated: generated
-  proposals: proposals
 
 artifacts:
   metadata: skill.yaml
@@ -68,16 +66,12 @@ generated:
 
 validation:
   max_before_depth: 3
-  module_path_min_depth: 1
-  module_path_max_depth: 4
 ```
 
 Use the manifest directory as the workspace root when resolving paths. Keep
 `root` as a human-readable declaration of the chosen supported root.
-`validation.module_path_min_depth` and `validation.module_path_max_depth` are
-optional. They count only the path from `modules/` to the module artifact
-directory; artifact-owned `references/`, `scripts/`, `templates/`, and
-`assets/` folders are excluded.
+Only the documented `paths` keys are supported; unknown path keys fail
+validation.
 
 ## Entry Skill
 
@@ -129,7 +123,8 @@ Category folders are readability containers only. They do not create routing
 behavior, inheritance, default resources, or implicit coupling. A category
 folder is valid only when it contains descendant module artifacts and does not
 itself contain module files such as `instructions.md`, `SKILL.md`,
-`agents/openai.yaml`, or artifact-owned resource folders.
+`agents/openai.yaml`, or artifact-owned resource folders. Nesting is a browsing
+aid only; use categories when they make the module catalog easier to browse.
 
 Module metadata:
 

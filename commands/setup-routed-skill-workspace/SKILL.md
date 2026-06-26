@@ -28,7 +28,7 @@ explicit instruction boundary rather than routing metadata.
 - Use `references/routed-workspace-contract.md` when defining workspace shape,
   metadata, routing, relations, generated artifacts, or validation rules.
 - Use `references/operations.md` when initializing, analyzing, creating modules
-  or command skills, rebuilding, validating, or proposing merges.
+  or command skills, rebuilding, validating, or resolving module overlap.
 - Use `scripts/rebuild-routed-skills.py` to regenerate target workspace artifacts.
 - Use `scripts/validate-routed-skills.py` to check target workspace integrity.
 
@@ -51,8 +51,8 @@ explicit instruction boundary rather than routing metadata.
 6. Rebuild generated artifacts from metadata with the bundled rebuild script.
 7. Validate structure, metadata, relations, resources, routing constraints, and
    generated freshness with the bundled validator before reporting completion.
-8. When overlap, ambiguity, or risk is detected, create a challenge or merge
-   proposal instead of adding another module silently.
+8. When overlap, ambiguity, or risk is detected, present a challenge report
+   instead of adding another module silently.
 
 ## Quality Gates
 

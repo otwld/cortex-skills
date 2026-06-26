@@ -17,7 +17,7 @@ product intent or risk decisions that files cannot answer.
 5. Create only user-requested routed modules. A generic scaffold may start with
    no routed modules; do not copy Cortex-specific always-loaded modules unless
    the user explicitly requests that policy.
-6. Create `commands/`, `shared/`, `generated/`, `scripts/`, and `proposals/`.
+6. Create `commands/`, `shared/`, `generated/`, and `scripts/`.
 7. Copy or adapt the bundled validation and rebuild scripts into the target
    workspace when the user wants local scripts.
 8. Rebuild catalog, graph, and cascade.
@@ -41,12 +41,12 @@ generated output.
    resources, and relations.
 2. Detect overlap through same names, duplicate strong signals, similar
    descriptions, shared relations, or duplicated resources.
-3. If overlap is low, choose the module artifact path from existing workspace
-   convention and manifest depth settings, then create
+3. If overlap is low, choose the module artifact path from the existing
+   workspace taxonomy and browsing convention, then create
    `modules/<category-path>/<module-name>/skill.yaml` and `instructions.md`
-   from templates. Flat `modules/<module-name>/` paths are valid when the
-   workspace allows them. Preserve the `using module: <module-name>` output
-   marker.
+   from templates. Flat `modules/<module-name>/` paths are valid, and nested
+   category folders are readability containers only. Preserve the
+   `using module: <module-name>` output marker.
 4. Keep new modules in `status: draft` until at least one concrete routing
    signal and module-specific instruction behavior are written; active modules
    with empty signals, generated-looking strong signals, or title-swapped
@@ -102,9 +102,8 @@ freshness, command skill exclusion, duplicate strong signals, direct strong
 signal wording, public agent-skill shapes, and required public
 `agents/openai.yaml` interface metadata.
 
-## Propose Merge
+## Resolve Module Overlap
 
 Compare descriptions, routing signals, relations, instructions, and resources.
 Recommend exactly one outcome: keep separate, merge, replace, narrow one module,
-or split responsibilities. Store the proposal under `proposals/` only when the
-user asks for a durable artifact.
+or split responsibilities.

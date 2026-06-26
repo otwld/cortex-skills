@@ -22,7 +22,7 @@
 - Added setup workspace template fixture coverage for empty generic workspaces,
   active modules with concrete signals, and active modules missing signals.
 - Added recursive routed module discovery and validator checks for nested
-  module category folders and module path depth bounds.
+  module category folders.
 
 ### Changed
 
