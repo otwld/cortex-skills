@@ -16,6 +16,8 @@ VALID_ACTIVATIONS = {'entry', 'routed', 'explicit'}
 VALID_VISIBILITIES = {'public', 'hidden'}
 RELATION_KEYS = ('before', 'with', 'after', 'excludes', 'replaces')
 RESOURCE_KEYS = ('references', 'scripts', 'templates', 'assets')
+DEFAULT_MODULE_PATH_MIN_DEPTH = 1
+DEFAULT_MODULE_PATH_MAX_DEPTH = 4
 AGENT_SKILL_NAME = 'SKILL.md'
 AGENT_METADATA_PATH = Path('agents') / 'openai.yaml'
 AGENT_SKILL_NAME_RE = re.compile(r'^[a-z0-9]+(?:-[a-z0-9]+)*$')
@@ -137,6 +139,98 @@ def resource_candidates(artifact: Any, workspace: Any, kind: str, value: str) ->
         artifact.directory / kind / value,
         workspace.root / 'shared' / value,
     ]
+
+
+def is_under_artifact(path: Path, artifact_dirs: set[Path]) -> bool:
+    """Return whether a path is inside an artifact directory but is not the artifact root."""
+    return any(parent in artifact_dirs for parent in path.parents)
+
+
+def has_descendant_artifact(path: Path, artifact_dirs: set[Path]) -> bool:
+    """Return whether a category folder contains at least one artifact below it."""
+    return any(path in artifact.parents for artifact in artifact_dirs)
+
+
+def has_module_like_contents(path: Path, instructions_name: str) -> bool:
+    """Return whether a non-artifact folder contains files that require artifact metadata."""
+    if (path / instructions_name).exists() or (path / AGENT_SKILL_NAME).exists():
+        return True
+    if (path / AGENT_METADATA_PATH).exists():
+        return True
+    return any((path / folder).exists() for folder in RESOURCE_KEYS)
+
+
+def validate_modules_tree(root: Path, modules_root: Path, metadata_name: str, instructions_name: str, errors: list[str]) -> None:
+    """Validate nested routed module artifacts and inert category folders."""
+    if not modules_root.exists():
+        return
+    try:
+        artifact_dirs = set(rebuild.discover_artifact_directories(modules_root, metadata_name, root))
+    except Exception as error:
+        errors.append(str(error))
+        artifact_dirs = {path.parent for path in modules_root.rglob(metadata_name) if path.is_file()}
+
+    for directory in sorted(path for path in modules_root.rglob('*') if path.is_dir()):
+        if directory in artifact_dirs:
+            metadata_path = directory / metadata_name
+            try:
+                metadata = rebuild.load_yaml(metadata_path)
+            except Exception as error:
+                errors.append(f'{rel(root, metadata_path)}: {error}')
+                metadata = {}
+            if metadata.get('activation') == 'explicit':
+                errors.append(f'{rel(root, directory)}: command skill must live under commands')
+            if not (directory / instructions_name).exists():
+                errors.append(f'{rel(root, directory)}: missing {instructions_name}')
+            continue
+
+        if is_under_artifact(directory, artifact_dirs):
+            continue
+
+        if has_module_like_contents(directory, instructions_name):
+            errors.append(f'{rel(root, directory)}: missing {metadata_name}')
+        elif not has_descendant_artifact(directory, artifact_dirs):
+            errors.append(f'{rel(root, directory)}: category folder has no descendant module artifact')
+
+
+def validation_integer(value: Any, label: str, default: int, errors: list[str]) -> int:
+    """Return an integer validation setting or record an error and use a default."""
+    if value is None:
+        return default
+    if not isinstance(value, int):
+        errors.append(f'{label}: expected integer')
+        return default
+    return value
+
+
+def validate_module_path_depths(workspace: Any, validation: dict[str, Any], errors: list[str]) -> None:
+    """Validate module artifact path depth relative to the modules root."""
+    min_depth = validation_integer(
+        validation.get('module_path_min_depth'),
+        'validation.module_path_min_depth',
+        DEFAULT_MODULE_PATH_MIN_DEPTH,
+        errors,
+    )
+    max_depth = validation_integer(
+        validation.get('module_path_max_depth'),
+        'validation.module_path_max_depth',
+        DEFAULT_MODULE_PATH_MAX_DEPTH,
+        errors,
+    )
+    if min_depth > max_depth:
+        errors.append('validation.module_path_min_depth must be less than or equal to validation.module_path_max_depth')
+        return
+
+    modules_root = workspace.root / manifest_value(workspace, 'paths', rebuild.DEFAULT_PATHS)['modules']
+    for artifact in workspace.modules:
+        try:
+            depth = len(artifact.directory.relative_to(modules_root).parts)
+        except ValueError:
+            continue
+        if depth < min_depth:
+            errors.append(f'{artifact.relative_path}: module path depth {depth} is below minimum {min_depth}')
+        if depth > max_depth:
+            errors.append(f'{artifact.relative_path}: module path depth {depth} exceeds maximum {max_depth}')
 
 
 def validate_resources(workspace: Any, artifact: Any, names: set[str], errors: list[str]) -> None:
@@ -371,24 +465,7 @@ def validate_workspace(raw_manifest: str | None) -> list[str]:
         errors.append(f'{rel(root, entry_dir)}: missing {metadata_name}')
 
     modules_root = root / paths['modules']
-    if modules_root.exists():
-        for child in sorted(modules_root.iterdir()):
-            if not child.is_dir():
-                continue
-            metadata_path = child / metadata_name
-            if not metadata_path.exists():
-                errors.append(f'{rel(root, child)}: missing {metadata_name}')
-                metadata = {}
-            else:
-                try:
-                    metadata = rebuild.load_yaml(metadata_path)
-                except Exception as error:
-                    errors.append(f'{rel(root, metadata_path)}: {error}')
-                    metadata = {}
-                if metadata.get('activation') == 'explicit':
-                    errors.append(f'{rel(root, child)}: command skill must live under {paths["commands"]}')
-            if not (child / instructions_name).exists():
-                errors.append(f'{rel(root, child)}: missing {instructions_name}')
+    validate_modules_tree(root, modules_root, metadata_name, instructions_name, errors)
 
     commands_root = root / paths['commands']
     if commands_root.exists():
@@ -458,6 +535,7 @@ def validate_workspace(raw_manifest: str | None) -> list[str]:
     if not isinstance(max_depth, int):
         errors.append('validation.max_before_depth: expected integer')
         max_depth = 3
+    validate_module_path_depths(workspace, validation, errors)
     for name in before_map:
         before_chain(name, before_map, [], errors, max_depth)
 

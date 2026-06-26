@@ -253,6 +253,25 @@ def load_artifact(directory: Path, metadata_name: str, root: Path) -> Artifact:
     )
 
 
+def discover_artifact_directories(search_root: Path, metadata_name: str, root: Path) -> list[Path]:
+    """Return artifact directories under a root while rejecting nested artifacts."""
+    if not search_root.exists():
+        return []
+
+    directories = sorted({path.parent for path in search_root.rglob(metadata_name) if path.is_file()})
+    directory_set = set(directories)
+    for directory in directories:
+        for ancestor in directory.parents:
+            if ancestor == search_root.parent:
+                break
+            if ancestor in directory_set:
+                raise RoutedSkillError(
+                    f'{workspace_relative(root, directory)}: artifact cannot be nested inside '
+                    f'{workspace_relative(root, ancestor)}'
+                )
+    return directories
+
+
 def load_workspace(raw_manifest: str | None = None) -> Workspace:
     """Load a routed skill workspace from its manifest."""
     manifest_path = find_manifest(raw_manifest)
@@ -270,13 +289,12 @@ def load_workspace(raw_manifest: str | None = None) -> Workspace:
     entry = load_artifact(root / entry_path, artifacts['metadata'], root)
     modules_root = root / paths['modules']
     modules: list[Artifact] = []
-    if modules_root.exists():
-        for child in sorted(modules_root.iterdir()):
-            if child.is_dir() and (child / artifacts['metadata']).exists():
-                artifact = load_artifact(child, artifacts['metadata'], root)
-                if artifact.activation == 'explicit':
-                    raise RoutedSkillError(f'{artifact.relative_path}: command skill must live under {paths["commands"]}')
-                modules.append(artifact)
+    for directory in discover_artifact_directories(modules_root, artifacts['metadata'], root):
+        artifact = load_artifact(directory, artifacts['metadata'], root)
+        if artifact.activation == 'explicit':
+            raise RoutedSkillError(f'{artifact.relative_path}: command skill must live under {paths["commands"]}')
+        modules.append(artifact)
+    modules.sort(key=lambda item: item.name)
 
     commands_root = root / paths['commands']
     commands: list[Artifact] = []

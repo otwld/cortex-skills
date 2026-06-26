@@ -38,13 +38,25 @@ def render_setup_template(relative_path: str, values: dict[str, str]) -> str:
     return text
 
 
-def manifest(root_name: str, *, max_depth: int = 3, always: str = '') -> str:
+def manifest(
+    root_name: str,
+    *,
+    max_depth: int = 3,
+    always: str = '',
+    module_min_depth: object | None = None,
+    module_max_depth: object | None = None,
+) -> str:
     """Return fixture manifest text."""
     routing_block = f'''
 routing:
   always:
     - {always}
 ''' if always else ''
+    module_depth_block = ''
+    if module_min_depth is not None:
+        module_depth_block += f'  module_path_min_depth: {module_min_depth}\n'
+    if module_max_depth is not None:
+        module_depth_block += f'  module_path_max_depth: {module_max_depth}\n'
     return f'''name: ascend
 root: {root_name}
 
@@ -72,7 +84,7 @@ generated:
 
 validation:
   max_before_depth: {max_depth}
-'''
+{module_depth_block}'''.rstrip() + '\n'
 
 
 def entry_metadata(name: str = 'ascend') -> str:
@@ -370,6 +382,33 @@ def expect_failure(name: str, mutate, expected: str, *, rebuild_after: bool = Fa
         print(f'ok: {name}')
 
 
+def move_module(root: Path, name: str, *parts: str) -> None:
+    """Move a fixture module into a nested category path."""
+    source = root / 'modules' / name
+    target = root / 'modules' / Path(*parts) / name
+    target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.move(str(source), str(target))
+
+
+def nested_modules_validate() -> None:
+    """Validate recursive module discovery and generated nested paths."""
+    with tempfile.TemporaryDirectory(prefix='routed-skills-') as raw:
+        temp_dir = Path(raw)
+        root = create_workspace(temp_dir)
+        move_module(root, 'module-creation', 'workflow', 'planning')
+        move_module(root, 'quality-standard', 'quality', 'documentation')
+        result = run([sys.executable, str(REBUILD), str(root / 'routed-skills.yaml')], temp_dir)
+        if result.returncode != 0:
+            raise AssertionError(f'nested module rebuild should pass\nstdout:\n{result.stdout}\nstderr:\n{result.stderr}')
+        catalog = (root / 'generated' / 'SKILL_CATALOG.md').read_text(encoding='utf-8')
+        if 'modules/workflow/planning/module-creation/' not in catalog:
+            raise AssertionError('nested module path missing from generated catalog')
+        result = run([sys.executable, str(VALIDATE), str(root / 'routed-skills.yaml')], temp_dir)
+        if result.returncode != 0:
+            raise AssertionError(f'nested modules should validate\nstdout:\n{result.stdout}\nstderr:\n{result.stderr}')
+        print('ok: nested modules validate')
+
+
 def add_explicit_command(root: Path) -> None:
     """Add a valid command skill."""
     write(root / 'commands' / 'setup-ci' / 'skill.yaml', module_metadata('setup-ci', activation='explicit', visibility='public'))
@@ -482,6 +521,28 @@ def explicit_under_modules(root: Path) -> None:
     write(root / 'modules' / 'setup-ci' / 'instructions.md', instructions('Set up CI when directly invoked.', name='setup-ci', marker='skill'))
 
 
+def explicit_under_nested_modules(root: Path) -> None:
+    """Add a command skill in a nested routed modules category."""
+    write(root / 'modules' / 'workflow' / 'tooling' / 'setup-ci' / 'skill.yaml', module_metadata('setup-ci', activation='explicit', visibility='public'))
+    write(root / 'modules' / 'workflow' / 'tooling' / 'setup-ci' / 'instructions.md', instructions('Set up CI when directly invoked.', name='setup-ci', marker='skill'))
+
+
+def orphan_category_folder(root: Path) -> None:
+    """Add an empty category folder under modules."""
+    (root / 'modules' / 'workflow').mkdir(parents=True, exist_ok=True)
+
+
+def nested_missing_metadata_module(root: Path) -> None:
+    """Add module-like nested contents without metadata."""
+    write(root / 'modules' / 'workflow' / 'planning' / 'missing-metadata' / 'instructions.md', instructions('Missing metadata fixture.', name='missing-metadata'))
+
+
+def nested_artifact_inside_artifact(root: Path) -> None:
+    """Add an artifact below another module artifact."""
+    write(root / 'modules' / 'module-creation' / 'child-module' / 'skill.yaml', module_metadata('child-module', strong='user asks for child module'))
+    write(root / 'modules' / 'module-creation' / 'child-module' / 'instructions.md', instructions('Child module.', name='child-module'))
+
+
 def missing_command_skill(root: Path) -> None:
     """Add a command skill without its public SKILL.md."""
     write(root / 'commands' / 'setup-ci' / 'skill.yaml', module_metadata('setup-ci', activation='explicit', visibility='public'))
@@ -557,6 +618,32 @@ def always_loaded_inactive_target(root: Path) -> None:
 def always_loaded_scalar_target(root: Path) -> None:
     """Configure routing.always as a scalar instead of a list."""
     write(root / 'routed-skills.yaml', manifest('.skills').replace('\ngenerated:', '\nrouting:\n  always: quality-standard\n\ngenerated:'))
+
+
+def non_integer_module_min_depth(root: Path) -> None:
+    """Configure module path minimum depth as a non-integer."""
+    write(root / 'routed-skills.yaml', manifest('.skills', module_min_depth='deep'))
+
+
+def non_integer_module_max_depth(root: Path) -> None:
+    """Configure module path maximum depth as a non-integer."""
+    write(root / 'routed-skills.yaml', manifest('.skills', module_max_depth='deep'))
+
+
+def module_min_depth_greater_than_max(root: Path) -> None:
+    """Configure inconsistent module path depth bounds."""
+    write(root / 'routed-skills.yaml', manifest('.skills', module_min_depth=4, module_max_depth=3))
+
+
+def shallow_module_path_depth(root: Path) -> None:
+    """Require nested module paths while fixtures are still flat."""
+    write(root / 'routed-skills.yaml', manifest('.skills', module_min_depth=2))
+
+
+def deep_module_path_depth(root: Path) -> None:
+    """Move a module deeper than the configured maximum module path depth."""
+    move_module(root, 'module-creation', 'workflow', 'planning')
+    write(root / 'routed-skills.yaml', manifest('.skills', module_max_depth=2))
 
 
 def duplicate_signal(root: Path) -> None:
@@ -693,6 +780,7 @@ def main() -> int:
     expect_success('command skill validates', add_explicit_command)
     expect_success('always-loaded module validates', enable_always_loaded_module)
     generated_always_loaded_module_is_rendered()
+    nested_modules_validate()
     setup_templates_empty_workspace_validates()
     setup_templates_active_modules_validate()
     setup_template_active_empty_signals_fail()
@@ -707,9 +795,13 @@ def main() -> int:
     expect_failure('legacy entry instructions fail', add_legacy_entry_instructions, 'entry instructions belong in SKILL.md')
     expect_failure('legacy entry openai metadata fails', add_legacy_entry_metadata, 'use agents/openai.yaml instead')
     expect_failure('missing metadata fails', add_missing_metadata_module, 'missing skill.yaml')
+    expect_failure('orphan category folder fails', orphan_category_folder, 'category folder has no descendant module artifact')
+    expect_failure('nested missing metadata fails', nested_missing_metadata_module, 'missing skill.yaml')
     expect_failure('missing instructions fails', add_missing_instructions_module, 'missing instructions.md')
     expect_failure('missing module output marker fails', missing_module_output_marker, 'missing output marker: using module: module-creation')
     expect_failure('legacy command skill under modules fails', explicit_under_modules, 'command skill must live under commands')
+    expect_failure('nested command skill under modules fails', explicit_under_nested_modules, 'command skill must live under commands')
+    expect_failure('nested artifact inside artifact fails', nested_artifact_inside_artifact, 'artifact cannot be nested inside')
     expect_failure('missing command SKILL.md fails', missing_command_skill, 'missing SKILL.md')
     expect_failure('missing command agents metadata fails', missing_command_agent_metadata, 'missing agents/openai.yaml')
     expect_failure('command implicit invocation fails', allow_implicit_command, 'allow_implicit_invocation must be false')
@@ -722,6 +814,11 @@ def main() -> int:
     expect_failure('always-loaded command target fails', always_loaded_command_target, 'routing.always target must be a routed module: setup-ci', rebuild_after=True)
     expect_failure('always-loaded inactive target fails', always_loaded_inactive_target, 'routing.always target must be active: quality-standard', rebuild_after=True)
     expect_failure('always-loaded scalar target fails', always_loaded_scalar_target, 'routing.always: expected list')
+    expect_failure('non-integer module min depth fails', non_integer_module_min_depth, 'validation.module_path_min_depth: expected integer')
+    expect_failure('non-integer module max depth fails', non_integer_module_max_depth, 'validation.module_path_max_depth: expected integer')
+    expect_failure('module min depth greater than max fails', module_min_depth_greater_than_max, 'module_path_min_depth must be less than or equal')
+    expect_failure('shallow module path depth fails', shallow_module_path_depth, 'modules/module-creation: module path depth 1 is below minimum 2')
+    expect_failure('deep module path depth fails', deep_module_path_depth, 'modules/workflow/planning/module-creation: module path depth 3 exceeds maximum 2', rebuild_after=True)
     expect_failure('stale generated artifact fails', stale_generated, 'stale generated artifact')
     expect_failure('duplicate strong signal fails', duplicate_signal, 'duplicate strong signal', rebuild_after=True)
     expect_failure('active empty signals fail', active_empty_signals, 'active routed module has no routing signals', rebuild_after=True)
