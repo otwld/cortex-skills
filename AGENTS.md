@@ -58,9 +58,10 @@ entry/cortex/
 |-- SKILL.md
 |-- agents/openai.yaml
 `-- skill.yaml
-modules/<artifact-name>/
+modules/<area>/<cluster>/<artifact-name>/
 |-- instructions.md
-`-- skill.yaml
+|-- skill.yaml
+`-- references/ or scripts/ or templates/ or assets/ when declared
 commands/<command-name>/
 |-- SKILL.md
 |-- agents/openai.yaml
@@ -74,13 +75,15 @@ proposals/
 Rules:
 
 - `entry/cortex/SKILL.md` is the only public routed entry skill.
-- Routed modules live under `modules/` with `activation: routed` and
-  `visibility: hidden`.
+- Routed modules live under non-semantic category folders in `modules/` with
+  `activation: routed` and `visibility: hidden`.
 - Command skills live under `commands/` with `activation: explicit` and
   `visibility: public`; they are direct-invocation only and excluded from routed
   cascade selection.
-- Do not add `MODULE.md`, taxonomy folders, compatibility shims, hidden
-  inheritance, or implicit resource sharing.
+- Category folders under `modules/` are for readability only; they do not create
+  inheritance, routing behavior, implicit resources, or hidden coupling.
+- Do not add `MODULE.md`, compatibility shims, hidden inheritance, or implicit
+  resource sharing.
 - Do not hand-edit files under `generated/`.
 
 ## Metadata And Instructions
@@ -185,7 +188,7 @@ Document the touched code at the right level:
 Before finishing any routed workspace change, verify:
 
 - There is exactly one public entry skill under `entry/cortex/`.
-- No `MODULE.md` files or taxonomy-era skill directories remain.
+- No `MODULE.md` files or obsolete flat module artifact directories remain.
 - Routed modules are hidden and command skills are public direct-invocation
   artifacts under `commands/`.
 - Relation targets name existing entry, routed module, or command skill

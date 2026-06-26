@@ -21,6 +21,8 @@
   metadata.
 - Added setup workspace template fixture coverage for empty generic workspaces,
   active modules with concrete signals, and active modules missing signals.
+- Added recursive routed module discovery and validator checks for nested
+  module category folders and module path depth bounds.
 
 ### Changed
 
@@ -34,8 +36,8 @@
 - Moved direct-invocation setup workflows into full public command skills under
   `commands/` with `SKILL.md` and `agents/openai.yaml`.
 - Renamed setup command skills to the `$setup-*` naming convention.
-- Replaced taxonomy folders and `MODULE.md` files with `modules/<name>/`
-  folders containing `instructions.md` and `skill.yaml`.
+- Replaced taxonomy-era `MODULE.md` files with module artifact folders
+  containing `instructions.md` and `skill.yaml`.
 - Narrowed broad routing signals for architecture drift, architecture
   deepening, test runners, verification, review, and branch completion.
 - Removed legacy-only extracted pattern resources from active routed modules.
@@ -43,6 +45,8 @@
   module-specific quality gates, hard stops, and usage checklist items.
 - Aligned `$setup-routed-skill-workspace` templates and contract references with
   stricter active-module signal and instruction-quality validation.
+- Moved Cortex routed modules into nested readability categories under
+  `modules/` while preserving `skill.yaml` module names and routing relations.
 
 ## v0.1.0 Public Seed - 2026-05-28
 

@@ -75,6 +75,8 @@ explicit instruction boundary rather than routing metadata.
   responsibility rather than title-swapped scaffold text.
 - Shared behavior is named through `uses` or resources; no implicit inheritance
   or hidden coupling is introduced.
+- Module category folders, when used, are readability containers only; they do
+  not create routing behavior, inheritance, or implicit resources.
 - Public entry and command skills include complete `agents/openai.yaml`
   interface metadata and keep implicit invocation disabled.
 - Generic scaffolds start with the public entry and user-requested modules only;
@@ -92,8 +94,9 @@ and cascade, then validate the workspace.
 ## Hard Stops
 
 - Do not create multiple entry skills.
-- Do not require `MODULE.md`, Cortex naming, taxonomy folders, TypeScript
-  assumptions, package registries, or domain starter packs in target workspaces.
+- Do not require `MODULE.md`, Cortex naming, Cortex category folders,
+  TypeScript assumptions, package registries, or domain starter packs in target
+  workspaces.
 - Do not hand-edit generated target artifacts as if they were source files.
 - Do not add command handoff metadata, infer handoff from ordinary entry-token
   prose, or switch silently from a command into the entry router.

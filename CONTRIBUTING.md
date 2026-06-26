@@ -17,8 +17,10 @@ documentation updates.
   activation, visibility, and generated catalog data.
 - Keep selected-module behavior in `instructions.md`.
 - Keep the public `$cortex` entry as the only public routed entry skill.
-- Do not add `MODULE.md`, taxonomy folders, compatibility shims, implicit
-  inheritance, or hidden resource sharing.
+- Do not add `MODULE.md`, compatibility shims, implicit inheritance, or hidden
+  resource sharing.
+- Category folders under `modules/` are allowed only as readability containers;
+  they do not create routing behavior, inheritance, or implicit resources.
 - Keep all illustrative examples inside the recruitment job-board universe.
 - Do not hand-edit files under `generated/`.
 
@@ -37,10 +39,14 @@ entry/cortex/
 Routed modules use:
 
 ```text
-modules/artifact-name/
+modules/category/path/artifact-name/
 |-- instructions.md
 `-- skill.yaml
 ```
+
+Generic routed workspaces may keep flat `modules/artifact-name/` paths unless
+their manifest configures a higher `validation.module_path_min_depth`. This
+repository uses nested category paths for readability.
 
 Command skills use:
 
@@ -82,11 +88,11 @@ For validator or rebuild changes, run the fixture regression suite:
 python3 scripts/test-validate-routed-skills.py
 ```
 
-The validator checks entry shape, command skill shape, metadata, activation and
-visibility rules, relations, resources, active module reachability, instruction
-prose quality, title-swapped boilerplate, public `agents/openai.yaml` display
-metadata, duplicate strong signals, generated freshness, and routed cascade
-exclusion for command skills.
+The validator checks entry shape, command skill shape, nested module categories,
+module path depth, metadata, activation and visibility rules, relations,
+resources, active module reachability, instruction prose quality, title-swapped
+boilerplate, public `agents/openai.yaml` display metadata, duplicate strong
+signals, generated freshness, and routed cascade exclusion for command skills.
 
 ## Pull Request Checklist
 

@@ -41,9 +41,12 @@ generated output.
    resources, and relations.
 2. Detect overlap through same names, duplicate strong signals, similar
    descriptions, shared relations, or duplicated resources.
-3. If overlap is low, create `modules/<module-name>/skill.yaml` and
-   `instructions.md` from templates, preserving the `using module:
-   <module-name>` output marker.
+3. If overlap is low, choose the module artifact path from existing workspace
+   convention and manifest depth settings, then create
+   `modules/<category-path>/<module-name>/skill.yaml` and `instructions.md`
+   from templates. Flat `modules/<module-name>/` paths are valid when the
+   workspace allows them. Preserve the `using module: <module-name>` output
+   marker.
 4. Keep new modules in `status: draft` until at least one concrete routing
    signal and module-specific instruction behavior are written; active modules
    with empty signals, generated-looking strong signals, or title-swapped

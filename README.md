@@ -273,8 +273,8 @@ entry/cortex/
 ```
 
 Compatible agent tooling should point at `entry/cortex/` for the `$cortex`
-entry. Routed modules stay hidden under `modules/`, while direct command skills
-live under `commands/`.
+entry. Routed modules stay hidden under nested category folders in `modules/`,
+while direct command skills live under `commands/`.
 
 Clone the repository if you want the full workspace locally:
 

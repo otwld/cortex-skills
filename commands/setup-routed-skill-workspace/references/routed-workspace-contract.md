@@ -2,7 +2,7 @@
 
 Use this reference when a task defines, audits, or changes the generic routed
 skill workspace format. The contract is intentionally independent of Cortex
-artifact names and taxonomy folders.
+artifact names and category names.
 
 ## Workspace Shape
 
@@ -20,6 +20,7 @@ Default layout:
     agents/openai.yaml
     skill.yaml
   modules/<module-name>/
+  modules/<category>/<optional-category>/<module-name>/
   commands/<command-name>/
     SKILL.md
     agents/openai.yaml
@@ -67,10 +68,16 @@ generated:
 
 validation:
   max_before_depth: 3
+  module_path_min_depth: 1
+  module_path_max_depth: 4
 ```
 
 Use the manifest directory as the workspace root when resolving paths. Keep
 `root` as a human-readable declaration of the chosen supported root.
+`validation.module_path_min_depth` and `validation.module_path_max_depth` are
+optional. They count only the path from `modules/` to the module artifact
+directory; artifact-owned `references/`, `scripts/`, `templates/`, and
+`assets/` folders are excluded.
 
 ## Entry Skill
 
@@ -112,9 +119,17 @@ the router.
 
 ## Modules
 
-Modules are folders and are the source of truth. Required files are `skill.yaml`
-and `instructions.md`; optional folders are `references/`, `scripts/`,
-`templates/`, and `assets/`.
+Modules are artifact folders and are the source of truth. Required files are
+`skill.yaml` and `instructions.md`; optional folders are `references/`,
+`scripts/`, `templates/`, and `assets/`.
+
+Module artifacts may be flat, such as `modules/testing/`, or nested under
+category folders, such as `modules/quality/testing/regression-testing/`.
+Category folders are readability containers only. They do not create routing
+behavior, inheritance, default resources, or implicit coupling. A category
+folder is valid only when it contains descendant module artifacts and does not
+itself contain module files such as `instructions.md`, `SKILL.md`,
+`agents/openai.yaml`, or artifact-owned resource folders.
 
 Module metadata:
 
