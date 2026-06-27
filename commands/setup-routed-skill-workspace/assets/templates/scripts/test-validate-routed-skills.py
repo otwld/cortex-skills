@@ -13,6 +13,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 REBUILD = SCRIPT_DIR / 'rebuild-routed-skills.py'
 VALIDATE = SCRIPT_DIR / 'validate-routed-skills.py'
+NESTED_WORKSPACE_ROOTS = {'skills', '.skills'}
 
 
 def run(command: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
@@ -24,6 +25,19 @@ def write(path: Path, text: str) -> None:
     """Write fixture text, creating parents first."""
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding='utf-8')
+
+
+def gitignore_root(root: Path) -> Path:
+    """Return the checkout root that must own runtime ignore policy."""
+    return root.parent if root.name in NESTED_WORKSPACE_ROOTS else root
+
+
+def runtime_ignore_pattern(root: Path) -> str:
+    """Return the gitignore pattern for the entry-local runtime directory."""
+    runtime = '.ascend/'
+    if root.name in NESTED_WORKSPACE_ROOTS:
+        return f'{root.name}/{runtime}'
+    return runtime
 
 
 def manifest(root_name: str) -> str:
@@ -234,7 +248,7 @@ def create_workspace(temp_dir: Path, root_name: str = '.skills') -> Path:
     """Create and rebuild a valid fixture workspace."""
     root = temp_dir if root_name == '.' else temp_dir / root_name
     write(root / 'routed-skills.yaml', manifest(root_name))
-    write(root / '.gitignore', '.ascend/\n')
+    write(gitignore_root(root) / '.gitignore', f'{runtime_ignore_pattern(root)}\n')
     write(root / 'entry' / 'ascend' / 'skill.yaml', entry_metadata())
     write(root / 'entry' / 'ascend' / 'SKILL.md', entry_skill())
     write(root / 'entry' / 'ascend' / 'agents' / 'openai.yaml', agent_metadata())
@@ -338,7 +352,13 @@ def unknown_facet_key(root: Path) -> None:
 
 def missing_gitignore(root: Path) -> None:
     """Remove the run-trace ignore policy."""
-    (root / '.gitignore').write_text('', encoding='utf-8')
+    (gitignore_root(root) / '.gitignore').write_text('', encoding='utf-8')
+
+
+def nested_gitignore_only(root: Path) -> None:
+    """Move runtime ignore policy into the routed skills directory."""
+    (gitignore_root(root) / '.gitignore').write_text('', encoding='utf-8')
+    write(root / '.gitignore', '.ascend/\n')
 
 
 def invalid_entry_config(root: Path) -> None:
@@ -405,7 +425,8 @@ def main() -> int:
     expect_failure('unknown lifecycle phase fails', unknown_lifecycle_phase, 'unknown lifecycle phase', rebuild_after=True)
     expect_failure('unknown facet key fails', unknown_facet_key, 'unknown routing facet key')
     expect_failure('active module without facets fails', active_module_without_facets, 'active routed module has no routing facets', rebuild_after=True)
-    expect_failure('missing runtime ignore fails', missing_gitignore, 'missing .ascend/')
+    expect_failure('missing runtime ignore fails', missing_gitignore, 'missing .skills/.ascend/')
+    expect_failure('nested runtime ignore under skills fails', nested_gitignore_only, 'missing .skills/.ascend/')
     expect_failure('invalid entry config fails', invalid_entry_config, 'always target does not exist')
     expect_failure('command lifecycle fails', command_with_lifecycle, 'command skills must not declare lifecycle files')
     expect_failure('stale generated fails', stale_generated, 'stale generated artifact')

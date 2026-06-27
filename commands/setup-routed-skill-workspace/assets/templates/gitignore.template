@@ -1,2 +1,2 @@
 # Entry-local runtime state
-{{runtime_dir}}/
+{{runtime_ignore_path}}

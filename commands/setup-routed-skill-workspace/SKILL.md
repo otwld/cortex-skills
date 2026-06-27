@@ -11,6 +11,8 @@ Create and extend Cortex-like routed skill workspaces. A generated workspace has
 one public entry skill chosen by the user, hidden routed modules selected by
 structured facets and lifecycle phase files, public command atoms, generated
 catalog/graph/cascade views, and local runtime state under `.<entry>/`.
+Runtime ignore policy belongs in the checkout-root `.gitignore`; nested routed
+workspace layouts such as `skills/` must not create a separate `skills/.gitignore`.
 
 This command is an authoring command, not a migration tool.
 
@@ -33,7 +35,7 @@ This command is an authoring command, not a migration tool.
    creating files.
 3. For initialization, create the manifest, entry skill, default commands,
    empty module/shared/generated/script folders, generated placeholders, copied
-   scripts, and `.gitignore` entry for `.<entry>/`.
+   scripts, and checkout-root `.gitignore` entry for the entry runtime path.
 4. For module creation, inspect existing module names, descriptions, facets,
    lifecycle files, and resources for overlap before adding a new module.
 5. For module creation, prefer `modules/<area>/<cluster>/<module-name>/` when
@@ -51,7 +53,8 @@ This command is an authoring command, not a migration tool.
 
 - Initialization creates exactly one public entry skill named by the user.
 - Runtime config and traces are operator-local under `.<entry>/`.
-- `.gitignore` ignores `.<entry>/`.
+- The checkout-root `.gitignore` ignores `.<entry>/` for root layouts or
+  `<target-root>/.<entry>/` for nested `skills/` and `.skills/` layouts.
 - New workspaces include `setup-routed-skill-workspace` and
   `setup-<entry>-config` command atoms by default.
 - New workspaces include rebuild, validate, and validator fixture-test scripts.

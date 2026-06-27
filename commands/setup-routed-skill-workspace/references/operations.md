@@ -8,7 +8,9 @@ Use this reference for the operations supported by
 1. Require the target root and entry slug.
 2. Create `routed-skills.yaml` with `entry.path: entry/<entry-slug>`.
 3. Create the public entry skill from templates.
-4. Add `.gitignore` with `.<entry-slug>/`.
+4. Add or update the checkout-root `.gitignore` with the entry runtime path:
+   use `.<entry-slug>/` for repository-root routed workspaces and
+   `<target-root>/.<entry-slug>/` for nested `skills/` or `.skills/` roots.
 5. Create empty `modules/`, `shared/`, and `generated/` folders.
 6. Copy rebuild, validate, and validator fixture-test scripts into `scripts/`.
 7. Create `commands/setup-routed-skill-workspace/` from the current command
@@ -20,6 +22,8 @@ Use this reference for the operations supported by
 Do not create starter routed modules unless the user explicitly asks for them.
 Do not create `.<entry>/config.json`; the config command owns that operator
 local file.
+Do not create `skills/.gitignore` or `.skills/.gitignore` to satisfy runtime
+ignore policy for nested layouts.
 
 ## Create Routed Module
 

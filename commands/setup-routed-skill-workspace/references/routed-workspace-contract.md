@@ -8,36 +8,39 @@ generated workspaces unless that is the requested entry slug.
 
 A workspace contains one public entry skill, hidden routed modules, public
 command atoms, shared resources, generated artifacts, and validation scripts.
+The checkout root owns `.gitignore`; the routed workspace root owns the skill
+artifacts.
 
 ```text
-<root>/
-  routed-skills.yaml
+<checkout-root>/
   .gitignore
-  entry/<entry-slug>/
-    SKILL.md
-    agents/openai.yaml
-    skill.yaml
-  modules/<area>/<cluster>/<module-name>/
-    skill.yaml
-    lifecycle/activate.md
-    lifecycle/plan.md
-    lifecycle/run.md
-    lifecycle/review.md
-    lifecycle/verify.md
-    lifecycle/finalize.md
-  commands/setup-routed-skill-workspace/
-    SKILL.md
-    agents/openai.yaml
-    skill.yaml
-    assets/
-    references/
-  commands/setup-<entry-slug>-config/
-    SKILL.md
-    agents/openai.yaml
-    skill.yaml
-  shared/
-  generated/
-  scripts/
+  <root>/
+    routed-skills.yaml
+    entry/<entry-slug>/
+      SKILL.md
+      agents/openai.yaml
+      skill.yaml
+    modules/<area>/<cluster>/<module-name>/
+      skill.yaml
+      lifecycle/activate.md
+      lifecycle/plan.md
+      lifecycle/run.md
+      lifecycle/review.md
+      lifecycle/verify.md
+      lifecycle/finalize.md
+    commands/setup-routed-skill-workspace/
+      SKILL.md
+      agents/openai.yaml
+      skill.yaml
+      assets/
+      references/
+    commands/setup-<entry-slug>-config/
+      SKILL.md
+      agents/openai.yaml
+      skill.yaml
+    shared/
+    generated/
+    scripts/
 ```
 
 The module path convention is three levels for clarity, but validators must
@@ -100,6 +103,11 @@ uses:
 - `.ascend/runs/{date-slug}/`
 
 The runtime directory is operator-local and ignored as `.<entry>/`.
+
+When the routed workspace root is the checkout root, `.gitignore` contains
+`.<entry>/`. When the routed workspace root is a nested `skills/` or `.skills/`
+directory, the checkout-root `.gitignore` contains `skills/.<entry>/` or
+`.skills/.<entry>/`. Do not create `skills/.gitignore` to satisfy this policy.
 
 Entry skills contain `SKILL.md`, `agents/openai.yaml`, and `skill.yaml`. Do not
 create entry `instructions.md`.
