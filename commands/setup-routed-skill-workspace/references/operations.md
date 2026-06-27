@@ -1,61 +1,48 @@
 # Routed Workspace Operations
 
-Use this reference when performing user-facing operations for a routed skill
-workspace. Inspect repository state before asking questions; ask only for
-product intent or risk decisions that files cannot answer.
+Use this reference for the operations supported by
+`$setup-routed-skill-workspace`.
 
 ## Initialize Workspace
 
-1. Look for existing `routed-skills.yaml`, `.skills`, `skills`, entry folders,
-   module-like folders, lifecycle files, generated artifacts, and scripts.
-2. Choose the root from user intent. If unspecified and no manifest exists, use
-   `.skills`.
-3. Create `routed-skills.yaml` from the template and set `entry.path`.
-4. Create exactly one entry skill under `entry/<entry-slug>/` with `SKILL.md`,
-   `agents/openai.yaml`, and `skill.yaml`.
-5. Create only user-requested routed modules. Active modules need structured
-   facets and at least one lifecycle file.
-6. Create `commands/`, `shared/`, `generated/`, and `scripts/`.
-7. Copy or adapt bundled validation and rebuild scripts when the user wants
-   local scripts.
-8. Rebuild catalog, graph, and cascade.
-9. Validate and report the exact command and result.
+1. Require the target root and entry slug.
+2. Create `routed-skills.yaml` with `entry.path: entry/<entry-slug>`.
+3. Create the public entry skill from templates.
+4. Add `.gitignore` with `.<entry-slug>/`.
+5. Create empty `modules/`, `shared/`, and `generated/` folders.
+6. Copy rebuild, validate, and validator fixture-test scripts into `scripts/`.
+7. Create `commands/setup-routed-skill-workspace/` from the current command
+   package so the target workspace can author future atoms.
+8. Create `commands/setup-<entry-slug>-config/`.
+9. Copy generated placeholders, then rebuild generated artifacts.
+10. Run validation.
 
-## Analyze Repository
+Do not create starter routed modules unless the user explicitly asks for them.
+Do not create `.<entry>/config.json`; the config command owns that operator
+local file.
 
-Classify existing files as entry skill candidate, routed module candidate,
-command skill candidate, shared resource, generated artifact, domain-specific
-content, or local tooling noise.
+## Create Routed Module
 
-Extract generic principles such as entry routing, facet metadata, lifecycle
-artifacts, generated catalogs, generated graphs, validation architecture, and
-local resource ownership. Exclude Cortex-specific names, domain modules,
-package files unless requested, IDE files, caches, and generated output.
-
-## Create Module
-
-1. Scan existing module names, descriptions, facets, lifecycle files, and
-   resources.
-2. Detect overlap through same names, similar descriptions, duplicate facet
-   values, or duplicated resources.
-3. If overlap is low, choose a module artifact path from the workspace taxonomy
-   and create `skill.yaml` plus at least `lifecycle/activate.md`.
-4. Keep new modules in `status: draft` until facets and lifecycle behavior are
-   concrete enough to validate.
-5. If overlap is high, create a challenge report that recommends create, merge,
-   update, or reject.
+1. Inspect existing module names, descriptions, facets, lifecycle files, and
+   declared resources.
+2. If overlap is material, report create, merge, narrow, split, or reject.
+3. Choose the requested module path; prefer
+   `modules/<area>/<cluster>/<module-name>/` when taxonomy is available.
+4. Create `skill.yaml` with `status: draft`, empty facets, and all lifecycle
+   phases declared.
+5. Create lifecycle placeholders for activate, plan, run, review, verify, and
+   finalize.
 6. Rebuild generated artifacts.
 7. Validate.
 
-## Create Command Skill
+## Create Command Atom
 
-Create `commands/<command-name>/` with `SKILL.md`, `agents/openai.yaml`, and
-`skill.yaml`. Use `activation: explicit` and `visibility: public`. Commands do
-not declare lifecycle files.
-
-When the command owns setup, discovery, intake, or normalization that may
-produce a router-ready follow-up request, document that command-specific handoff
-in `SKILL.md` using a `Router handoff:` block.
+1. Create `commands/<command-name>/`.
+2. Add `SKILL.md`, `agents/openai.yaml`, and `skill.yaml`.
+3. Use `activation: explicit`, `visibility: public`, and `status: active`.
+4. Do not add lifecycle files.
+5. Rebuild generated artifacts.
+6. Validate.
 
 ## Rebuild Workspace
 
@@ -65,22 +52,17 @@ Run:
 python3 scripts/rebuild-routed-skills.py routed-skills.yaml
 ```
 
-The script regenerates catalog, graph, and cascade from metadata.
-
 ## Validate Workspace
 
 Run:
 
 ```bash
+python3 scripts/rebuild-routed-skills.py --check routed-skills.yaml
 python3 scripts/validate-routed-skills.py routed-skills.yaml
 ```
 
-Validation checks structure, metadata, lifecycle files, resources, routing
-facets, generated freshness, public skill metadata, operator config when
-present, and local run-trace ignore policy.
+When validation or rebuild scripts change, also run:
 
-## Resolve Module Overlap
-
-Compare descriptions, facet values, lifecycle behavior, and resources.
-Recommend exactly one outcome: keep separate, merge, replace, narrow one module,
-or split responsibilities.
+```bash
+python3 scripts/test-validate-routed-skills.py
+```

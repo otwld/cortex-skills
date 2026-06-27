@@ -1,6 +1,6 @@
 interface:
-  display_name: "Setup Project Router Skill"
-  short_description: "Set up project router skills"
-  default_prompt: "Use $setup-routed-skill-workspace to create, validate, or evolve a project router skill."
+  display_name: "Setup Routed Skill Workspace"
+  short_description: "Create routed skill workspaces"
+  default_prompt: "Use $setup-routed-skill-workspace to initialize an entry-named routed skill workspace or add routed modules and command atoms."
 policy:
   allow_implicit_invocation: false

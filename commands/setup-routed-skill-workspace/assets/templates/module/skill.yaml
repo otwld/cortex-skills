@@ -16,6 +16,11 @@ routing:
 
 lifecycle:
   activate: lifecycle/activate.md
+  plan: lifecycle/plan.md
+  run: lifecycle/run.md
+  review: lifecycle/review.md
+  verify: lifecycle/verify.md
+  finalize: lifecycle/finalize.md
 
 uses: []
 

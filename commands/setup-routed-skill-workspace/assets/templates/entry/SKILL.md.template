@@ -1,6 +1,6 @@
 ---
 name: {{entry_name}}
-description: Use only when the user explicitly includes {{entry_invocation}}; routes work through lifecycle atoms in the {{workspace_name}} routed skill workspace.
+description: Use only when the user explicitly includes {{entry_invocation}}; routes work through entry-local lifecycle atoms and run traces.
 ---
 
 # {{entry_display_name}}
@@ -8,7 +8,8 @@ description: Use only when the user explicitly includes {{entry_invocation}}; ro
 ## Overview
 
 Route explicit {{entry_invocation}} requests through hidden atoms selected by
-structured facets and lifecycle phase coverage.
+structured facets and lifecycle phase coverage. Runtime config and traces are
+operator-local under `{{runtime_dir}}/`.
 
 Use routed workspace metadata as the source of truth:
 
@@ -19,9 +20,9 @@ Use routed workspace metadata as the source of truth:
 
 ## Workflow
 
-1. Accept the request only when the user explicitly includes {{entry_invocation}} or when a command emits a `Router handoff:` block containing a literal {{entry_invocation}} request.
-2. Start `.cortex/runs/{date-slug}/` and write `request.md`.
-3. Read `.codex/config.json`; if missing, invoke the config command atom or scaffold the workspace's documented default config.
+1. Accept the request only when the user explicitly includes {{entry_invocation}}.
+2. Start `{{runtime_dir}}/runs/{date-slug}/` and write `request.md`.
+3. Read `{{runtime_dir}}/config.json`; if missing, invoke {{config_command_invocation}} to scaffold the default phase config.
 4. Run lifecycle phases in manifest order.
 5. Report phase progress such as `Starting phase: activate`, `Activated modules: ...`, and `Completed phase: plan`.
 6. Select atoms from structured facets, phase config, and declared lifecycle files.
@@ -30,7 +31,7 @@ Use routed workspace metadata as the source of truth:
 
 ## Quality Gates
 
-- This public entry skill is invoked only by explicit {{entry_invocation}} use or a valid command handoff.
+- This public entry skill is invoked only by explicit {{entry_invocation}} use.
 - Modules are hidden behind this entry point.
 - Generated artifacts are derived from module metadata.
 - Routing decisions remain inspectable through facets, lifecycle declarations, and run traces.

@@ -1,19 +1,19 @@
-# {{module_name}} Activate
+# {{module_display_name}} Activate
 
 ## Overview
 
-{{module_purpose}}
+Describe the request or repository evidence that should activate this atom.
 
 ## Workflow
 
-1. Match this atom only when its structured facets have direct request or repository evidence.
-2. Load declared resources only when this phase needs them.
-3. Return activation evidence and constraints for later phases.
+1. Compare the request and repository evidence with this atom's facets.
+2. Name the exact evidence that matched.
+3. Return constraints and useful context for later phases.
 
 ## Quality Gates
 
-- Facet evidence is explicit and local to this atom.
-- This atom does not name peer modules or route other atoms.
+- Activation evidence is concrete enough to audit.
+- This phase does not name peer modules or route other atoms.
 
 ## Hard Stops
 
@@ -22,4 +22,4 @@
 
 ## Phase Output
 
-- Return matched evidence, required local resources, and phase constraints for this atom.
+- Return matched evidence, constraints, and declared resources needed by later phases.

@@ -1,76 +1,79 @@
 ---
 name: setup-routed-skill-workspace
-description: Use only when the user explicitly includes $setup-routed-skill-workspace; sets up, analyzes, validates, rebuilds, or evolves generic routed skill workspaces with lifecycle atoms, structured facets, local resources, generated catalogs and graphs, and deterministic integrity checks.
+description: Use only when the user explicitly includes $setup-routed-skill-workspace; creates entry-named Cortex-like routed skill workspaces and authors new routed modules or command atoms with lifecycle phases, facets, generated routing views, and validation scripts.
 ---
 
 # Setup Routed Skill Workspace
 
 ## Overview
 
-This command skill runs only when directly invoked as
-`$setup-routed-skill-workspace`.
+Create and extend Cortex-like routed skill workspaces. A generated workspace has
+one public entry skill chosen by the user, hidden routed modules selected by
+structured facets and lifecycle phase files, public command atoms, generated
+catalog/graph/cascade views, and local runtime state under `.<entry>/`.
 
-Create and maintain routed skill workspaces without preserving Cortex-specific
-structure. Treat module folders and `skill.yaml` metadata as the source of
-truth, lifecycle files as runtime behavior, and generated catalogs, graphs, and
-cascades as disposable outputs.
+This command is an authoring command, not a migration tool.
 
 ## Local Inputs
 
-- Use `references/routed-workspace-contract.md` when defining workspace shape,
-  metadata, lifecycle phases, facets, generated artifacts, or validation rules.
-- Use `references/operations.md` when initializing, analyzing, creating modules
-  or command skills, rebuilding, validating, or resolving module overlap.
-- Use `scripts/rebuild-routed-skills.py` to regenerate target workspace artifacts.
-- Use `scripts/validate-routed-skills.py` to check target workspace integrity.
+- Use `references/routed-workspace-contract.md` for the current workspace
+  shape, metadata, lifecycle, runtime, and validation contract.
+- Use `references/operations.md` for init, module authoring, command authoring,
+  rebuild, and validation workflows.
+- Use `assets/templates/` as the source for generated files.
+- Use `scripts/rebuild-routed-skills.py`, `scripts/validate-routed-skills.py`,
+  and `scripts/test-validate-routed-skills.py` as the scripts copied into new
+  workspaces.
 
 ## Workflow
 
-1. Inspect first: find any `routed-skills.yaml`, `.skills`, `skills`, entry folders, module-like folders, lifecycle files, generated artifacts, and local validation scripts before asking the user for choices.
-2. Identify the target root from user intent or the manifest; default to `.skills` only when no stronger evidence exists.
-3. Apply the generic contract: exactly one public entry skill, hidden routed modules, public command atoms, structured facets, lifecycle files, explicit resource ownership, and optional command handoff through a visible `Router handoff:` block.
-4. Use templates from `assets/templates/` for scaffolded files, then adapt names, descriptions, facets, and lifecycle files to the requested workspace.
-5. When creating or realigning command skills, define any command-owned entry handoff in `SKILL.md`; do not add handoff metadata to `skill.yaml`.
-6. Rebuild generated artifacts from metadata with the bundled rebuild script.
-7. Validate structure, metadata, lifecycle files, resources, routing facets, generated freshness, and ignored run traces before reporting completion.
-8. When overlap, ambiguity, or risk is detected, present a challenge report instead of adding another module silently.
+1. Classify the request as initialize workspace, create routed module, create
+   command atom, rebuild, validate, or a combination of those operations.
+2. For initialization, require an explicit target root and entry slug before
+   creating files.
+3. For initialization, create the manifest, entry skill, default commands,
+   empty module/shared/generated/script folders, generated placeholders, copied
+   scripts, and `.gitignore` entry for `.<entry>/`.
+4. For module creation, inspect existing module names, descriptions, facets,
+   lifecycle files, and resources for overlap before adding a new module.
+5. For module creation, prefer `modules/<area>/<cluster>/<module-name>/` when
+   the user provides taxonomy; do not enforce depth when the target workspace
+   already uses a different valid layout.
+6. Create new modules as hidden routed draft atoms with empty facets and all
+   lifecycle phase files so the user can fill, remove, or narrow files after
+   scaffold.
+7. Create new command atoms with only `SKILL.md`, `agents/openai.yaml`, and
+   `skill.yaml`.
+8. Rebuild generated catalog, graph, and cascade from metadata.
+9. Validate before claiming the workspace or new atom is ready.
 
 ## Quality Gates
 
-- The target workspace has exactly one public entry skill.
-- The public entry skill is a valid agent skill folder with `SKILL.md`; routed metadata alone is not enough.
-- Routed modules are hidden, command atoms are public, and generated artifacts are derived from metadata.
-- Active routed modules have structured facets and at least one declared lifecycle file.
-- Lifecycle files do not name peer modules or route other atoms.
-- Routing remains reviewable through facets, lifecycle declarations, generated graph/cascade files, and local run traces.
-- Shared behavior is named through `uses` or resources; no implicit inheritance or hidden coupling is introduced.
-- Module category folders are readability containers only; they do not create routing behavior, inheritance, or implicit resources.
-- Public entry and command skills include complete `agents/openai.yaml` interface metadata and keep implicit invocation disabled.
-- Validation evidence is current when claiming that a routed workspace is ready.
-
-## Example
-
-When asked to create `$ascend`, initialize `.skills/routed-skills.yaml`, create
-one public entry skill under `entry/ascend/` with `SKILL.md`,
-`agents/openai.yaml`, and `skill.yaml`, add only requested modules with
-structured facets and lifecycle files, generate the catalog, graph, and cascade,
-then validate the workspace.
+- Initialization creates exactly one public entry skill named by the user.
+- Runtime config and traces are operator-local under `.<entry>/`.
+- `.gitignore` ignores `.<entry>/`.
+- New workspaces include `setup-routed-skill-workspace` and
+  `setup-<entry>-config` command atoms by default.
+- New workspaces include rebuild, validate, and validator fixture-test scripts.
+- New modules are draft until their facets and lifecycle behavior are concrete.
+- Command atoms do not declare lifecycle files.
+- Generated artifacts are rebuilt from metadata, not hand-edited.
 
 ## Hard Stops
 
-- Do not create multiple entry skills.
-- Do not require `MODULE.md`, Cortex naming, Cortex category folders, TypeScript assumptions, package registries, or domain starter packs in target workspaces.
-- Do not hand-edit generated target artifacts as if they were source files.
-- Do not add module relations, relation language, inheritance, shims, compatibility layers, or hidden resource sharing.
-- Do not create a new module when existing modules have high-overlap facets or responsibilities without presenting a challenge report.
-- Do not claim a generated workspace is valid without running the routed workspace validator or naming the validation gap.
+- Do not handle migration, legacy layouts, compatibility shims, relation graphs,
+  strong/medium/weak signals, output markers, or `instructions.md` module
+  files.
+- Do not create starter routed modules during initialization unless the user
+  explicitly asks for them.
+- Do not create or commit `.<entry>/config.json` or run traces during scaffold.
+- Do not create Router handoff sections in command atoms by default.
+- Do not add hidden resource sharing or implicit inheritance.
 
 ## Completion Checklist
 
-- Existing workspace shape or absence was inspected.
-- Root, entry slug, and manifest path are explicit.
-- Entry, routed modules, command skills, resources, lifecycle files, and generated artifacts follow the generic contract.
-- Command handoff behavior was preserved, added, or ruled out at the command instruction boundary.
-- Overlap, facet ambiguity, and missing active-module lifecycle files were checked before creating modules.
-- Catalog, graph, and cascade were rebuilt from metadata.
-- Routed workspace validation was run or the remaining blocker is stated.
+- Requested operation, target root, and entry slug are explicit.
+- Created files came from current templates or copied current scripts.
+- Module overlap was checked before creating a new module.
+- Catalog, graph, and cascade were rebuilt.
+- Workspace validation was run, or the exact blocker is stated.

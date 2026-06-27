@@ -1,0 +1,6 @@
+interface:
+  display_name: "Setup {{entry_display_name}} Config"
+  short_description: "Create {{entry_display_name}} phase config"
+  default_prompt: "Use $setup-{{entry_name}}-config to create or repair {{runtime_dir}}/config.json for {{entry_display_name}} phase routing."
+policy:
+  allow_implicit_invocation: false

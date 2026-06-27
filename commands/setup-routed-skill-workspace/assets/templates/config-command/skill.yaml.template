@@ -1,0 +1,11 @@
+name: setup-{{entry_name}}-config
+description: "Use when {{entry_display_name}} needs to create or repair the operator-local {{runtime_dir}}/config.json phase configuration."
+activation: explicit
+visibility: public
+status: active
+uses: []
+resources:
+  references: []
+  scripts: []
+  templates: []
+  assets: []

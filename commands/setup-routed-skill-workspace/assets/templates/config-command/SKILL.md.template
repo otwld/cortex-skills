@@ -1,0 +1,51 @@
+---
+name: setup-{{entry_name}}-config
+description: Use when {{entry_display_name}} needs to create or repair the operator-local {{runtime_dir}}/config.json phase configuration.
+---
+
+# Setup {{entry_display_name}} Config
+
+## Overview
+
+Create or repair the operator-local `{{runtime_dir}}/config.json` file used by
+{{entry_invocation}} before lifecycle routing begins.
+
+## Workflow
+
+1. Inspect whether `{{runtime_dir}}/config.json` exists.
+2. If it is missing, create it with all lifecycle phases and empty `always` lists.
+3. If it exists, preserve valid configured modules and repair only invalid or missing phase keys when explicitly asked.
+4. Keep `{{runtime_dir}}/` operator-local and ignored.
+
+## Default Config
+
+```json
+{
+  "phases": {
+    "activate": { "always": [] },
+    "plan": { "always": [] },
+    "run": { "always": [] },
+    "review": { "always": [] },
+    "verify": { "always": [] },
+    "finalize": { "always": [] }
+  }
+}
+```
+
+## Quality Gates
+
+- The config includes every manifest lifecycle phase.
+- Each `always` value is a list of routed module names.
+- Existing operator choices are preserved during repair.
+
+## Hard Stops
+
+- Do not add project-specific modules to the default scaffold.
+- Do not commit `{{runtime_dir}}/config.json`.
+- Do not change routed module metadata from this command.
+
+## Completion Checklist
+
+- Existing config state was inspected.
+- Missing phase keys were scaffolded or repaired.
+- The resulting JSON shape is valid for {{entry_invocation}} bootstrap.

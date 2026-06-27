@@ -14,31 +14,18 @@ Run the explicit {{command_invocation}} command workflow.
 1. Confirm the command was directly invoked or invoked by the entry router as an orchestration atom.
 2. Inspect the workspace state relevant to the command.
 3. Apply the command workflow.
-4. If the command delegates remaining work to the entry router, emit a `Router handoff:` block containing one literal entry invocation.
-5. Validate command output before completion.
-
-## Router Handoff
-
-Use a handoff only when this command has completed its command-owned work and
-the remaining request should be routed through the public entry skill.
-
-```text
-Router handoff:
-<entry-invocation> <router-ready request>
-```
-
-Additional phase summaries, constraints, or command-specific context may be
-included in the block. Include any command-owned context the entry router needs.
+4. Validate command output before completion.
 
 ## Quality Gates
 
 - This command is public and may be invoked directly or by the entry router.
-- Router handoff output is explicit when the command delegates remaining work.
+- Command behavior is contained in `SKILL.md`.
+- Command metadata does not declare lifecycle files.
 
 ## Hard Stops
 
-- Do not treat ordinary prose or examples that mention the entry invocation as a router handoff.
-- Do not add routed module lifecycle files from this command unless that is the command's explicit responsibility.
+- Do not add routed module lifecycle files to this command.
+- Do not add Router handoff sections unless the user explicitly requests one.
 
 ## Output Format
 
@@ -47,5 +34,4 @@ Report the command result and validation evidence.
 ## Completion Checklist
 
 - Invocation path was clear.
-- Router handoff was explicit, or the command completed without delegating.
 - Validation evidence was stated.

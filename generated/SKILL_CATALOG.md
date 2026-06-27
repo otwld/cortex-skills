@@ -64,9 +64,9 @@ Workspace: `cortex`
 | Command | Description | Status | Path |
 | --- | --- | --- | --- |
 | `setup-agent-instructions` | Use only when the user explicitly includes $setup-agent-instructions; sets up or audits workspace AI-agent instruction files such as AGENTS.md, nested AGENTS.md, CLAUDE.md, .github/copilot-instructions.md, .cursorrules, .cursor/rules, .windsurf, or .clinerules. | `active` | `commands/setup-agent-instructions/` |
-| `setup-cortex-config` | Use when Cortex needs to create or repair the operator-local .codex/config.json phase configuration. | `active` | `commands/setup-cortex-config/` |
+| `setup-cortex-config` | Use when Cortex needs to create or repair the operator-local .cortex/config.json phase configuration. | `active` | `commands/setup-cortex-config/` |
 | `setup-project-memory` | Use only when the user explicitly includes $setup-project-memory; sets up or verifies project-memory artifacts such as domain glossary, ADR location, out-of-scope decisions, issue tracker config, or triage label mapping. | `active` | `commands/setup-project-memory/` |
-| `setup-routed-skill-workspace` | Use only when the user explicitly includes $setup-routed-skill-workspace; sets up, analyzes, validates, rebuilds, or evolves generic routed skill workspaces with one public entry skill, hidden routed modules, command skills, explicit routing metadata, local resources, generated catalogs and graphs, and deterministic integrity checks. | `active` | `commands/setup-routed-skill-workspace/` |
+| `setup-routed-skill-workspace` | Use only when the user explicitly includes $setup-routed-skill-workspace; creates entry-named Cortex-like routed skill workspaces and authors new routed modules or command atoms with lifecycle phases, facets, generated routing views, and validation scripts. | `active` | `commands/setup-routed-skill-workspace/` |
 
 ## Routing Facets
 

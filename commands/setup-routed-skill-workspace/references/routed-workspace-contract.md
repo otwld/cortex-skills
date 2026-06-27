@@ -1,28 +1,37 @@
 # Routed Workspace Contract
 
-Use this reference when a task defines, audits, or changes the generic routed
-skill workspace format. The contract is independent of Cortex artifact names
-and category names.
+Use this reference when creating or extending a Cortex-like routed skill
+workspace. The entry name is user-chosen; do not hard-code `cortex` into
+generated workspaces unless that is the requested entry slug.
 
 ## Workspace Shape
 
-A routed skill workspace contains one public entry skill, hidden routed modules,
-optional public command skills, shared resources, generated artifacts, and
-validation scripts.
-
-Default layout:
+A workspace contains one public entry skill, hidden routed modules, public
+command atoms, shared resources, generated artifacts, and validation scripts.
 
 ```text
-.skills/
+<root>/
   routed-skills.yaml
+  .gitignore
   entry/<entry-slug>/
     SKILL.md
     agents/openai.yaml
     skill.yaml
-  modules/<category>/<module-name>/
+  modules/<area>/<cluster>/<module-name>/
     skill.yaml
-    lifecycle/<phase>.md
-  commands/<command-name>/
+    lifecycle/activate.md
+    lifecycle/plan.md
+    lifecycle/run.md
+    lifecycle/review.md
+    lifecycle/verify.md
+    lifecycle/finalize.md
+  commands/setup-routed-skill-workspace/
+    SKILL.md
+    agents/openai.yaml
+    skill.yaml
+    assets/
+    references/
+  commands/setup-<entry-slug>-config/
     SKILL.md
     agents/openai.yaml
     skill.yaml
@@ -31,16 +40,17 @@ Default layout:
   scripts/
 ```
 
-Category folders under `modules/` are browsing containers only. They do not
-create routing behavior, inheritance, default resources, or implicit coupling.
+The module path convention is three levels for clarity, but validators must
+accept any non-nested module artifact under `modules/`.
 
 ## Manifest
 
-`routed-skills.yaml` is the workspace manifest. Required shape:
+`routed-skills.yaml` defines the workspace root, artifact paths, facet keys,
+lifecycle phases, and generated artifact paths.
 
 ```yaml
-name: routed-skills
-root: .skills
+name: <entry-slug>
+root: <root>
 
 paths:
   entry: entry
@@ -54,7 +64,7 @@ artifacts:
 
 entry:
   required: true
-  path: entry/routed-skills
+  path: entry/<entry-slug>
 
 routing:
   facets:
@@ -81,67 +91,49 @@ generated:
   cascade: generated/module-cascade.md
 ```
 
-The manifest owns allowed facet keys and lifecycle phase names. Facet values
-remain module-local strings, but validators should reject empty, mechanical, or
-module-name-only values.
+## Entry Runtime
 
-## Entry Skill
+The public entry skill owns routing behavior. For entry `ascend`, runtime state
+uses:
 
-Exactly one entry skill is mandatory. It lives under `entry/<entry-slug>/` and
-contains `SKILL.md`, `agents/openai.yaml`, and `skill.yaml`.
+- `.ascend/config.json`
+- `.ascend/runs/{date-slug}/`
 
-`SKILL.md` is the public agent entry point and owns router behavior: config
-bootstrap, lifecycle phase progress, atom selection, command invocation, and
-run trace handoff. Do not create entry `instructions.md`.
+The runtime directory is operator-local and ignored as `.<entry>/`.
 
-`agents/openai.yaml` is UI metadata. Public entry and command skills must set
-`interface.display_name`, `interface.short_description`,
-`interface.default_prompt`, and `policy.allow_implicit_invocation: false`.
-
-Entry metadata:
-
-```yaml
-name: routed-skills
-description: Public entry skill for this routed skill workspace.
-activation: entry
-visibility: public
-status: active
-```
+Entry skills contain `SKILL.md`, `agents/openai.yaml`, and `skill.yaml`. Do not
+create entry `instructions.md`.
 
 ## Routed Modules
 
-Routed modules are hidden atoms. Required source files are `skill.yaml` and at
-least one declared lifecycle file when the module is active. Routed modules do
-not have `instructions.md`.
-
-Module metadata:
+Routed modules are hidden atoms. New modules are scaffolded as drafts with empty
+facets and every lifecycle phase file. The user then fills useful lifecycle
+files and removes phases that do not apply.
 
 ```yaml
-name: testing
-description: Guidance for test strategy and validation.
+name: module-name
+description: Draft routed atom for a specific responsibility.
 activation: routed
 visibility: hidden
-status: active
+status: draft
 
 routing:
   priority: 5
   facets:
-    intents:
-      - test
-    surfaces:
-      - test-runner
-    risks:
-      - regression
-    artifacts:
-      - test-plan
-    repo:
-      - package.json
-    request:
-      - asks for test coverage
+    intents: []
+    surfaces: []
+    risks: []
+    artifacts: []
+    repo: []
+    request: []
 
 lifecycle:
   activate: lifecycle/activate.md
+  plan: lifecycle/plan.md
+  run: lifecycle/run.md
+  review: lifecycle/review.md
   verify: lifecycle/verify.md
+  finalize: lifecycle/finalize.md
 
 uses: []
 
@@ -152,60 +144,35 @@ resources:
   assets: []
 ```
 
-Lifecycle files must live under the owning module's `lifecycle/` folder and use
-manifest phase names. Each file contains phase-specific runtime behavior, gates,
-hard stops, and a `## Phase Output` contract. Lifecycle files must not name peer
-modules or route other atoms.
+Active modules must have concrete facets and at least one declared lifecycle
+file. Lifecycle files must contain `## Overview`, `## Workflow`,
+`## Quality Gates`, `## Hard Stops`, and `## Phase Output`.
 
-## Command Skills
+## Command Atoms
 
-Command skills are public command atoms. Required files are `SKILL.md`,
-`agents/openai.yaml`, and `skill.yaml`. They may own optional `references/`,
-`scripts/`, `templates/`, and `assets/` folders.
+Command atoms are public direct commands. They contain `SKILL.md`,
+`agents/openai.yaml`, and `skill.yaml`; they do not declare lifecycle files.
 
-Command metadata uses `activation: explicit` and `visibility: public`. Commands
-do not declare lifecycle files. The entry router may invoke a command when
-orchestration requires it, such as bootstrapping `.codex/config.json`.
+Initialization creates:
 
-Command skills may define command-specific handoff behavior in `SKILL.md`. A
-handoff is an instruction boundary, not metadata. A valid handoff uses a
-`Router handoff:` block containing exactly one router-ready request beginning
-with the literal entry invocation.
+- `setup-routed-skill-workspace` for future workspace/module/command authoring.
+- `setup-<entry>-config` for creating or repairing `.<entry>/config.json`.
 
-## Runtime Config And Traces
-
-The entry router reads `.codex/config.json` before normal routing. The file is
-operator-local and may define phase-specific always atoms:
-
-```json
-{
-  "phases": {
-    "activate": { "always": [] },
-    "plan": { "always": [] },
-    "run": { "always": [] },
-    "review": { "always": [] },
-    "verify": { "always": [] },
-    "finalize": { "always": [] }
-  }
-}
-```
-
-Each routed request writes a local run trace under `.cortex/runs/{date-slug}/`.
-Run traces are ignored by git and may contain full local evidence.
+Do not add Router handoff sections by default.
 
 ## Generated Artifacts
 
-Generated files are disposable:
+Generated files are disposable and rebuilt from metadata:
 
 - `generated/SKILL_CATALOG.md`
 - `generated/module-graph.md`
 - `generated/module-cascade.md`
 
-`module-graph.md` is a bipartite facet/lifecycle graph. It must not contain
-module-to-module dependency edges.
+Validation must fail stale generated output.
 
-## Prohibited Legacy Surface
+## Prohibited Surface
 
-Do not add module relations, relation columns, relation graphs, routed module
-`instructions.md`, strong/medium/weak signal blocks, output marker blocks, or
-hidden resource coupling.
+Do not add migration branches, legacy compatibility language, relation metadata,
+relation graphs, strong/medium/weak signals, routed module `instructions.md`,
+output markers, shims, placeholder completion claims, or hidden resource
+coupling.
