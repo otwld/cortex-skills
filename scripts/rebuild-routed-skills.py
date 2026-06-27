@@ -366,6 +366,16 @@ def facets_text(artifact: Artifact, facet_keys: list[str]) -> str:
     return '<br>'.join(entries) if entries else 'None'
 
 
+def runtime_dir(workspace: Workspace) -> str:
+    """Return the entry-local runtime directory name."""
+    return f'.{workspace.entry.name}'
+
+
+def entry_invocation(workspace: Workspace) -> str:
+    """Return the public entry invocation token."""
+    return f'${workspace.entry.name}'
+
+
 def generated_paths(workspace: Workspace) -> dict[str, Path]:
     """Return generated artifact paths from the manifest."""
     generated = merge_defaults(workspace.manifest.get('generated'), DEFAULT_GENERATED, 'generated')
@@ -486,6 +496,7 @@ def render_cascade(workspace: Workspace) -> str:
     """Render the generated routing cascade."""
     routed = [artifact for artifact in workspace.modules if artifact.activation == 'routed']
     commands = [artifact for artifact in workspace.commands if artifact.activation == 'explicit']
+    runtime = runtime_dir(workspace)
     lines = [
         '# Module Cascade',
         '',
@@ -493,8 +504,8 @@ def render_cascade(workspace: Workspace) -> str:
         '',
         '## Routing Rules',
         '',
-        '1. Start a run trace under `.cortex/runs/{date-slug}/`.',
-        '2. Read `.codex/config.json`; if missing, invoke the config command atom and scaffold an empty phase config.',
+        f'1. Start a run trace under `{runtime}/runs/{{date-slug}}/`.',
+        f'2. Read `{runtime}/config.json`; if missing, invoke the config command atom and scaffold an empty phase config.',
         '3. Run lifecycle phases in order: ' + ', '.join(f'`{phase}`' for phase in workspace.phases) + '.',
         '4. For each phase, combine phase-specific config `always` modules with modules matched by structured facets.',
         '5. Collect request and repository evidence before selecting modules.',
@@ -533,7 +544,7 @@ def render_cascade(workspace: Workspace) -> str:
         '',
         '## Command Skills',
         '',
-        'Command skills are public atoms. They are not selected by facet routing, but `$cortex` may invoke them for orchestration such as config bootstrap.',
+        f'Command skills are public atoms. They are not selected by facet routing, but `{entry_invocation(workspace)}` may invoke them for orchestration such as config bootstrap.',
         '',
         '| Command | Path |',
         '| --- | --- |',

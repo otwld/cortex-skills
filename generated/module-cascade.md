@@ -5,7 +5,7 @@ Generated from routed module metadata. Do not edit by hand.
 ## Routing Rules
 
 1. Start a run trace under `.cortex/runs/{date-slug}/`.
-2. Read `.codex/config.json`; if missing, invoke the config command atom and scaffold an empty phase config.
+2. Read `.cortex/config.json`; if missing, invoke the config command atom and scaffold an empty phase config.
 3. Run lifecycle phases in order: `activate`, `plan`, `run`, `review`, `verify`, `finalize`.
 4. For each phase, combine phase-specific config `always` modules with modules matched by structured facets.
 5. Collect request and repository evidence before selecting modules.

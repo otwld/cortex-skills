@@ -130,7 +130,7 @@ def module_metadata(
     lifecycle: str = 'activate: lifecycle/activate.md',
 ) -> str:
     """Return fixture module metadata."""
-    lifecycle_block = f'\n  {lifecycle}' if lifecycle else ' {}'
+    lifecycle_block = f'\n  {lifecycle.lstrip()}' if lifecycle else ' {}'
     return f'''name: {name}
 description: Guidance for {name}.
 activation: {activation}
@@ -158,6 +158,50 @@ resources:
   templates: []
   assets: []
 '''
+
+
+def module_metadata_with_facets(name: str, *, status: str = 'active', facets: bool = True, lifecycle: str = 'activate: lifecycle/activate.md') -> str:
+    """Return fixture module metadata with optional empty facets."""
+    facet_value = 'create module' if facets else ''
+    if facets:
+        return module_metadata(name, status=status, lifecycle=lifecycle, facet_value=facet_value)
+    lifecycle_block = f'\n  {lifecycle.lstrip()}' if lifecycle else ' {}'
+    return f'''name: {name}
+description: Guidance for {name}.
+activation: routed
+visibility: hidden
+status: {status}
+
+routing:
+  priority: 5
+  facets:
+    intents: []
+    surfaces: []
+    risks: []
+    artifacts: []
+    repo: []
+    request: []
+
+lifecycle:{lifecycle_block}
+
+uses: []
+
+resources:
+  references: []
+  scripts: []
+  templates: []
+  assets: []
+'''
+
+
+def all_lifecycle_metadata(name: str, *, status: str = 'draft') -> str:
+    """Return fixture metadata declaring every lifecycle phase."""
+    return module_metadata_with_facets(
+        name,
+        status=status,
+        facets=False,
+        lifecycle='\n  activate: lifecycle/activate.md\n  plan: lifecycle/plan.md\n  run: lifecycle/run.md\n  review: lifecycle/review.md\n  verify: lifecycle/verify.md\n  finalize: lifecycle/finalize.md',
+    )
 
 
 def lifecycle_text(title: str = 'Create Module') -> str:
@@ -190,7 +234,7 @@ def create_workspace(temp_dir: Path, root_name: str = '.skills') -> Path:
     """Create and rebuild a valid fixture workspace."""
     root = temp_dir if root_name == '.' else temp_dir / root_name
     write(root / 'routed-skills.yaml', manifest(root_name))
-    write(root / '.gitignore', '.cortex/runs/\n')
+    write(root / '.gitignore', '.ascend/\n')
     write(root / 'entry' / 'ascend' / 'skill.yaml', entry_metadata())
     write(root / 'entry' / 'ascend' / 'SKILL.md', entry_skill())
     write(root / 'entry' / 'ascend' / 'agents' / 'openai.yaml', agent_metadata())
@@ -297,14 +341,19 @@ def missing_gitignore(root: Path) -> None:
     (root / '.gitignore').write_text('', encoding='utf-8')
 
 
-def invalid_codex_config(root: Path) -> None:
-    """Write an invalid operator config."""
-    write(root / '.codex' / 'config.json', json.dumps({'phases': {'activate': {'always': ['missing-module']}}}))
+def invalid_entry_config(root: Path) -> None:
+    """Write an invalid entry-local operator config."""
+    write(root / '.ascend' / 'config.json', json.dumps({'phases': {'activate': {'always': ['missing-module']}}}))
 
 
-def valid_codex_config(root: Path) -> None:
-    """Write a valid operator config."""
-    write(root / '.codex' / 'config.json', json.dumps({'phases': {'activate': {'always': ['module-creation']}}}))
+def write_valid_entry_config(root: Path) -> None:
+    """Write a valid entry-local operator config."""
+    write(root / '.ascend' / 'config.json', json.dumps({'phases': {'activate': {'always': ['module-creation']}}}))
+
+
+def valid_entry_config(root: Path) -> None:
+    """Write a valid entry-local operator config."""
+    write_valid_entry_config(root)
 
 
 def stale_generated(root: Path) -> None:
@@ -318,13 +367,34 @@ def lifecycle_output_marker(root: Path) -> None:
     path.write_text('# Output Marker\n\nDisplay:\nusing module: module-creation\n\n---\n' + path.read_text(encoding='utf-8'), encoding='utf-8')
 
 
+def draft_all_phase_module(root: Path) -> None:
+    """Replace the fixture module with a draft all-phase scaffold."""
+    write(root / 'modules' / 'module-creation' / 'skill.yaml', all_lifecycle_metadata('module-creation'))
+    for phase in ('activate', 'plan', 'run', 'review', 'verify', 'finalize'):
+        write(root / 'modules' / 'module-creation' / 'lifecycle' / f'{phase}.md', lifecycle_text(f'Module Creation {phase.title()}'))
+    run([sys.executable, str(REBUILD), str(root / 'routed-skills.yaml')], root.parent)
+
+
+def active_module_without_facets(root: Path) -> None:
+    """Remove all active module facets."""
+    write(root / 'modules' / 'module-creation' / 'skill.yaml', module_metadata_with_facets('module-creation', facets=False))
+
+
+def command_with_lifecycle(root: Path) -> None:
+    """Add a command that incorrectly declares lifecycle files."""
+    add_explicit_command(root)
+    path = root / 'commands' / 'setup-ci' / 'skill.yaml'
+    path.write_text(path.read_text(encoding='utf-8') + '\nlifecycle:\n  activate: lifecycle/activate.md\n', encoding='utf-8')
+
+
 def main() -> int:
     """Run Cortex routed workspace validator fixtures."""
     expect_success('valid workspace in .skills')
     expect_success('valid workspace in skills', root_name='skills')
     expect_success('valid workspace at repository root', root_name='.')
     expect_success('command skill validates', add_explicit_command)
-    expect_success('valid codex config validates', valid_codex_config)
+    expect_success('valid entry config validates', valid_entry_config)
+    expect_success('draft all-phase module validates', draft_all_phase_module)
     expect_failure('multiple entries fail', add_second_entry, 'expected exactly one entry skill')
     expect_failure('legacy module instructions fail', add_legacy_module_instructions, 'routed module runtime belongs in lifecycle files')
     expect_failure('relations fail', add_relations, 'prohibited metadata key remains: relations')
@@ -334,8 +404,10 @@ def main() -> int:
     expect_failure('undeclared lifecycle file fails', undeclared_lifecycle_file, 'undeclared lifecycle file')
     expect_failure('unknown lifecycle phase fails', unknown_lifecycle_phase, 'unknown lifecycle phase', rebuild_after=True)
     expect_failure('unknown facet key fails', unknown_facet_key, 'unknown routing facet key')
-    expect_failure('missing run trace ignore fails', missing_gitignore, 'missing .cortex/runs/')
-    expect_failure('invalid codex config fails', invalid_codex_config, 'always target does not exist')
+    expect_failure('active module without facets fails', active_module_without_facets, 'active routed module has no routing facets', rebuild_after=True)
+    expect_failure('missing runtime ignore fails', missing_gitignore, 'missing .ascend/')
+    expect_failure('invalid entry config fails', invalid_entry_config, 'always target does not exist')
+    expect_failure('command lifecycle fails', command_with_lifecycle, 'command skills must not declare lifecycle files')
     expect_failure('stale generated fails', stale_generated, 'stale generated artifact')
     expect_failure('lifecycle output marker fails', lifecycle_output_marker, 'prohibited lifecycle routing/output text remains')
     return 0

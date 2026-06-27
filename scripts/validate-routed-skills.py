@@ -368,9 +368,14 @@ def validate_facets(workspace: Any, artifact: Any, metadata: dict[str, Any], err
                 errors.append(f'{artifact.name}: routing facet uses mechanical evidence wording: {value}')
 
 
-def validate_codex_config(workspace: Any, names: dict[str, Any], errors: list[str]) -> None:
-    """Validate operator-local Cortex config if it exists."""
-    config_path = workspace.root / '.codex' / 'config.json'
+def runtime_dir(workspace: Any) -> str:
+    """Return the entry-local runtime directory name."""
+    return f'.{workspace.entry.name}'
+
+
+def validate_runtime_config(workspace: Any, names: dict[str, Any], errors: list[str]) -> None:
+    """Validate operator-local entry config if it exists."""
+    config_path = workspace.root / runtime_dir(workspace) / 'config.json'
     if not config_path.exists():
         return
     try:
@@ -407,15 +412,17 @@ def validate_codex_config(workspace: Any, names: dict[str, Any], errors: list[st
                 errors.append(f'{rel(workspace.root, config_path)}: phases.{phase}.always target must be an active hidden routed module: {target}')
 
 
-def validate_gitignore(root: Path, errors: list[str]) -> None:
-    """Validate local run traces are ignored by git."""
+def validate_gitignore(workspace: Any, errors: list[str]) -> None:
+    """Validate local runtime state is ignored by git."""
+    root = workspace.root
+    runtime = f'{runtime_dir(workspace)}/'
     gitignore = root / '.gitignore'
     if not gitignore.exists():
-        errors.append('.gitignore: missing file required to ignore .cortex/runs/')
+        errors.append(f'.gitignore: missing file required to ignore {runtime}')
         return
     lines = {line.strip() for line in gitignore.read_text(encoding='utf-8').splitlines()}
-    if '.cortex/runs/' not in lines:
-        errors.append('.gitignore: missing .cortex/runs/')
+    if runtime not in lines:
+        errors.append(f'.gitignore: missing {runtime}')
 
 
 def validate_workspace(raw_manifest: str | None) -> list[str]:
@@ -522,8 +529,8 @@ def validate_workspace(raw_manifest: str | None) -> list[str]:
         errors.append(f'{workspace.entry.name}: entry skill must be public')
     validate_agent_entry(workspace.root, workspace.entry.directory, workspace.entry.name, errors)
 
-    validate_codex_config(workspace, names, errors)
-    validate_gitignore(workspace.root, errors)
+    validate_runtime_config(workspace, names, errors)
+    validate_gitignore(workspace, errors)
     validate_generated(workspace, errors)
     return sorted(set(errors))
 
