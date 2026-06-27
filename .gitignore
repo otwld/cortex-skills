@@ -47,4 +47,4 @@ temp/
 
 # Agent-local history
 .diary/
-.cortex/runs/
+.cortex/

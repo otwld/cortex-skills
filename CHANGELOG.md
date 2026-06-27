@@ -8,9 +8,9 @@
   `lifecycle/<phase>.md`.
 - Repurposed `generated/module-graph.md` as a bipartite module-to-facet and
   module-to-phase graph.
-- Added `.codex/config.json` bootstrap behavior and the `$setup-cortex-config`
+- Added `.cortex/config.json` bootstrap behavior and the `$setup-cortex-config`
   command atom.
-- Added local run traces under ignored `.cortex/runs/`.
+- Added local run traces under ignored `.cortex/`.
 - Removed public output marker requirements.
 - Updated rebuild and validation scripts for facets, lifecycle declarations,
   operator config validation, and run-trace ignore policy.

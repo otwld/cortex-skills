@@ -41,7 +41,7 @@ structured facets and lifecycle phase coverage.
 ```text
 your request
   -> $cortex entry
-  -> .codex/config.json bootstrap
+  -> .cortex/config.json bootstrap
   -> .cortex/runs/{date-slug}/ trace
   -> activate
   -> plan
@@ -53,7 +53,7 @@ your request
 
 Routing follows a few plain rules:
 
-- `$cortex` reads `.codex/config.json` first and scaffolds it when missing.
+- `$cortex` reads `.cortex/config.json` first and scaffolds it when missing.
 - Each run writes local trace files under `.cortex/runs/`.
 - Modules expose structured facets in `skill.yaml`.
 - Runtime behavior lives in `lifecycle/<phase>.md` files.
@@ -111,8 +111,8 @@ Invoke setup commands directly when you want that operation:
 | Command | Use when |
 | --- | --- |
 | `$setup-agent-instructions` | Creating or auditing durable agent instruction files such as `AGENTS.md`. |
-| `$setup-cortex-config` | Creating or repairing operator-local `.codex/config.json`. |
-| `$setup-routed-skill-workspace` | Creating, validating, or evolving another routed skill workspace. |
+| `$setup-cortex-config` | Creating or repairing operator-local `.cortex/config.json`. |
+| `$setup-routed-skill-workspace` | Creating an entry-named routed workspace or adding routed modules and command atoms. |
 | `$setup-project-memory` | Setting up project glossary, ADR, out-of-scope, or tracker memory. |
 
 ## Quality Bar

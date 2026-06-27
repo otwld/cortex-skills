@@ -204,7 +204,7 @@ Before finishing any routed workspace change, verify:
 - Active routed modules have structured facets and at least one lifecycle file.
 - Lifecycle files avoid copied template prose and repeated low-value checklist
   bullets.
-- `.cortex/runs/` is ignored.
+- `.cortex/` is ignored.
 - Generated artifacts were rebuilt from metadata and are fresh.
 - Examples follow `example-universe-enforcer`.
 

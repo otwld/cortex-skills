@@ -1,19 +1,19 @@
 ---
 name: setup-cortex-config
-description: Use when Cortex needs to create or repair the operator-local .codex/config.json phase configuration.
+description: Use when Cortex needs to create or repair the operator-local .cortex/config.json phase configuration.
 ---
 
 # Setup Cortex Config
 
 ## Overview
 
-Create or repair the operator-local `.codex/config.json` file used by `$cortex`
+Create or repair the operator-local `.cortex/config.json` file used by `$cortex`
 before lifecycle routing begins.
 
 ## Workflow
 
-1. Inspect whether `.codex/config.json` exists.
-2. If it is missing, create `.codex/config.json` with all lifecycle phases and empty `always` lists.
+1. Inspect whether `.cortex/config.json` exists.
+2. If it is missing, create `.cortex/config.json` with all lifecycle phases and empty `always` lists.
 3. If it exists, preserve valid configured modules and repair only invalid or missing phase keys when explicitly asked.
 4. Keep the config operator-local; do not move it into tracked workspace source.
 
@@ -41,7 +41,7 @@ before lifecycle routing begins.
 ## Hard Stops
 
 - Do not add project-specific modules to the default scaffold.
-- Do not commit `.codex/config.json`; `.codex/` remains operator-local.
+- Do not commit `.cortex/config.json`; `.cortex/` remains operator-local.
 - Do not change routed module metadata from this command.
 
 ## Completion Checklist
