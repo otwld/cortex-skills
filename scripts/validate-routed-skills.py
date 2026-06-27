@@ -16,6 +16,7 @@ REBUILD_PATH = SCRIPT_DIR / 'rebuild-routed-skills.py'
 VALID_ACTIVATIONS = {'entry', 'routed', 'explicit'}
 VALID_VISIBILITIES = {'public', 'hidden'}
 RESOURCE_KEYS = ('references', 'scripts', 'templates', 'assets')
+NESTED_WORKSPACE_ROOTS = {'skills', '.skills'}
 AGENT_SKILL_NAME = 'SKILL.md'
 AGENT_METADATA_PATH = Path('agents') / 'openai.yaml'
 AGENT_SKILL_NAME_RE = re.compile(r'^[a-z0-9]+(?:-[a-z0-9]+)*$')
@@ -373,6 +374,14 @@ def runtime_dir(workspace: Any) -> str:
     return f'.{workspace.entry.name}'
 
 
+def gitignore_policy(workspace: Any) -> tuple[Path, str, str]:
+    """Return required gitignore file, display path, and runtime ignore pattern."""
+    runtime = f'{runtime_dir(workspace)}/'
+    if workspace.root.name in NESTED_WORKSPACE_ROOTS:
+        return workspace.root.parent / '.gitignore', '../.gitignore', f'{workspace.root.name}/{runtime}'
+    return workspace.root / '.gitignore', '.gitignore', runtime
+
+
 def validate_runtime_config(workspace: Any, names: dict[str, Any], errors: list[str]) -> None:
     """Validate operator-local entry config if it exists."""
     config_path = workspace.root / runtime_dir(workspace) / 'config.json'
@@ -413,16 +422,14 @@ def validate_runtime_config(workspace: Any, names: dict[str, Any], errors: list[
 
 
 def validate_gitignore(workspace: Any, errors: list[str]) -> None:
-    """Validate local runtime state is ignored by git."""
-    root = workspace.root
-    runtime = f'{runtime_dir(workspace)}/'
-    gitignore = root / '.gitignore'
+    """Validate local runtime state is ignored from the checkout root."""
+    gitignore, label, runtime = gitignore_policy(workspace)
     if not gitignore.exists():
-        errors.append(f'.gitignore: missing file required to ignore {runtime}')
+        errors.append(f'{label}: missing file required to ignore {runtime}')
         return
     lines = {line.strip() for line in gitignore.read_text(encoding='utf-8').splitlines()}
     if runtime not in lines:
-        errors.append(f'.gitignore: missing {runtime}')
+        errors.append(f'{label}: missing {runtime}')
 
 
 def validate_workspace(raw_manifest: str | None) -> list[str]:
