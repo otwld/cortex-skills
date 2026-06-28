@@ -1,0 +1,48 @@
+name: "composition-over-inheritance"
+description: "Internal Cortex module applied broadly when code is created, edited, refactored, reviewed, moved, or split, to prefer composition, dependency injection, strategies, adapters, hooks, reusable functions, and reusable components over inheritance unless polymorphism, framework extension, or a stable abstract contract justifies a hierarchy."
+activation: "routed"
+visibility: "hidden"
+status: "active"
+routing:
+  priority: 5
+  facets:
+    intents:
+      - "prefer composition over inheritance for changed code"
+      - "assemble behavior from explicit collaborators and reusable units"
+      - "justify inheritance only when polymorphism or framework contracts require it"
+    surfaces:
+      - "classes, abstract classes, base classes, subclasses, mixins, interfaces, providers, factories, adapters, strategies, hooks, composables, functions, and components"
+      - "dependency injection boundaries, constructor dependencies, override methods, protected state, template methods, and framework extension points"
+      - "behavior assembled through reusable functions, services, components, slots, render props, strategy objects, adapters, configuration, or injected collaborators"
+    risks:
+      - "inheritance is used only to share helpers or state"
+      - "subclasses depend on protected internals, override order, or base-class lifecycle timing"
+      - "composition creates shallow wrappers without a clear collaborator contract"
+      - "composition guidance duplicates extraction, public API, SRP, or framework-specific decisions"
+    artifacts:
+      - "inheritance justification"
+      - "composition boundary decision"
+      - "collaborator, strategy, adapter, provider, hook, or component composition"
+      - "changed class, function, component, service, or module"
+    repo:
+      - "diff creates, edits, moves, splits, deletes, or reviews code"
+      - "diff adds or changes extends clauses, abstract classes, mixins, protected members, override methods, dependency injection, reusable functions, components, strategies, adapters, hooks, or providers"
+      - "diff changes behavior reuse, extension points, collaborator wiring, or class hierarchy design"
+    request:
+      - "implement, create, edit, refactor, move, split, or review code"
+      - "asks whether to use inheritance, composition, dependency injection, strategy, adapter, reusable functions, or reusable components"
+      - "mentions Composition Over Inheritance, polymorphism, base class, subclass, abstract class, mixin, override, or collaborator design"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  plan: "lifecycle/plan.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
+  verify: "lifecycle/verify.md"
+uses: []
+resources:
+  references:
+    - "references/composition-boundaries.md"
+  scripts: []
+  templates: []
+  assets: []
+
