@@ -18,17 +18,25 @@ Use routed workspace metadata as the source of truth:
 - `../../generated/module-graph.md`
 - `../../generated/module-cascade.md`
 
+Resolve source artifact paths relative to this `SKILL.md` file, not the caller's
+current working directory. Keep the {{entry_display_name}} source workspace root
+separate from the invocation runtime root. When {{entry_invocation}} is invoked
+from another repository, use that repository only as request and repo evidence;
+do not substitute its routed workspace, generated routing views, hidden modules,
+commands, or entry runtime for {{entry_display_name}} routing source artifacts.
+
 ## Workflow
 
 1. Accept the request only when the user explicitly includes {{entry_invocation}}.
 2. Start `{{runtime_dir}}/runs/{date-slug}/` and write `request.md`.
 3. Read `{{runtime_dir}}/config.json`; if missing, invoke {{config_command_invocation}} to scaffold the default phase config.
-4. Run lifecycle phases in manifest order.
-5. Report phase progress such as `Starting phase: activate`, `Activated modules: ...`, and `Completed phase: plan`.
-6. During `activate`, run the Intent Derivation Gate before module selection.
-7. Select atoms from the confirmed intent model by structured facets and declared lifecycle files.
-8. Write phase traces as each phase completes.
-9. Pass hidden phase trace forward so later phases know the intent model, matched facets, activated atoms, lifecycle files used, and unresolved questions.
+4. Resolve the {{entry_display_name}} source workspace root from this entry skill file, then read its generated catalog, graph, and cascade.
+5. Run lifecycle phases in manifest order.
+6. Report phase progress such as `Starting phase: activate`, `Activated modules: ...`, and `Completed phase: plan`.
+7. During `activate`, run the Intent Derivation Gate before module selection.
+8. Select atoms from the confirmed intent model by structured facets and declared lifecycle files.
+9. Write phase traces as each phase completes.
+10. Pass hidden phase trace forward so later phases know the intent model, routing source root, runtime root, matched facets, activated atoms, lifecycle files used, and unresolved questions.
 
 ## Intent Derivation Gate
 
@@ -39,6 +47,8 @@ generated artifacts, and relevant local metadata.
 
 Record these fields in `{{runtime_dir}}/runs/{date-slug}/activate.json`:
 
+- `routing_source_root`
+- `runtime_root`
 - `explicit_intents`
 - `inferred_intents`
 - `operation_type`
@@ -72,11 +82,13 @@ not add a generic fallback module.
 - This public entry skill is invoked only by explicit {{entry_invocation}} use.
 - Modules are hidden behind this entry point.
 - Generated artifacts are derived from module metadata.
+- Routing source artifacts are resolved from this skill's source workspace, never from the caller workspace.
 - Routing decisions remain inspectable through the intent model, facets, lifecycle declarations, and run traces.
 
 ## Hard Stops
 
 - Do not use this skill through implicit invocation.
+- Do not load a caller repository's routed workspace, generated views, hidden modules, command atoms, or runtime entry when resolving this entry's atoms.
 - Do not route hidden modules through relation concepts such as `before`, `with`, `after`, `excludes`, or `replaces`.
 - Do not treat generated catalog, graph, or cascade files as source files.
 - Do not add hidden resource coupling.
@@ -93,6 +105,7 @@ facets, and lifecycle files used in the run trace.
 - Generated cascade was available.
 - Run trace was started.
 - Config was read or scaffolded.
+- Source workspace root and invocation runtime root were recorded.
 - Intent was derived and validated before module retrieval when required.
 - Activated atoms had intent-model evidence, phase config, or lifecycle coverage.
 - Missing module coverage was recorded when expected responsibilities had no owner.

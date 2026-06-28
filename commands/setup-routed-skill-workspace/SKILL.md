@@ -59,6 +59,8 @@ This command is an authoring command, not a migration tool.
 - New workspaces include `setup-routed-skill-workspace` and
   `setup-<entry>-config` command atoms by default.
 - Entry templates include the intent derivation gate before module selection.
+- Entry templates keep source artifact resolution separate from invocation
+  runtime resolution.
 - The target workspace has or will add modules for the durable artifact surfaces
   the entry is expected to handle.
 - New workspaces include rebuild, validate, and validator fixture-test scripts.

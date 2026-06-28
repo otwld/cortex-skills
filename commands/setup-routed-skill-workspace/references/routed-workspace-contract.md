@@ -114,12 +114,20 @@ directory, the checkout-root `.gitignore` contains `skills/.<entry>/` or
 Entry skills contain `SKILL.md`, `agents/openai.yaml`, and `skill.yaml`. Do not
 create entry `instructions.md`.
 
+Entry source artifacts are resolved relative to the entry skill file and its
+routed workspace root. Runtime traces and config are resolved from the
+invocation workspace. Keep those roots distinct. If an entry is invoked while
+the agent's current working directory is another repository, the caller
+repository is request and repo evidence only; it must not replace the entry's
+own manifest, generated routing views, hidden modules, commands, or runtime
+entry.
+
 Entry activation derives an intent model before module selection. The model
 records explicit and inferred intent, operation type, affected surfaces,
 expected artifacts, risk profile, validation needs, excluded scope, confidence,
-user validation, module retrieval query, activated modules, and missing
-coverage. Modules are retrieved from that model by facets and lifecycle coverage,
-not only by literal prompt words.
+user validation, routing source root, runtime root, module retrieval query,
+activated modules, and missing coverage. Modules are retrieved from that model
+by facets and lifecycle coverage, not only by literal prompt words.
 
 Hidden routing applies only when the entry skill is explicitly invoked or when
 project instructions define a handoff convention that emits the entry request.
