@@ -74,6 +74,12 @@ This graph is bipartite: modules link to facet values and lifecycle phases. It c
 | `completion-verification` | `artifacts` | latest user request<br>requirements checklist<br>test output<br>inspected diff<br>runtime evidence<br>blocked validation note |
 | `completion-verification` | `repo` | modified files<br>generated outputs<br>test suite<br>runtime artifacts<br>documentation changes |
 | `completion-verification` | `request` | is this done<br>claim the task is complete<br>show validation proof<br>confirm acceptance criteria<br>ready to ship<br>summarize completion evidence |
+| `composition-over-inheritance` | `intents` | prefer composition over inheritance for changed code<br>assemble behavior from explicit collaborators and reusable units<br>justify inheritance only when polymorphism or framework contracts require it |
+| `composition-over-inheritance` | `surfaces` | classes, abstract classes, base classes, subclasses, mixins, interfaces, providers, factories, adapters, strategies, hooks, composables, functions, and components<br>dependency injection boundaries, constructor dependencies, override methods, protected state, template methods, and framework extension points<br>behavior assembled through reusable functions, services, components, slots, render props, strategy objects, adapters, configuration, or injected collaborators |
+| `composition-over-inheritance` | `risks` | inheritance is used only to share helpers or state<br>subclasses depend on protected internals, override order, or base-class lifecycle timing<br>composition creates shallow wrappers without a clear collaborator contract<br>composition guidance duplicates extraction, public API, SRP, or framework-specific decisions |
+| `composition-over-inheritance` | `artifacts` | inheritance justification<br>composition boundary decision<br>collaborator, strategy, adapter, provider, hook, or component composition<br>changed class, function, component, service, or module |
+| `composition-over-inheritance` | `repo` | diff creates, edits, moves, splits, deletes, or reviews code<br>diff adds or changes extends clauses, abstract classes, mixins, protected members, override methods, dependency injection, reusable functions, components, strategies, adapters, hooks, or providers<br>diff changes behavior reuse, extension points, collaborator wiring, or class hierarchy design |
+| `composition-over-inheritance` | `request` | implement, create, edit, refactor, move, split, or review code<br>asks whether to use inheritance, composition, dependency injection, strategy, adapter, reusable functions, or reusable components<br>mentions Composition Over Inheritance, polymorphism, base class, subclass, abstract class, mixin, override, or collaborator design |
 | `design-intake` | `intents` | clarify-ambiguous-request<br>stabilize-user-facing-outcome |
 | `design-intake` | `surfaces` | workflow-intake<br>requirements-clarification<br>scope-definition |
 | `design-intake` | `risks` | repo-answerable-question-sent-to-user<br>public-behavior-chosen-by-assumption<br>implementation-starts-from-unstable-intent |
@@ -128,6 +134,12 @@ This graph is bipartite: modules link to facet values and lifecycle phases. It c
 | `library-placement-decision` | `artifacts` | new library or package<br>moved source file or folder<br>extracted abstraction<br>public export<br>ownership decision |
 | `library-placement-decision` | `repo` | TypeScript monorepo<br>modular workspace<br>library-oriented source tree |
 | `library-placement-decision` | `request` | asks where new code should live<br>adds, moves, or extracts reusable logic, DTOs, adapters, UI, or utilities<br>changes import location, package ownership, or library boundaries |
+| `minimize-cognitive-load` | `intents` | minimize reader effort for touched code<br>prefer obvious, explicit, predictable implementation over clever, terse, or speculative design<br>simplify control flow, data flow, dependency visibility, public surface, and abstraction depth<br>optimize changes for reviewability without mixing noisy refactors into feature work |
+| `minimize-cognitive-load` | `surfaces` | files, functions, methods, classes, components, hooks, services, controllers, providers, commands, adapters, modules, tests, and scripts<br>control flow, branching, nesting, callbacks, recursion, async sequencing, error handling, data flow, state flow, and side effects<br>names, helper functions, parameters, return values, public methods, exports, interfaces, factories, configuration options, extension points, and abstractions<br>feature locality, file layout, dependency wiring, implicit behavior, generated code, review diffs, and debugging paths |
+| `minimize-cognitive-load` | `risks` | implementation is clever, terse, overly generic, or optimized at the cost of reader clarity<br>related logic is scattered across services, utilities, helpers, managers, factories, or abstraction layers<br>control flow is deeply nested, indirect, callback-heavy, recursive, or hidden behind lifecycle hooks, decorators, globals, or implicit configuration<br>public surface area, parameters, options, interfaces, extension points, or abstractions exceed the current need<br>reviewability is reduced by noisy refactors, mixed concerns, broad movement, or unclear behavioral diff<br>cognitive-load guidance duplicates naming, TypeScript style, documentation, SRP, extraction, public API, composition, SSOT, or performance decisions |
+| `minimize-cognitive-load` | `artifacts` | cognitive-load inventory<br>simplification decision<br>readability review finding<br>abstraction keep-or-remove decision<br>reviewability check |
+| `minimize-cognitive-load` | `repo` | diff creates, edits, moves, splits, deletes, or reviews code<br>diff changes control flow, branching, data flow, state flow, side effects, async sequencing, error handling, or dependency wiring<br>diff adds or changes files, helpers, utilities, managers, services, interfaces, factories, public exports, configuration options, extension points, or abstractions<br>diff mixes feature work with refactors, broad moves, formatting churn, or readability-only changes |
+| `minimize-cognitive-load` | `request` | implement, create, edit, refactor, move, split, or review code<br>asks whether code is simple, obvious, readable, understandable, debuggable, maintainable, reviewable, too clever, too abstract, too generic, or too complex<br>mentions cognitive load, readability, simplicity, explicit behavior, control flow, data flow, hidden behavior, public surface area, reviewability, or unnecessary abstraction |
 | `naming-consistency` | `intents` | choose names that encode domain role, lifecycle, and ownership<br>review public and reusable names for project vocabulary alignment |
 | `naming-consistency` | `surfaces` | files, folders, exports, classes, functions, and constants<br>DTOs, contracts, events, commands, providers, and factories<br>domain glossary and project memory<br>tests, stories, fixtures, docs, and generated references |
 | `naming-consistency` | `risks` | generic name forces readers to inspect implementation<br>role suffix describes a pattern instead of the local responsibility<br>public rename leaves old imports or docs behind<br>term conflicts with the project glossary |
@@ -206,6 +218,18 @@ This graph is bipartite: modules link to facet values and lifecycle phases. It c
 | `rxjs-conventions` | `artifacts` | *.ts and *.tsx files importing rxjs or rxjs/operators<br>Observable-returning services, effects, components, stores, and tests<br>Marble tests, fake timer tests, integration tests, and subscription cleanup assertions |
 | `rxjs-conventions` | `repo` | Existing stream naming, $ suffix, and subscription ownership conventions<br>Lifecycle or disposal mechanism for the surrounding framework<br>Tests that prove ordering, cancellation, teardown, and error behavior |
 | `rxjs-conventions` | `request` | Create, modify, or review an Observable, operator chain, subscription, subject, or multicasted stream<br>Choose between switchMap, mergeMap, concatMap, exhaustMap, share, shareReplay, or manual subscription<br>Fix a stream leak, stale request, duplicate emission, cancellation bug, or swallowed error |
+| `single-responsibility-principle` | `intents` | preserve one reason to change for touched code units<br>separate responsibilities only when change drivers differ<br>review code cohesion without creating unnecessary files |
+| `single-responsibility-principle` | `surfaces` | files, functions, methods, classes, components, hooks, services, providers, controllers, commands, schemas, and modules<br>UI rendering, validation, business rules, orchestration, mapping, persistence, networking, configuration, and side effects<br>code units that coordinate multiple layers or change for unrelated reasons |
+| `single-responsibility-principle` | `risks` | UI, validation, persistence, business logic, and networking are mixed inside one unit<br>a file or function changes for unrelated product, data, integration, or presentation reasons<br>mechanical splitting creates shallow files without clearer ownership<br>SRP review duplicates extraction, placement, public API, or deepening decisions |
+| `single-responsibility-principle` | `artifacts` | responsibility inventory<br>split or keep-together decision<br>cohesion review finding<br>changed code unit |
+| `single-responsibility-principle` | `repo` | diff creates, edits, moves, splits, deletes, or reviews code<br>diff changes files, functions, classes, components, hooks, services, controllers, commands, schemas, providers, or modules<br>diff mixes UI, validation, business rules, persistence, networking, mapping, orchestration, or side effects |
+| `single-responsibility-principle` | `request` | implement, create, edit, refactor, move, split, or review code<br>asks whether a unit has too many responsibilities or should be split<br>mentions Single Responsibility Principle, SRP, cohesion, one reason to change, mixed concerns, or responsibility boundaries |
+| `single-source-of-truth` | `intents` | preserve one authoritative owner for each touched fact or rule<br>replace copied state, configuration, validation, constants, or business rules with references, imports, derivations, or generated outputs<br>allow duplication only when it is a cache, projection, generated artifact, migration bridge, compatibility layer, or test snapshot with an explicit owner and sync path |
+| `single-source-of-truth` | `surfaces` | state stores, component state, form state, caches, projections, reducers, hooks, providers, controllers, services, repositories, adapters, commands, and modules<br>configuration, environment defaults, constants, enums, feature flags, schemas, DTOs, validators, permissions, policies, calculations, and business rules<br>generated files, fixtures, examples, documentation snippets, API payloads, view models, persistence models, and serialization mappings |
+| `single-source-of-truth` | `risks` | the same state, configuration, validation, constant, field list, enum, permission, calculation, or business rule is duplicated across code units<br>derived data is stored as a second writable source instead of being computed from the owner<br>frontend, backend, persistence, documentation, generated output, or tests define competing versions of the same rule<br>a migration, cache, fixture, or generated artifact lacks a declared owner, regeneration path, invalidation rule, or removal condition<br>single-source guidance duplicates SRP, extraction, public API, composition, no-transitional, or documentation decisions |
+| `single-source-of-truth` | `artifacts` | source-of-truth inventory<br>authoritative owner decision<br>consumer reference or derivation<br>duplication exception with sync or removal rule<br>drift-risk review finding |
+| `single-source-of-truth` | `repo` | diff creates, edits, moves, splits, deletes, or reviews code<br>diff changes state, configuration, validation, constants, enums, schemas, DTOs, feature flags, permissions, calculations, business rules, generated files, fixtures, examples, documentation facts, or derived data<br>diff copies values, field lists, validation rules, mapping logic, defaults, policy decisions, payload shapes, or generated content between files or layers<br>diff introduces caches, projections, denormalized data, snapshots, migration bridges, compatibility layers, or generated artifacts |
+| `single-source-of-truth` | `request` | implement, create, edit, refactor, move, split, or review code<br>asks whether data, rules, state, config, validation, constants, schema, DTOs, fixtures, generated files, docs, or business logic are duplicated<br>mentions Single Source of Truth, SSOT, one truth, authoritative owner, duplication, copied values, drift, source of truth, state owner, config owner, validation owner, or rule owner |
 | `skill-evolution` | `intents` | Evolve Cortex skill behavior<br>Codify recurring agent failure<br>Close durable workflow doctrine gap |
 | `skill-evolution` | `surfaces` | Routed skill metadata<br>Lifecycle phase guidance<br>Skill-owned references<br>Skill workspace conventions |
 | `skill-evolution` | `risks` | One-off preference becomes reusable doctrine<br>Overlapping ownership across skill artifacts<br>Metadata, lifecycle, and resource declarations drift<br>Routing evidence is too broad to audit |
@@ -311,6 +335,11 @@ This graph is bipartite: modules link to facet values and lifecycle phases. It c
 | `completion-verification` | `activate` | `lifecycle/activate.md` |
 | `completion-verification` | `verify` | `lifecycle/verify.md` |
 | `completion-verification` | `finalize` | `lifecycle/finalize.md` |
+| `composition-over-inheritance` | `activate` | `lifecycle/activate.md` |
+| `composition-over-inheritance` | `plan` | `lifecycle/plan.md` |
+| `composition-over-inheritance` | `run` | `lifecycle/run.md` |
+| `composition-over-inheritance` | `review` | `lifecycle/review.md` |
+| `composition-over-inheritance` | `verify` | `lifecycle/verify.md` |
 | `design-intake` | `activate` | `lifecycle/activate.md` |
 | `design-intake` | `plan` | `lifecycle/plan.md` |
 | `diary` | `activate` | `lifecycle/activate.md` |
@@ -335,6 +364,11 @@ This graph is bipartite: modules link to facet values and lifecycle phases. It c
 | `library-placement-decision` | `activate` | `lifecycle/activate.md` |
 | `library-placement-decision` | `plan` | `lifecycle/plan.md` |
 | `library-placement-decision` | `review` | `lifecycle/review.md` |
+| `minimize-cognitive-load` | `activate` | `lifecycle/activate.md` |
+| `minimize-cognitive-load` | `plan` | `lifecycle/plan.md` |
+| `minimize-cognitive-load` | `run` | `lifecycle/run.md` |
+| `minimize-cognitive-load` | `review` | `lifecycle/review.md` |
+| `minimize-cognitive-load` | `verify` | `lifecycle/verify.md` |
 | `naming-consistency` | `activate` | `lifecycle/activate.md` |
 | `naming-consistency` | `plan` | `lifecycle/plan.md` |
 | `naming-consistency` | `review` | `lifecycle/review.md` |
@@ -369,6 +403,16 @@ This graph is bipartite: modules link to facet values and lifecycle phases. It c
 | `rxjs-conventions` | `activate` | `lifecycle/activate.md` |
 | `rxjs-conventions` | `run` | `lifecycle/run.md` |
 | `rxjs-conventions` | `review` | `lifecycle/review.md` |
+| `single-responsibility-principle` | `activate` | `lifecycle/activate.md` |
+| `single-responsibility-principle` | `plan` | `lifecycle/plan.md` |
+| `single-responsibility-principle` | `run` | `lifecycle/run.md` |
+| `single-responsibility-principle` | `review` | `lifecycle/review.md` |
+| `single-responsibility-principle` | `verify` | `lifecycle/verify.md` |
+| `single-source-of-truth` | `activate` | `lifecycle/activate.md` |
+| `single-source-of-truth` | `plan` | `lifecycle/plan.md` |
+| `single-source-of-truth` | `run` | `lifecycle/run.md` |
+| `single-source-of-truth` | `review` | `lifecycle/review.md` |
+| `single-source-of-truth` | `verify` | `lifecycle/verify.md` |
 | `skill-evolution` | `activate` | `lifecycle/activate.md` |
 | `skill-evolution` | `plan` | `lifecycle/plan.md` |
 | `skill-evolution` | `run` | `lifecycle/run.md` |
