@@ -1,0 +1,50 @@
+name: "single-source-of-truth"
+description: "Internal Cortex module applied broadly when code is created, edited, refactored, reviewed, moved, or split, to keep state, configuration, validation, constants, schemas, feature flags, business rules, derived data, generated facts, and documentation facts owned by one authoritative source with many consumers."
+activation: "routed"
+visibility: "hidden"
+status: "active"
+routing:
+  priority: 5
+  facets:
+    intents:
+      - "preserve one authoritative owner for each touched fact or rule"
+      - "replace copied state, configuration, validation, constants, or business rules with references, imports, derivations, or generated outputs"
+      - "allow duplication only when it is a cache, projection, generated artifact, migration bridge, compatibility layer, or test snapshot with an explicit owner and sync path"
+    surfaces:
+      - "state stores, component state, form state, caches, projections, reducers, hooks, providers, controllers, services, repositories, adapters, commands, and modules"
+      - "configuration, environment defaults, constants, enums, feature flags, schemas, DTOs, validators, permissions, policies, calculations, and business rules"
+      - "generated files, fixtures, examples, documentation snippets, API payloads, view models, persistence models, and serialization mappings"
+    risks:
+      - "the same state, configuration, validation, constant, field list, enum, permission, calculation, or business rule is duplicated across code units"
+      - "derived data is stored as a second writable source instead of being computed from the owner"
+      - "frontend, backend, persistence, documentation, generated output, or tests define competing versions of the same rule"
+      - "a migration, cache, fixture, or generated artifact lacks a declared owner, regeneration path, invalidation rule, or removal condition"
+      - "single-source guidance duplicates SRP, extraction, public API, composition, no-transitional, or documentation decisions"
+    artifacts:
+      - "source-of-truth inventory"
+      - "authoritative owner decision"
+      - "consumer reference or derivation"
+      - "duplication exception with sync or removal rule"
+      - "drift-risk review finding"
+    repo:
+      - "diff creates, edits, moves, splits, deletes, or reviews code"
+      - "diff changes state, configuration, validation, constants, enums, schemas, DTOs, feature flags, permissions, calculations, business rules, generated files, fixtures, examples, documentation facts, or derived data"
+      - "diff copies values, field lists, validation rules, mapping logic, defaults, policy decisions, payload shapes, or generated content between files or layers"
+      - "diff introduces caches, projections, denormalized data, snapshots, migration bridges, compatibility layers, or generated artifacts"
+    request:
+      - "implement, create, edit, refactor, move, split, or review code"
+      - "asks whether data, rules, state, config, validation, constants, schema, DTOs, fixtures, generated files, docs, or business logic are duplicated"
+      - "mentions Single Source of Truth, SSOT, one truth, authoritative owner, duplication, copied values, drift, source of truth, state owner, config owner, validation owner, or rule owner"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  plan: "lifecycle/plan.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
+  verify: "lifecycle/verify.md"
+uses: []
+resources:
+  references:
+    - "references/source-of-truth-boundaries.md"
+  scripts: []
+  templates: []
+  assets: []
