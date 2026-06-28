@@ -3,14 +3,15 @@
 ## Overview
 
 Check each requirement and completion claim against evidence that can be
-inspected again by another agent.
+inspected again by another agent. Verification covers every explicit and
+inferred requirement in the activation intent model.
 
 ## Workflow
 
 ### Verification Method
 
-- Build a short checklist from the latest user request and any explicit
-  acceptance criteria.
+- Build a short checklist from the activation intent model, latest user request,
+  embedded plans, explicit acceptance criteria, and recorded user decisions.
 - For each item, attach one of these evidence types:
   - command result, including command name and outcome;
   - file or diff inspection;
@@ -21,6 +22,8 @@ inspected again by another agent.
   changes.
 - Inspect negative space: files that should not change, generated artifacts that
   should not be hand-edited, and requirements that were easy to overlook.
+- Confirm each `missing_coverage` entry is either resolved, explicitly out of
+  scope, or carried as residual risk.
 
 ### Failure Modes
 
@@ -34,6 +37,7 @@ inspected again by another agent.
 ## Quality Gates
 
 - Each mandatory requirement has fresh evidence or an explicit blocker.
+- Each explicit and inferred intent has evidence, an exclusion, or a blocker.
 - Validation commands are rerun when material changes make prior output stale.
 - Missing proof is carried into the phase output rather than normalized away.
 
@@ -47,6 +51,9 @@ inspected again by another agent.
 ## Phase Output
 
 - Checklist of requirements and the evidence attached to each one.
+- Intent-model coverage for explicit intents, inferred intents, affected
+  surfaces, expected artifacts, validation needs, excluded scope, and missing
+  coverage.
 - Commands or inspections run during this phase.
 - Missing evidence, blocked checks, and residual risk that must appear in the
   final answer.

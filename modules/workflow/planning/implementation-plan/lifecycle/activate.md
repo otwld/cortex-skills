@@ -4,17 +4,21 @@
 
 Confirm that requirements are stable enough to produce an implementation plan
 that another engineer can execute without inventing product or technical
-decisions.
+decisions. Activation consumes the entry intent model before deciding whether a
+planning phase should run.
 
 ## Workflow
 
-1. Read user requirements, acceptance criteria, constraints, and non-goals.
-2. Inspect current repository structure, public interfaces, tests, docs,
+1. Read the activation intent model and its evidence, including explicit and
+   inferred intents, affected surfaces, expected artifacts, validation needs,
+   confidence, activated modules, and missing coverage.
+2. Read user requirements, acceptance criteria, constraints, and non-goals.
+3. Inspect current repository structure, public interfaces, tests, docs,
    generated files, and validation commands that the plan will affect.
-3. Use `skill-quality-standard.md` when planning skill artifacts.
-4. Use `vertical-slices.md` when the work can be delivered as end-to-end
+4. Use `skill-quality-standard.md` when planning skill artifacts.
+5. Use `vertical-slices.md` when the work can be delivered as end-to-end
    increments.
-5. Identify affected surfaces, compatibility concerns, migration impact, and
+6. Identify affected surfaces, compatibility concerns, migration impact, and
    validation expectations.
 
 ## Quality Gates
@@ -23,6 +27,8 @@ decisions.
   execution path.
 - Requirements are known enough to name affected surfaces, validation, and
   compatibility concerns.
+- The intent model is specific enough to name module responsibilities before
+  planning.
 - The work has enough risk, sequencing, or cross-boundary impact that direct
   implementation would hide decisions.
 - Planning can produce concrete tasks rather than broad research prompts.
@@ -42,6 +48,8 @@ decisions.
 Return:
 
 - Planning scope, non-goals, and affected surfaces.
+- Derived intent summary, activated module responsibilities, and missing
+  coverage relevant to planning.
 - Evidence inspected and assumptions accepted.
 - Required validation, docs, generated outputs, migration, and compatibility
   concerns.

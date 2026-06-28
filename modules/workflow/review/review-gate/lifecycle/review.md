@@ -3,16 +3,19 @@
 ## Overview
 
 Assess completed work against the user's requirements and the current diff,
-prioritizing defects and regression risk over preference.
+prioritizing defects and regression risk over preference. Review against the
+activation intent model, not only the literal latest prompt.
 
 ## Workflow
 
 ### Inspect
 
-- Reconstruct the required behavior from the latest user request and any stated
-  constraints.
+- Reconstruct the required behavior from the activation intent model, latest
+  user request, embedded plans, and any stated constraints.
 - Inspect the changed files, public interfaces, tests, docs, generated outputs,
   dependency changes, and configuration changes.
+- Check each explicit and inferred intent, affected surface, expected artifact,
+  validation need, excluded scope item, and missing coverage note.
 - Compare validation evidence to the changed surface area. A passing unrelated
   command does not cover a risky change.
 - Look for missing negative cases, broken compatibility, unintended file churn,
@@ -30,6 +33,8 @@ prioritizing defects and regression risk over preference.
 ## Quality Gates
 
 - Requirements and diff scope are inspected prior to style or preference issues.
+- Review scope is mapped to the activation intent model, including inferred
+  requirements and validation needs.
 - Findings describe a reproducible failure mode and concrete risk.
 - No-findings output still names the evidence inspected and remaining test gaps.
 
@@ -37,6 +42,8 @@ prioritizing defects and regression risk over preference.
 
 - Do not approve major work when requirement fit or validation coverage has not
   been inspected.
+- Do not approve major work when the activation intent model is unavailable or
+  materially contradicts the diff without a recorded user decision.
 - Do not report vague concerns that cannot guide a fix.
 - Do not mix unrelated improvement ideas into blocking review findings.
 - Do not treat style preference as a defect unless it violates an explicit
@@ -45,6 +52,6 @@ prioritizing defects and regression risk over preference.
 ## Phase Output
 
 - Severity-ordered findings, or a clear no-findings statement.
-- Evidence inspected: requirements, diff scope, tests, docs, contracts, and
-  relevant artifacts.
+- Evidence inspected: intent model, requirements, diff scope, tests, docs,
+  contracts, and relevant artifacts.
 - Required fixes, accepted residual risks, and validation needed following fixes.

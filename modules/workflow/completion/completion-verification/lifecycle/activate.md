@@ -3,13 +3,16 @@
 ## Overview
 
 Convert a pending success statement into a set of claims that can be checked
-against the latest request, the current workspace, and current validation
-evidence.
+against the activation intent model, the latest request, the current workspace,
+and current validation evidence.
 
 ## Workflow
 
 ### Inspect
 
+- Read the activation intent model, including explicit and inferred intents,
+  affected surfaces, expected artifacts, validation needs, excluded scope,
+  activated modules, and missing coverage.
 - Read the latest user request, including constraints that arrived later in the
   thread.
 - Identify every completion claim that will appear in the response: files
@@ -22,8 +25,8 @@ evidence.
 
 ### Decide
 
-- Decide which user requirements are satisfied, which are partially satisfied,
-  and which remain unverified.
+- Decide which explicit and inferred requirements are satisfied, which are
+  partially satisfied, which are excluded, and which remain unverified.
 - Decide whether evidence is fresh enough. Earlier command output is stale when
   code, config, generated artifacts, dependencies, or relevant data changed
   afterward.
@@ -34,6 +37,8 @@ evidence.
 
 - Every completion claim maps to a user requirement, changed artifact, or
   validation result.
+- Every completion claim is compatible with the activation intent model and any
+  recorded user validation.
 - Evidence freshness is checked against the current workspace.
 - Final status wording is constrained by the weakest mandatory evidence.
 
@@ -47,5 +52,6 @@ evidence.
 ## Phase Output
 
 - Requirement-to-evidence map for the pending completion claim.
+- Intent-model coverage and unresolved missing coverage.
 - Evidence that is fresh, evidence that is stale, and checks still missing.
 - Allowed final wording for completion, partial completion, or blocked status.
