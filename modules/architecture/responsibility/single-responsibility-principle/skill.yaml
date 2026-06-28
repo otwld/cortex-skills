@@ -1,0 +1,48 @@
+name: "single-responsibility-principle"
+description: "Internal Cortex module applied broadly when code is created, edited, refactored, reviewed, moved, or split, to keep touched files, functions, classes, components, hooks, services, controllers, commands, providers, schemas, and modules focused on one reason to change."
+activation: "routed"
+visibility: "hidden"
+status: "active"
+routing:
+  priority: 5
+  facets:
+    intents:
+      - "preserve one reason to change for touched code units"
+      - "separate responsibilities only when change drivers differ"
+      - "review code cohesion without creating unnecessary files"
+    surfaces:
+      - "files, functions, methods, classes, components, hooks, services, providers, controllers, commands, schemas, and modules"
+      - "UI rendering, validation, business rules, orchestration, mapping, persistence, networking, configuration, and side effects"
+      - "code units that coordinate multiple layers or change for unrelated reasons"
+    risks:
+      - "UI, validation, persistence, business logic, and networking are mixed inside one unit"
+      - "a file or function changes for unrelated product, data, integration, or presentation reasons"
+      - "mechanical splitting creates shallow files without clearer ownership"
+      - "SRP review duplicates extraction, placement, public API, or deepening decisions"
+    artifacts:
+      - "responsibility inventory"
+      - "split or keep-together decision"
+      - "cohesion review finding"
+      - "changed code unit"
+    repo:
+      - "diff creates, edits, moves, splits, deletes, or reviews code"
+      - "diff changes files, functions, classes, components, hooks, services, controllers, commands, schemas, providers, or modules"
+      - "diff mixes UI, validation, business rules, persistence, networking, mapping, orchestration, or side effects"
+    request:
+      - "implement, create, edit, refactor, move, split, or review code"
+      - "asks whether a unit has too many responsibilities or should be split"
+      - "mentions Single Responsibility Principle, SRP, cohesion, one reason to change, mixed concerns, or responsibility boundaries"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  plan: "lifecycle/plan.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
+  verify: "lifecycle/verify.md"
+uses: []
+resources:
+  references:
+    - "references/responsibility-boundaries.md"
+  scripts: []
+  templates: []
+  assets: []
+
