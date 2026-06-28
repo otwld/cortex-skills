@@ -1,0 +1,53 @@
+name: "minimize-cognitive-load"
+description: "Internal Cortex module applied broadly when code is created, edited, refactored, reviewed, moved, or split, to make touched code easier to understand, modify, debug, and review by preferring obvious control flow, explicit data flow, local reasoning, descriptive intent, minimal public surface, and necessary-only abstractions."
+activation: "routed"
+visibility: "hidden"
+status: "active"
+routing:
+  priority: 5
+  facets:
+    intents:
+      - "minimize reader effort for touched code"
+      - "prefer obvious, explicit, predictable implementation over clever, terse, or speculative design"
+      - "simplify control flow, data flow, dependency visibility, public surface, and abstraction depth"
+      - "optimize changes for reviewability without mixing noisy refactors into feature work"
+    surfaces:
+      - "files, functions, methods, classes, components, hooks, services, controllers, providers, commands, adapters, modules, tests, and scripts"
+      - "control flow, branching, nesting, callbacks, recursion, async sequencing, error handling, data flow, state flow, and side effects"
+      - "names, helper functions, parameters, return values, public methods, exports, interfaces, factories, configuration options, extension points, and abstractions"
+      - "feature locality, file layout, dependency wiring, implicit behavior, generated code, review diffs, and debugging paths"
+    risks:
+      - "implementation is clever, terse, overly generic, or optimized at the cost of reader clarity"
+      - "related logic is scattered across services, utilities, helpers, managers, factories, or abstraction layers"
+      - "control flow is deeply nested, indirect, callback-heavy, recursive, or hidden behind lifecycle hooks, decorators, globals, or implicit configuration"
+      - "public surface area, parameters, options, interfaces, extension points, or abstractions exceed the current need"
+      - "reviewability is reduced by noisy refactors, mixed concerns, broad movement, or unclear behavioral diff"
+      - "cognitive-load guidance duplicates naming, TypeScript style, documentation, SRP, extraction, public API, composition, SSOT, or performance decisions"
+    artifacts:
+      - "cognitive-load inventory"
+      - "simplification decision"
+      - "readability review finding"
+      - "abstraction keep-or-remove decision"
+      - "reviewability check"
+    repo:
+      - "diff creates, edits, moves, splits, deletes, or reviews code"
+      - "diff changes control flow, branching, data flow, state flow, side effects, async sequencing, error handling, or dependency wiring"
+      - "diff adds or changes files, helpers, utilities, managers, services, interfaces, factories, public exports, configuration options, extension points, or abstractions"
+      - "diff mixes feature work with refactors, broad moves, formatting churn, or readability-only changes"
+    request:
+      - "implement, create, edit, refactor, move, split, or review code"
+      - "asks whether code is simple, obvious, readable, understandable, debuggable, maintainable, reviewable, too clever, too abstract, too generic, or too complex"
+      - "mentions cognitive load, readability, simplicity, explicit behavior, control flow, data flow, hidden behavior, public surface area, reviewability, or unnecessary abstraction"
+lifecycle:
+  activate: "lifecycle/activate.md"
+  plan: "lifecycle/plan.md"
+  run: "lifecycle/run.md"
+  review: "lifecycle/review.md"
+  verify: "lifecycle/verify.md"
+uses: []
+resources:
+  references:
+    - "references/cognitive-load-boundaries.md"
+  scripts: []
+  templates: []
+  assets: []
