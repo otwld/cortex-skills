@@ -1,5 +1,5 @@
 name: "code-documentation"
-description: "Internal Cortex module applied whenever a request asks for, accepts, generates, edits, moves, deletes, splits, refactors, or materially reviews code; when public, reusable, or user-facing documentation, Storybook docs, examples, stories, MDX docs, or API usage notes change; and when dense implementation blocks need explanatory line comments."
+description: "Internal Cortex module applied whenever a request asks for, accepts, generates, edits, moves, deletes, splits, refactors, or materially reviews code; when touched code surfaces need strong API, type, property, function, component, schema, command, example, or workflow documentation; and when long or dense implementation flow needs explanatory comments."
 activation: "routed"
 visibility: "hidden"
 status: "active"
@@ -8,15 +8,18 @@ routing:
   facets:
     intents:
       - "keep code-adjacent documentation current"
-      - "document touched public or reusable code surfaces"
-      - "explain dense implementation logic"
+      - "enforce strong documentation coverage for touched code"
+      - "document public, reusable, structural, and behavioral code surfaces"
+      - "explain long or dense implementation flow"
     surfaces:
-      - "exported symbols and package entry points"
-      - "component inputs, routes, commands, hooks, services, and providers"
-      - "DTOs, schemas, payloads, generated docs, README usage, Storybook, and MDX"
-      - "long or branch-heavy functions"
+      - "exported symbols, package entry points, interfaces, type aliases, classes, enums, methods, fields, and properties"
+      - "component props, inputs, outputs, slots, emitted events, routes, commands, hooks, services, and providers"
+      - "DTOs, schemas, payloads, validation rules, config options, generated docs, README usage, Storybook, and MDX"
+      - "named functions, methods, callbacks, long functions, and branch-heavy implementation blocks"
     risks:
       - "changed behavior lacks consumer-facing documentation"
+      - "types, interface properties, config fields, or schema fields are reachable but undocumented"
+      - "functions and methods hide responsibility, side effects, constraints, or failure modes"
       - "comments narrate syntax instead of preserving intent"
       - "stale examples or docs remain reachable when code has moved"
     artifacts:
@@ -26,6 +29,7 @@ routing:
     repo:
       - "diff creates, edits, moves, splits, deletes, or materially reviews code"
       - "diff changes a public import, framework binding, configuration, command, or user workflow"
+      - "diff changes interfaces, type members, component contracts, schemas, DTOs, config fields, or examples"
       - "diff touches ordering-sensitive, lifecycle-sensitive, cached, concurrent, retrying, paginated, or error-recovery logic"
     request:
       - "implement, create, edit, move, delete, split, refactor, or review code"
