@@ -9,8 +9,9 @@ description: Use only when the user explicitly includes $setup-routed-skill-work
 
 Create and extend Cortex-like routed skill workspaces. A generated workspace has
 one public entry skill chosen by the user, hidden routed modules selected by
-structured facets and lifecycle phase files, public command atoms, generated
-catalog/graph/cascade views, and local runtime state under `.<entry>/`.
+an entry-derived intent model, structured facets, and lifecycle phase files,
+public command atoms, generated catalog/graph/cascade views, and local runtime
+state under `.<entry>/`.
 Runtime ignore policy belongs in the checkout-root `.gitignore`; nested routed
 workspace layouts such as `skills/` must not create a separate `skills/.gitignore`.
 
@@ -57,6 +58,9 @@ This command is an authoring command, not a migration tool.
   `<target-root>/.<entry>/` for nested `skills/` and `.skills/` layouts.
 - New workspaces include `setup-routed-skill-workspace` and
   `setup-<entry>-config` command atoms by default.
+- Entry templates include the intent derivation gate before module selection.
+- The target workspace has or will add modules for the durable artifact surfaces
+  the entry is expected to handle.
 - New workspaces include rebuild, validate, and validator fixture-test scripts.
 - New modules are draft until their facets and lifecycle behavior are concrete.
 - Command atoms do not declare lifecycle files.
@@ -69,6 +73,9 @@ This command is an authoring command, not a migration tool.
   files.
 - Do not create starter routed modules during initialization unless the user
   explicitly asks for them.
+- Do not imply hidden routing applies to ordinary tool invocations unless the
+  entry skill is explicitly invoked or project instructions define a handoff
+  convention.
 - Do not create or commit `.<entry>/config.json` or run traces during scaffold.
 - Do not create Router handoff sections in command atoms by default.
 - Do not add hidden resource sharing or implicit inheritance.

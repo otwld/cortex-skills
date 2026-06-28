@@ -25,16 +25,54 @@ Use routed workspace metadata as the source of truth:
 3. Read `{{runtime_dir}}/config.json`; if missing, invoke {{config_command_invocation}} to scaffold the default phase config.
 4. Run lifecycle phases in manifest order.
 5. Report phase progress such as `Starting phase: activate`, `Activated modules: ...`, and `Completed phase: plan`.
-6. Select atoms from structured facets, phase config, and declared lifecycle files.
-7. Write phase traces as each phase completes.
-8. Pass hidden phase trace forward so later phases know the matched facets, activated atoms, lifecycle files used, and unresolved questions.
+6. During `activate`, run the Intent Derivation Gate before module selection.
+7. Select atoms from the confirmed intent model by structured facets and declared lifecycle files.
+8. Write phase traces as each phase completes.
+9. Pass hidden phase trace forward so later phases know the intent model, matched facets, activated atoms, lifecycle files used, and unresolved questions.
+
+## Intent Derivation Gate
+
+Before selecting atoms in `activate`, derive a generic intent model from the
+request and local evidence. Inspect the explicit request, embedded plans, recent
+user turns available in context, mentioned paths, repository structure,
+generated artifacts, and relevant local metadata.
+
+Record these fields in `{{runtime_dir}}/runs/{date-slug}/activate.json`:
+
+- `explicit_intents`
+- `inferred_intents`
+- `operation_type`
+- `affected_surfaces`
+- `expected_artifacts`
+- `risk_profile`
+- `validation_needs`
+- `excluded_scope`
+- `confidence`
+- `user_validated`
+- `module_retrieval_query`
+- `activated_modules`
+- `missing_coverage`
+
+Keep detailed evidence in the trace. Show only a concise user-facing activation
+summary: derived intent, validation question if one is needed, activated modules,
+and missing coverage.
+
+Ask the operator before module retrieval only when confidence is low, several
+plausible intents imply different modules, scope would expand materially, or the
+missing decision changes validation or artifact ownership.
+
+Retrieve modules from the confirmed intent model. Match facets and lifecycle
+coverage using derived surfaces, risks, expected artifacts, operation type, and
+validation needs. If the intent model expects a responsibility but no module
+exists, record it in `missing_coverage` and surface that during activation. Do
+not add a generic fallback module.
 
 ## Quality Gates
 
 - This public entry skill is invoked only by explicit {{entry_invocation}} use.
 - Modules are hidden behind this entry point.
 - Generated artifacts are derived from module metadata.
-- Routing decisions remain inspectable through facets, lifecycle declarations, and run traces.
+- Routing decisions remain inspectable through the intent model, facets, lifecycle declarations, and run traces.
 
 ## Hard Stops
 
@@ -55,7 +93,9 @@ facets, and lifecycle files used in the run trace.
 - Generated cascade was available.
 - Run trace was started.
 - Config was read or scaffolded.
-- Activated atoms had direct facet evidence, phase config, or lifecycle coverage.
+- Intent was derived and validated before module retrieval when required.
+- Activated atoms had intent-model evidence, phase config, or lifecycle coverage.
+- Missing module coverage was recorded when expected responsibilities had no owner.
 
 ## Source Artifacts
 

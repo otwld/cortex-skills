@@ -27,7 +27,7 @@ will treat as operating rules.
    release steps, and agent autonomy.
 4. Draft `AGENTS.md` first: include repo-specific orientation, edit targets,
    validation commands, documentation obligations, safety boundaries, generated
-   artifacts, and release cautions.
+   artifacts, routed-skill handoff boundaries, and release cautions.
 5. Add nested `AGENTS.md` only when a subtree has materially different rules,
    commands, generated outputs, or ownership boundaries.
 6. Treat tool-specific files as secondary: update existing files only when they
@@ -46,6 +46,9 @@ will treat as operating rules.
 - Tool-specific files do not contradict `AGENTS.md`.
 - Generated files, protected paths, security boundaries, and verification
   commands are concrete and checkable.
+- Routed hidden modules are described as active only when the entry skill is
+  explicitly invoked or project instructions define a concrete handoff
+  convention.
 - The output avoids broad doctrine such as "be helpful" and focuses on
   repository-specific operating facts.
 - The strict grill happens before writing or replacing durable agent
@@ -66,6 +69,8 @@ root `AGENTS.md` plus a nested app guide only if the app has distinct rules.
 - Do not copy large sections from `README`, contribution docs, or architecture
   docs when a link and short operating rule is enough.
 - Do not invent commands, owners, path rules, or release processes.
+- Do not imply hidden routing applies to direct requests unless a public entry
+  invocation or handoff convention makes that boundary explicit.
 - Do not preserve conflicting instructions across multiple AI files.
 - Do not claim completion without checking the generated guidance against the
   current repository.

@@ -9,7 +9,9 @@ generated workspaces unless that is the requested entry slug.
 A workspace contains one public entry skill, hidden routed modules, public
 command atoms, shared resources, generated artifacts, and validation scripts.
 The checkout root owns `.gitignore`; the routed workspace root owns the skill
-artifacts.
+artifacts. A routed workspace must include modules for the durable artifact
+surfaces its public entry is expected to handle. Missing module ownership is
+reported during activation instead of hidden behind a generic fallback.
 
 ```text
 <checkout-root>/
@@ -111,6 +113,17 @@ directory, the checkout-root `.gitignore` contains `skills/.<entry>/` or
 
 Entry skills contain `SKILL.md`, `agents/openai.yaml`, and `skill.yaml`. Do not
 create entry `instructions.md`.
+
+Entry activation derives an intent model before module selection. The model
+records explicit and inferred intent, operation type, affected surfaces,
+expected artifacts, risk profile, validation needs, excluded scope, confidence,
+user validation, module retrieval query, activated modules, and missing
+coverage. Modules are retrieved from that model by facets and lifecycle coverage,
+not only by literal prompt words.
+
+Hidden routing applies only when the entry skill is explicitly invoked or when
+project instructions define a handoff convention that emits the entry request.
+Ordinary mentions of the entry name do not activate hidden modules.
 
 ## Routed Modules
 
