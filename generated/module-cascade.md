@@ -4,16 +4,17 @@ Generated from routed module metadata. Do not edit by hand.
 
 ## Routing Rules
 
-1. Start a run trace under `.cortex/runs/{date-slug}/`.
-2. Read `.cortex/config.json`; if missing, invoke the config command atom and scaffold an empty phase config.
-3. Run lifecycle phases in order: `activate`, `plan`, `run`, `review`, `verify`, `finalize`.
-4. For each phase, combine phase-specific config `always` modules with modules matched by structured facets.
-5. Collect request and repository evidence before selecting modules.
-6. Prefer higher-priority modules when facet evidence is otherwise equivalent.
-7. A phase subagent may own the whole phase and returns visible phase output plus hidden trace data.
-8. Hidden phase trace carries selected modules, matched facets, lifecycle files used, and next-phase inputs.
-9. Command skills are public atoms; `$cortex` may invoke them when orchestration requires it.
-10. Routed modules never declare peer module dependencies or exclusions.
+1. Resolve routing source artifacts from this entry skill workspace, not the caller current working directory.
+2. Start a run trace under `.cortex/runs/{date-slug}/` in the invocation runtime workspace.
+3. Read `.cortex/config.json`; if missing, invoke the config command atom and scaffold an empty phase config.
+4. Run lifecycle phases in order: `activate`, `plan`, `run`, `review`, `verify`, `finalize`.
+5. For each phase, combine phase-specific config `always` modules with modules matched by structured facets.
+6. Collect request and repository evidence before selecting modules.
+7. Prefer higher-priority modules when facet evidence is otherwise equivalent.
+8. A phase subagent may own the whole phase and returns visible phase output plus hidden trace data.
+9. Hidden phase trace carries selected modules, matched facets, lifecycle files used, and next-phase inputs.
+10. Command skills are public atoms; `$cortex` may invoke them when orchestration requires it.
+11. Routed modules never declare peer module dependencies or exclusions.
 
 ## Lifecycle Phases
 
